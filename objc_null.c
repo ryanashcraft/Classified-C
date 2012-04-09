@@ -11,19 +11,19 @@
 class *objc_null;
 
 obj *_constructor();
-void *_desc(obj *obj);
+void _desc(var obj, void *ret);
 
 class *_objc_null_init() {
 	objc_null = malloc(sizeof(class));
 	assert(objc_null);
 
-	objc_null->name = "NULL";
+	objc_null->name = "Null";
 	list *objc_null_vtable = create_list();
 	objc_null->v_table = objc_null_vtable;
 
 	objc_null->constructor = &_constructor;
 
-	string method_name = "desc";
+	string method_name = "description";
 	method *objc_null_desc = malloc(sizeof(method));
 	assert(objc_null_desc);
 	objc_null_desc->name = malloc(sizeof(char) * strlen(method_name));
@@ -48,8 +48,13 @@ obj *_constructor() {
 	return null;
 }
 
-void *_desc(obj *obj) {
-	printf("%s", obj->class->name);
+void _desc(var obj, void *ret) {
+	string desct = "NULL";
+	string description;
 
-	return 0;
+	description = malloc(sizeof(char) * strlen(desct));
+	assert(description);
+	strcpy(description, desct);
+
+	memcpy(ret, &description, sizeof(&description));
 }

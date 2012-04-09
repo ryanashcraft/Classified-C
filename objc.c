@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
@@ -10,8 +11,7 @@
 
 list *class_list;
 
-obj *objc_constructor(string class_name);
-
+int method_name_equals(const void *methodp, va_list args);
 int class_name_equals(const void *class, va_list args);
 
 void _objc_init() {
@@ -20,20 +20,39 @@ void _objc_init() {
 	push_back(class_list, _objc_null_init());
 }
 
-int main(int argc, char **argv) {
-	_objc_init();
+void objc_message_send(var o, string message, void *ret) {
+	method *the_method = get_first_occurrence(o->class->v_table, method_name_equals, message);
 
-	var a_null = objc_constructor("NULL");
+	if (!the_method) {
+		fprintf(stderr, "Object of class %s does not respond to message \"%s\"\n", o->class->name, message);
+		exit(EXIT_FAILURE);
+	}
 
-	((method *)back(a_null->class->v_table))->f_pointer(a_null);
+	the_method->f_pointer(o, ret);
+}
 
-	printf("\n");
+int method_name_equals(const void *methodp, va_list args) {
+	string name;
+	method *the_method = (method *)methodp;
+
+	vsprintf(name, "%s", args);
+
+	if (strcmp(the_method->name, name) == 0) {
+		return 1;
+	}
+
+	return 0;
 }
 
 obj *objc_constructor(string class_name) {
-	class *new_class = get_first_occurrence(class_list, class_name_equals, class_name);
+	class *the_class = get_first_occurrence(class_list, class_name_equals, class_name);
 
-	return new_class->constructor();
+	if (!the_class) {
+		fprintf(stderr, "Cannot construct object of class \"%s\"\n", class_name);
+		exit(EXIT_FAILURE);
+	}
+
+	return the_class->constructor();
 }
 
 int class_name_equals(const void *classp, va_list args) {
