@@ -6,6 +6,7 @@ static class *this = NULL;
 
 static var constructor();
 static var concatenate();
+static var length();
 
 string cbstring_to_string(var v) {
 	return ((struct _cbstring_data *)v->data)->value;
@@ -21,6 +22,9 @@ class *cbstring_init() {
 	this = mclass(mstring("CBString"), &constructor);
 
 	method = mmethod(mstring("concatenate"), &concatenate);
+	push_back(this->methods, method);
+
+	method = mmethod(mstring("length"), &length);
 	push_back(this->methods, method);
 
 	return this;
@@ -48,4 +52,10 @@ var concatenate(var v, va_list args) {
 	free(part_two);
 
 	return NULL;
+}
+
+var length(var v, va_list args) {
+	var length = cbang_constructor("CBInteger", strlen(cbstring_to_string(v)));
+
+	return length;
 }

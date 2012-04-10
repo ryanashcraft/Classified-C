@@ -3,8 +3,9 @@
 
 #include "cbnull.h"
 #include "cbstring.h"
+#include "cbinteger.h"
 
-list *class_list;
+static list *class_list;
 
 int method_name_equals(const void *methodp, va_list args);
 int class_name_equals(const void *class, va_list args);
@@ -14,6 +15,7 @@ void cbang_init() {
 
 	push_back(class_list, cbnull_init());
 	push_back(class_list, cbstring_init());
+	push_back(class_list, cbinteger_init());
 }
 
 var cbang_message_send(var o, string message, ...) {
