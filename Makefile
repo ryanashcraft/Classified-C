@@ -1,10 +1,14 @@
+
+# C!
+# Ryan Ashcraft
+
 cbsrc=foo.cbang
 cb=foo.c
 cbo=foo.o
 
-src=cbang.c list.c cbnull.c
-obj=cbang.o list.o cbnull.o
-inc=cbang.h list.h cbnull.h
+src=cbang.c list.c cbnull.c cbstring.c
+obj=cbang.o list.o cbnull.o cbstring.o
+inc=cbang.h list.h cbnull.h cbstring.h
 misc=Makefile
 target=cb-foo.out
 cflags=-Wall -g -Werror -pedantic -std=c99

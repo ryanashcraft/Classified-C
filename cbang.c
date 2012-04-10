@@ -1,14 +1,8 @@
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
-#include <assert.h>
-
-#include "list.h"
-
 #include "cbang.h"
+
 #include "cbnull.h"
+#include "cbstring.h"
 
 list *class_list;
 
@@ -19,6 +13,7 @@ void cbang_init() {
 	class_list = create_list();
 
 	push_back(class_list, cbnull_init());
+	push_back(class_list, cbstring_init());
 }
 
 var cbang_message_send(var o, string message) {
@@ -79,7 +74,7 @@ int class_name_equals(const void *classp, va_list args) {
 	return 0;
 }
 
-class *cbang_class_init(string name, cpointer constructor) {
+class *mclass(string name, cpointer constructor) {
 	class *the_class = malloc(sizeof(class));
 	assert(the_class);
 
@@ -93,7 +88,7 @@ class *cbang_class_init(string name, cpointer constructor) {
 	return the_class;
 }
 
-method *cbang_method_init(string name, fpointer function) {
+method *mmethod(string name, fpointer function) {
 	method *the_method = malloc(sizeof(method));
 	assert(the_method);
 
@@ -102,6 +97,14 @@ method *cbang_method_init(string name, fpointer function) {
 	the_method->function = function;
 
 	return the_method;
+}
+
+var mvar(class *class) {
+	var the_var = malloc(sizeof(obj));
+	assert(the_var);
+	the_var->class = class;
+
+	return the_var;
 }
 
 string mstring(string s) {

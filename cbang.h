@@ -1,8 +1,14 @@
 
-#ifndef CBANG_H
-#define CBANG_H
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <assert.h>
 
 #include "list.h"
+
+#ifndef CBANG_H
+#define CBANG_H
 
 typedef struct _class class;
 typedef struct _obj obj;
@@ -34,8 +40,9 @@ void cbang_init();
 var cbang_constructor(string class_name);
 var cbang_message_send(var o, string message);
 
-class *cbang_class_init(string name, cpointer constructor);
-method *cbang_method_init(string name, fpointer function);
+class *mclass(string name, cpointer constructor);
+method *mmethod(string name, fpointer function);
+obj *mvar(class *class);
 
 string mstring(string s);
 
