@@ -1,6 +1,6 @@
 
-#ifndef OBJC_H
-#define OBJC_H
+#ifndef CBANG_H
+#define CBANG_H
 
 #include "list.h"
 
@@ -30,7 +30,7 @@ struct _method {
 	fpointer f_pointer;
 };
 
-void _cbang_init();
+void cbang_init();
 var cbang_constructor(string class_name);
 var cbang_message_send(var o, string message);
 

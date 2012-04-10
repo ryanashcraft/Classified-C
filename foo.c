@@ -5,13 +5,11 @@
 
 #include "cbang.h"
 
-char *strendtrim(char *s);
-
 int main(int argc, char **argv) {
 	var temp;
-	_cbang_init();
+	cbang_init();
 
-	var a_null = cbang_constructor("Null");
+	var a_null = cbang_constructor("CBNull");
 	temp = cbang_message_send(a_null, "describe");
 
 	printf("\n");

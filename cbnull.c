@@ -8,42 +8,44 @@
 
 #include "cbang.h"
 
-class *this;
+class *this = NULL;
 
-var _constructor();
-var _desc(var obj);
+var constructor();
+var desc(var obj);
 
-class *_objc_null_init() {
-	string tname = "Null";
+class *cbnull_init() {
+	if (this) {
+		return this;
+	}
+
+	string tname = "CBNull";
 	string name = malloc(sizeof(char) * (strlen(tname) + 1));
 	assert(name);
 	strcpy(name, tname);
-	this = cbang_class_init(name, &_constructor);
+	this = cbang_class_init(name, &constructor);
 
 	/* Description method */
-	method *desc = malloc(sizeof(method));
-	assert(desc);
+	method *method = malloc(sizeof(method));
+	assert(method);
 	tname = "describe";
 	name = malloc(sizeof(char) * (strlen(tname) + 1));
 	assert(name);
 	strcpy(name, tname);
-	desc = cbang_method_init(name, &_desc);
-	push_back(this->v_table, desc);
+	method = cbang_method_init(name, &desc);
+	push_back(this->v_table, method);
 
 	return this;
 }
 
-obj *_constructor() {
-	obj *null;
+var constructor() {
+	obj *the_obj;
+	the_obj = malloc(sizeof(obj));
+	assert(the_obj);
+	the_obj->class = this;
 
-	null = malloc(sizeof(obj));
-	assert(null);
-
-	null->class = this;
-
-	return null;
+	return the_obj;
 }
 
-var _desc(var v) {
+var desc(var v) {
 	return v;
 }

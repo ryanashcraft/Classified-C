@@ -1,7 +1,7 @@
 
-#ifndef OBJC_NULL_H
-#define OBJC_NULL_H
+#ifndef CB_NULL_H
+#define CB_NULL_H
 
-class *_objc_null_init();
+class *cbnull_init();
 
 #endif

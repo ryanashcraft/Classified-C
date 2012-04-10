@@ -15,10 +15,10 @@ list *class_list;
 int method_name_equals(const void *methodp, va_list args);
 int class_name_equals(const void *class, va_list args);
 
-void _cbang_init() {
+void cbang_init() {
 	class_list = create_list();
 
-	push_back(class_list, _objc_null_init());
+	push_back(class_list, cbnull_init());
 }
 
 var cbang_message_send(var o, string message) {
