@@ -22,14 +22,14 @@ void cbang_init() {
 }
 
 var cbang_message_send(var o, string message) {
-	method *the_method = get_first_occurrence(o->class->v_table, method_name_equals, message);
+	method *the_method = get_first_occurrence(o->class->methods, method_name_equals, message);
 
 	if (!the_method) {
 		fprintf(stderr, "Object of class %s does not respond to message \"%s\"\n", o->class->name, message);
 		exit(EXIT_FAILURE);
 	}
 
-	return the_method->f_pointer(o);
+	return the_method->function(o);
 }
 
 int method_name_equals(const void *methodp, va_list args) {
@@ -83,8 +83,8 @@ class *cbang_class_init(string name, cpointer constructor) {
 	class *the_class = malloc(sizeof(class));
 	assert(the_class);
 
-	list *vtable = create_list();
-	the_class->v_table = vtable;
+	list *methods = create_list();
+	the_class->methods = methods;
 
 	the_class->name = name;
 
@@ -99,7 +99,14 @@ method *cbang_method_init(string name, fpointer function) {
 
 	the_method->name = name;
 
-	the_method->f_pointer = function;
+	the_method->function = function;
 
 	return the_method;
+}
+
+string mstring(string s) {
+	string the_string = malloc(sizeof(char) * (strlen(s) + 1));
+	assert(the_string);
+	strcpy(the_string, s);
+	return the_string;
 }

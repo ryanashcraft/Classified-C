@@ -18,21 +18,13 @@ class *cbnull_init() {
 		return this;
 	}
 
-	string tname = "CBNull";
-	string name = malloc(sizeof(char) * (strlen(tname) + 1));
-	assert(name);
-	strcpy(name, tname);
-	this = cbang_class_init(name, &constructor);
+	this = cbang_class_init(mstring("CBNull"), &constructor);
 
 	/* Description method */
 	method *method = malloc(sizeof(method));
 	assert(method);
-	tname = "describe";
-	name = malloc(sizeof(char) * (strlen(tname) + 1));
-	assert(name);
-	strcpy(name, tname);
-	method = cbang_method_init(name, &desc);
-	push_back(this->v_table, method);
+	method = cbang_method_init(mstring("describe"), &desc);
+	push_back(this->methods, method);
 
 	return this;
 }

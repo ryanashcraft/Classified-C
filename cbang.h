@@ -18,7 +18,7 @@ typedef obj * (*fpointer) (var obj);
 struct _class {
 	string name;
 	cpointer constructor;
-	list *v_table;
+	list *methods;
 };
 
 struct _obj {
@@ -27,7 +27,7 @@ struct _obj {
 
 struct _method {
 	string name;
-	fpointer f_pointer;
+	fpointer function;
 };
 
 void cbang_init();
@@ -36,5 +36,7 @@ var cbang_message_send(var o, string message);
 
 class *cbang_class_init(string name, cpointer constructor);
 method *cbang_method_init(string name, fpointer function);
+
+string mstring(string s);
 
 #endif
