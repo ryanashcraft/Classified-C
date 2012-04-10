@@ -6,11 +6,11 @@
 cb=foo.c
 cbo=foo.o
 
-src=cbang.c list.c cbobject.c cbnull.c cbstring.c cbinteger.c
-obj=cbang.o list.o cbobject.o cbnull.o cbstring.o cbinteger.o
-inc=cbang.h list.h cbobject.h cbnull.h cbstring.h cbinteger.h
+src=CBang.c list.c CBObject.c CBNull.c CBString.c CBInteger.c
+obj=CBang.o list.o CBObject.o CBNull.o CBString.o CBInteger.o
+inc=CBang.h list.h CBObject.h CBNull.h CBString.h CBInteger.h
 misc=Makefile
-target=cb-foo.out
+target=foo.out
 cflags=-Wall -g -Werror -pedantic -std=c99
 lflags=-lpthread
 
