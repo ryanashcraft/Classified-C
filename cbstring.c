@@ -43,7 +43,7 @@ var concatenate(var v, va_list args) {
 
 	realloc(part_one, sizeof(char) * (part_one_length + part_two_length + 1));
 
-	memcpy(&part_one[part_one_length - 1], part_two, sizeof(char) * (part_two_length + 1));
+	memcpy(&part_one[part_one_length], part_two, sizeof(char) * (part_two_length + 1));
 
 	free(part_two);
 
