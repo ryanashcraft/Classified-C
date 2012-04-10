@@ -580,20 +580,20 @@ int find_occurrence(list* llist, const void *search, equal_op compare_func) {
   node *n = llist->head;
   
   if (!n) {
-      return 0;
+    return 0;
   }
   
   if (llist->head->next == llist->head
-      && compare_func(n->data, search) != 0) {
-          return 1;
+    && ((compare_func && compare_func(n->data, search) != 0) || n->data == search)) {
+    return 1;
   }
   
   do {
-      if (compare_func(n->data, search) != 0) {
-          return 1;
-      }
-      
-      n = n->next;
+    if ((compare_func && compare_func(n->data, search) != 0) || n->data == search) {
+        return 1;
+    }
+    
+    n = n->next;
   } while (n != llist->head);
   
   return 0;

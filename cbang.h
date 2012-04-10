@@ -38,6 +38,7 @@ struct _method {
 };
 
 void cbang_init();
+void add_class(class);
 var construct(string class_name, ...);
 var message(var v, string message, ...);
 void release(var v);

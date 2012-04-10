@@ -8,16 +8,28 @@
 
 static list *class_list;
 
+var construct_parent(class type, va_list argp);
+
 int method_name_equals(const void *methodp, va_list args);
 int class_name_equals(const void *class, va_list args);
 
 void cbang_init() {
+	if (class_list) {
+		return;
+	}
+
 	class_list = create_list();
 
 	push_back(class_list, cbobject_init());
 	push_back(class_list, cbnull_init());
 	push_back(class_list, cbstring_init());
 	push_back(class_list, cbinteger_init());
+}
+
+void add_class(class c) {
+	if (find_occurrence(class_list, c, NULL) == 0) {
+		push_back(class_list, c);
+	}
 }
 
 var message(var v, string message, ...) {
@@ -62,7 +74,7 @@ int method_name_equals(const void *methodp, va_list args) {
 var construct(string class_name, ...) {
 	class the_class;
 	va_list argp;
-	var retval;
+	var v;
 
 	the_class = get_first_occurrence(class_list, class_name_equals, class_name);
 
@@ -72,12 +84,23 @@ var construct(string class_name, ...) {
 	}
 
 	va_start(argp, class_name);
-
-	retval = the_class->constructor(argp);
-
+	v = the_class->constructor(argp);
+	if (v->type->parent != NULL) {
+		v->parent = construct_parent(v->type->parent, argp);
+	}
 	va_end(argp);
 
-	return retval;
+	return v;
+}
+
+var construct_parent(class type, va_list argp) {
+	var v = type->constructor(argp);
+
+	if (v->type->parent != NULL) {
+		v->parent = construct_parent(v->type->parent, argp);
+	}
+
+	return v;
 }
 
 int class_name_equals(const void *classp, va_list args) {
@@ -148,12 +171,6 @@ var mvar(class type) {
 	the_var->parent = NULL;
 	/* set data to NULL so that it won't try to free later if never set */
 	the_var->data = NULL;
-
-	var v = the_var;
-	while (v->type->parent != NULL) {
-		v->parent = mvar(v->type->parent);
-		v = v->parent;
-	}
 
 	return the_var;
 }

@@ -21,10 +21,10 @@ class cbinteger_init() {
 }
 
 var constructor(va_list args) {
-	var the_var = mvar(this);
+	var v = mvar(this);
 
-	the_var->data = malloc(sizeof(struct _cbinteger_data));
-	((struct _cbinteger_data *)the_var->data)->value = va_arg(args, int);
+	v->data = malloc(sizeof(struct _cbinteger_data));
+	((struct _cbinteger_data *)v->data)->value = va_arg(args, int);
 
-	return the_var;
+	return v;
 }

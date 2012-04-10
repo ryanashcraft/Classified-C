@@ -25,7 +25,7 @@ var constructor(va_list args) {
 	return mvar(this);
 }
 
-var print(va_list args) {
-	printf("FOO!\n");
+var print(var v, va_list args) {
+	printf("CBObject");
 	return NULL;
 }
