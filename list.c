@@ -516,6 +516,9 @@ void* get_first_occurrence(list* llist, list_pred_args test_func, ...) {
       }
       
       n = n->next;
+
+      /* you have to call va_start again to reset arguments */
+      va_start(argp, test_func);
   } while (n != llist->head);
   
   va_end(argp);

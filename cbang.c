@@ -45,15 +45,25 @@ int method_name_equals(const void *methodp, va_list args) {
 	return 0;
 }
 
-obj *cbang_constructor(string class_name) {
-	class *the_class = get_first_occurrence(class_list, class_name_equals, class_name);
+var cbang_constructor(string class_name, ...) {
+	class *the_class;
+	va_list argp;
+	var retval;
+
+	the_class = get_first_occurrence(class_list, class_name_equals, class_name);
 
 	if (!the_class) {
 		fprintf(stderr, "Cannot construct object of class \"%s\"\n", class_name);
 		exit(EXIT_FAILURE);
 	}
 
-	return the_class->constructor();
+	va_start(argp, class_name);
+
+	retval = the_class->constructor(argp);
+
+	va_end(argp);
+
+	return retval;
 }
 
 int class_name_equals(const void *classp, va_list args) {

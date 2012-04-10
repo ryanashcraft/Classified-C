@@ -1,16 +1,13 @@
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
 #include "cbang.h"
+#include "cbstring.h"
 
 int main(int argc, char **argv) {
-	var temp;
 	cbang_init();
 
-	var a_null = cbang_constructor("CBNull");
-	temp = cbang_message_send(a_null, "describe");
+	var s = cbang_constructor("CBString", mstring("foo!"));
+	
+	printf("%s", cbstring_to_string(s));
 
 	printf("\n");
 }

@@ -4,7 +4,6 @@
 static class *this = NULL;
 
 static var constructor();
-static var desc(var obj);
 
 class *cbnull_init() {
 	if (this) {
@@ -13,16 +12,9 @@ class *cbnull_init() {
 
 	this = mclass(mstring("CBNull"), &constructor);
 
-	method *method = mmethod(mstring("describe"), &desc);
-	push_back(this->methods, method);
-
 	return this;
 }
 
-var constructor() {
+var constructor(va_list args) {
 	return mvar(this);
-}
-
-var desc(var v) {
-	return v;
 }

@@ -1,10 +1,14 @@
 
 #include "cbang.h"
+#include "cbstring.h"
 
 static class *this = NULL;
 
 static var constructor();
-static var desc(var obj);
+
+string cbstring_to_string(var v) {
+	return ((struct _cbstring_data *)v->data)->value;
+}
 
 class *cbstring_init() {
 	if (this) {
@@ -13,16 +17,14 @@ class *cbstring_init() {
 
 	this = mclass(mstring("CBString"), &constructor);
 
-	method *method = mmethod(mstring("describe"), &desc);
-	push_back(this->methods, method);
-
 	return this;
 }
 
-var constructor() {
-	return mvar(this);
-}
+var constructor(va_list args) {
+	var the_var = mvar(this);
 
-var desc(var v) {
-	return v;
+	the_var->data = malloc(sizeof(struct _cbstring_data));
+	((struct _cbstring_data *)the_var->data)->value = va_arg(args, string);
+
+	return the_var;
 }
