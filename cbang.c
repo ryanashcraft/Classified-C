@@ -16,15 +16,20 @@ void cbang_init() {
 	push_back(class_list, cbstring_init());
 }
 
-var cbang_message_send(var o, string message) {
-	method *the_method = get_first_occurrence(o->class->methods, method_name_equals, message);
+var cbang_message_send(var o, string message, ...) {
+	method *the_method;
+	va_list argp;
+
+	the_method = get_first_occurrence(o->class->methods, method_name_equals, message);
 
 	if (!the_method) {
 		fprintf(stderr, "Object of class %s does not respond to message \"%s\"\n", o->class->name, message);
 		exit(EXIT_FAILURE);
 	}
 
-	return the_method->function(o);
+	va_start(argp, message);
+
+	return the_method->function(o, argp);
 }
 
 int method_name_equals(const void *methodp, va_list args) {

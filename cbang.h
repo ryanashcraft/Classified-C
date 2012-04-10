@@ -19,7 +19,7 @@ typedef obj * var;
 typedef unsigned int uint;
 typedef char * string;
 typedef obj * (*cpointer) (va_list args);
-typedef obj * (*fpointer) (var v);
+typedef obj * (*fpointer) (var v, va_list args);
 
 struct _class {
 	string name;
@@ -39,7 +39,7 @@ struct _method {
 
 void cbang_init();
 var cbang_constructor(string class_name, ...);
-var cbang_message_send(var o, string message);
+var cbang_message_send(var o, string message, ...);
 
 class *mclass(string name, cpointer constructor);
 method *mmethod(string name, fpointer function);
