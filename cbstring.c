@@ -1,6 +1,6 @@
 
-#include "cbang.h"
-#include "cbstring.h"
+#include "CBang.h"
+#include "CBString.h"
 
 static class this = NULL;
 

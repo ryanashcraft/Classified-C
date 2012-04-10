@@ -1,10 +1,10 @@
 
-#include "cbang.h"
+#include "CBang.h"
 
-#include "cbobject.h"
-#include "cbnull.h"
-#include "cbstring.h"
-#include "cbinteger.h"
+#include "CBobject.h"
+#include "CBnull.h"
+#include "CBstring.h"
+#include "CBinteger.h"
 
 static list *class_list;
 

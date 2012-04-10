@@ -1,5 +1,5 @@
 
-#include "cbang.h"
+#include "CBang.h"
 
 static class this = NULL;
 
