@@ -1,7 +1,7 @@
 
-#include "cbang.h"
-#include "cbstring.h"
-#include "cbinteger.h"
+#include "CBang.h"
+#include "CBString.h"
+#include "CBInteger.h"
 
 int main(int argc, char **argv) {
 	cbang_init();

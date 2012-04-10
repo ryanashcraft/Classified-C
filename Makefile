@@ -3,8 +3,8 @@
 # Ryan Ashcraft
 
 # cbsrc=foo.cbang
-cb=foo.c
-cbo=foo.o
+cb=Foo.c
+cbo=Foo.o
 
 src=CBang.c list.c CBObject.c CBNull.c CBString.c CBInteger.c
 obj=CBang.o list.o CBObject.o CBNull.o CBString.o CBInteger.o
