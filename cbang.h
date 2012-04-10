@@ -2,6 +2,8 @@
 #ifndef OBJC_H
 #define OBJC_H
 
+#include "list.h"
+
 typedef struct _class class;
 typedef struct _obj obj;
 typedef struct _method method;

@@ -1,25 +1,27 @@
-objcsrc=foo.objc
-bangc=foo.c
-src=objc.c list.c objc_null.c
-obj=foo.o objc.o list.o objc_null.o
-inc=objc.h list.h objc_null.h
+cbsrc=foo.cbang
+cb=foo.c
+cbo=foo.o
+
+src=cbang.c list.c cbnull.c
+obj=cbang.o list.o cbnull.o
+inc=cbang.h list.h cbnull.h
 misc=Makefile
-target=objc-test
+target=cb-foo.out
 cflags=-Wall -g -Werror -pedantic -std=c99
 lflags=-lpthread
 
 all: $(target)
 
-$(target) : $(obj) $(misc)
-	gcc $(cflags) $(lflags) -o $(target) $(obj)
+$(target) : $(obj) $(cbo) $(misc)
+	gcc $(cflags) $(lflags) -o $(target) $(obj) $(cbo)
 
 .SECONDARY:
 
-%.c : %.objc
+%.c : %.cbang
 	cat $< | sed -e 's/\([A-Za-z][A-Za-z0-9_]*\):\([A-Za-z0-9_-]*\)!/objc_message_send\(\1, \"\2\")/' > $@
 
 %.o : %.c $(misc) $(inc)
 	gcc $(cflags) -c -o $@ $<
 
 clean:
-	rm -f $(obj) $(target) foo.c
+	rm -f $(obj) $(cbo) $(target) foo.c

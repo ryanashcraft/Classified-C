@@ -6,7 +6,7 @@
 
 #include "list.h"
 
-#include "objc.h"
+#include "cbang.h"
 
 class *objc_null;
 
@@ -29,7 +29,7 @@ class *_objc_null_init() {
 	method *objc_null_desc = malloc(sizeof(method));
 	assert(objc_null_desc);
 
-	string tmethodname = "description";
+	string tmethodname = "describe";
 	objc_null_desc->name = malloc(sizeof(char) * (strlen(tmethodname) + 1));
 	assert(objc_null_desc->name);
 	strcpy(objc_null_desc->name, tmethodname);

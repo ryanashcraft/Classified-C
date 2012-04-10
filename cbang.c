@@ -7,8 +7,8 @@
 
 #include "list.h"
 
-#include "objc.h"
-#include "objc_null.h"
+#include "cbang.h"
+#include "cbnull.h"
 
 list *class_list;
 

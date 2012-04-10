@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "list.h"
-#include "objc.h"
+#include "cbang.h"
 
 char *strendtrim(char *s);
 
