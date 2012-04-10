@@ -18,7 +18,7 @@ void cbang_init() {
 	push_back(class_list, cbinteger_init());
 }
 
-var cbang_message_send(var v, string message, ...) {
+var message(var v, string message, ...) {
 	method the_method;
 	va_list argp;
 
@@ -52,7 +52,7 @@ int method_name_equals(const void *methodp, va_list args) {
 	return 0;
 }
 
-var cbang_constructor(string class_name, ...) {
+var construct(string class_name, ...) {
 	class the_class;
 	va_list argp;
 	var retval;
@@ -91,7 +91,7 @@ int class_name_equals(const void *classp, va_list args) {
 	return 0;
 }
 
-void cbang_release(var v) {
+void release(var v) {
 	if (v->data) {
 		free(v->data);
 	}

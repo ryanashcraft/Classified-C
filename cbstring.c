@@ -9,7 +9,7 @@ static var concatenate();
 static var length();
 
 string cbstring_to_string(var v) {
-	return ((struct _cbstring_data *)v->data)->value;
+	return ((cbstring_data)v->data)->value;
 }
 
 class cbstring_init() {
@@ -34,13 +34,13 @@ var constructor(va_list args) {
 	var the_var = mvar(this);
 
 	the_var->data = malloc(sizeof(struct _cbstring_data));
-	((struct _cbstring_data *)the_var->data)->value = va_arg(args, string);
+	((cbstring_data)the_var->data)->value = va_arg(args, string);
 
 	return the_var;
 }
 
 var concatenate(var v, va_list args) {
-	string part_one = ((struct _cbstring_data *)v->data)->value;
+	string part_one = ((cbstring_data)v->data)->value;
 	string part_two = va_arg(args, string);
 	int part_one_length = strlen(part_one);
 	int part_two_length = strlen(part_two);
@@ -55,7 +55,7 @@ var concatenate(var v, va_list args) {
 }
 
 var length(var v, va_list args) {
-	var length = cbang_constructor("CBInteger", strlen(cbstring_to_string(v)));
+	var length = construct("CBInteger", strlen(cbstring_to_string(v)));
 
 	return length;
 }
