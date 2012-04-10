@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#include <assert.h>
 
 #include "list.h"
 
@@ -20,7 +21,7 @@ void _objc_init() {
 	push_back(class_list, _objc_null_init());
 }
 
-void objc_message_send(var o, string message, void *ret) {
+var objc_message_send(var o, string message) {
 	method *the_method = get_first_occurrence(o->class->v_table, method_name_equals, message);
 
 	if (!the_method) {
@@ -28,19 +29,24 @@ void objc_message_send(var o, string message, void *ret) {
 		exit(EXIT_FAILURE);
 	}
 
-	the_method->f_pointer(o, ret);
+	return the_method->f_pointer(o);
 }
 
 int method_name_equals(const void *methodp, va_list args) {
 	string name;
 	method *the_method = (method *)methodp;
 
+	name = malloc(sizeof(char) * strlen(the_method->name));
+	assert(name);
+
 	vsprintf(name, "%s", args);
 
 	if (strcmp(the_method->name, name) == 0) {
+		free(name);
 		return 1;
 	}
 
+	free(name);
 	return 0;
 }
 
@@ -59,11 +65,16 @@ int class_name_equals(const void *classp, va_list args) {
 	string name;
 	class *the_class = (class *)classp;
 
+	name = malloc(sizeof(char) * strlen(the_class->name));
+	assert(name);
+
 	vsprintf(name, "%s", args);
 
 	if (strcmp(the_class->name, name) == 0) {
+		free(name);
 		return 1;
 	}
 
+	free(name);
 	return 0;
 }

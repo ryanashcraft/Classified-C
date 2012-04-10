@@ -1,4 +1,5 @@
 objcsrc=foo.objc
+bangc=foo.c
 src=objc.c list.c objc_null.c
 obj=foo.o objc.o list.o objc_null.o
 inc=objc.h list.h objc_null.h
@@ -12,8 +13,10 @@ all: $(target)
 $(target) : $(obj) $(misc)
 	gcc $(cflags) $(lflags) -o $(target) $(obj)
 
+.SECONDARY:
+
 %.c : %.objc
-	cat $< | sed -e 's/\(\&[A-Za-z][A-Za-z0-9_]*\)[ ]*= [ ]*\[\([A-Za-z][A-Za-z0-9_]*\) [ ]*\([A-Za-z0-9_-]*\)\];/objc_message_send\(\2, \"\3\", \1\);/' > $@
+	cat $< | sed -e 's/\[\([A-Za-z][A-Za-z0-9_]*\) [ ]*\([A-Za-z0-9_-]*\)\]/objc_message_send\(\1, \"\2\")/' > $@
 
 %.o : %.c $(misc) $(inc)
 	gcc $(cflags) -c -o $@ $<

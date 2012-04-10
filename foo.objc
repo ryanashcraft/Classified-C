@@ -9,14 +9,13 @@
 char *strendtrim(char *s);
 
 int main(int argc, char **argv) {
-	string temp;
+	var temp;
 
 	_objc_init();
 
 	var a_null = objc_constructor("Null");
 	
-	&temp = [a_null description];
-	printf("%s", temp);
+	temp = [a_null description];
 
 	printf("\n");
 }

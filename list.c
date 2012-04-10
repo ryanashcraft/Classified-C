@@ -495,6 +495,7 @@ void* get_first_occurrence(list* llist, list_pred_args test_func, ...) {
   n = llist->head;
   
   if (!n) {
+      va_end(argp);
       return NULL;
   }
   

@@ -11,7 +11,7 @@ typedef obj * var;
 typedef unsigned int uint;
 typedef char * string;
 typedef obj * (*cpointer) (void);
-typedef void (*fpointer) (var obj, void *ret);
+typedef obj * (*fpointer) (var obj);
 
 struct _class {
 	string name;
@@ -26,11 +26,10 @@ struct _obj {
 struct _method {
 	string name;
 	fpointer f_pointer;
-	class *return_type;
 };
 
 void _objc_init();
-obj *objc_constructor(string class_name);
-void objc_message_send(var o, string message, void *ret);
+var objc_constructor(string class_name);
+var objc_message_send(var o, string message);
 
 #endif

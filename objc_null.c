@@ -10,27 +10,31 @@
 
 class *objc_null;
 
-obj *_constructor();
-void _desc(var obj, void *ret);
+var _constructor();
+var _desc(var obj);
 
 class *_objc_null_init() {
 	objc_null = malloc(sizeof(class));
 	assert(objc_null);
 
-	objc_null->name = "Null";
+	string tname = "Null";
+	objc_null->name = malloc(sizeof(char) * (strlen(tname) + 1));
+	assert(objc_null->name);
+	strcpy(objc_null->name, tname);
 	list *objc_null_vtable = create_list();
 	objc_null->v_table = objc_null_vtable;
 
 	objc_null->constructor = &_constructor;
 
-	string method_name = "description";
 	method *objc_null_desc = malloc(sizeof(method));
 	assert(objc_null_desc);
-	objc_null_desc->name = malloc(sizeof(char) * strlen(method_name));
+
+	string tmethodname = "description";
+	objc_null_desc->name = malloc(sizeof(char) * (strlen(tmethodname) + 1));
 	assert(objc_null_desc->name);
-	strcpy(objc_null_desc->name, method_name);
+	strcpy(objc_null_desc->name, tmethodname);
+
 	objc_null_desc->f_pointer = &_desc;
-	objc_null_desc->return_type = objc_null;
 
 	push_back(objc_null_vtable, objc_null_desc);
 
@@ -48,13 +52,6 @@ obj *_constructor() {
 	return null;
 }
 
-void _desc(var obj, void *ret) {
-	string desct = "NULL";
-	string description;
-
-	description = malloc(sizeof(char) * strlen(desct));
-	assert(description);
-	strcpy(description, desct);
-
-	memcpy(ret, &description, sizeof(&description));
+var _desc(var v) {
+	return v;
 }
