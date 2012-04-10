@@ -18,7 +18,7 @@ $(target) : $(obj) $(cbo) $(misc)
 .SECONDARY:
 
 %.c : %.cbang
-	cat $< | sed -e 's/\([A-Za-z][A-Za-z0-9_]*\):\([A-Za-z0-9_-]*\)!/objc_message_send\(\1, \"\2\")/' > $@
+	cat $< | sed -e 's/\([A-Za-z][A-Za-z0-9_]*\):\([A-Za-z0-9_-]*\)!/cbang_message_send\(\1, \"\2\")/' > $@
 
 %.o : %.c $(misc) $(inc)
 	gcc $(cflags) -c -o $@ $<

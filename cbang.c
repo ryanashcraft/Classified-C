@@ -15,13 +15,13 @@ list *class_list;
 int method_name_equals(const void *methodp, va_list args);
 int class_name_equals(const void *class, va_list args);
 
-void _objc_init() {
+void _cbang_init() {
 	class_list = create_list();
 
 	push_back(class_list, _objc_null_init());
 }
 
-var objc_message_send(var o, string message) {
+var cbang_message_send(var o, string message) {
 	method *the_method = get_first_occurrence(o->class->v_table, method_name_equals, message);
 
 	if (!the_method) {
@@ -50,7 +50,7 @@ int method_name_equals(const void *methodp, va_list args) {
 	return 0;
 }
 
-obj *objc_constructor(string class_name) {
+obj *cbang_constructor(string class_name) {
 	class *the_class = get_first_occurrence(class_list, class_name_equals, class_name);
 
 	if (!the_class) {
@@ -77,4 +77,29 @@ int class_name_equals(const void *classp, va_list args) {
 
 	free(name);
 	return 0;
+}
+
+class *cbang_class_init(string name, cpointer constructor) {
+	class *the_class = malloc(sizeof(class));
+	assert(the_class);
+
+	list *vtable = create_list();
+	the_class->v_table = vtable;
+
+	the_class->name = name;
+
+	the_class->constructor = constructor;
+
+	return the_class;
+}
+
+method *cbang_method_init(string name, fpointer function) {
+	method *the_method = malloc(sizeof(method));
+	assert(the_method);
+
+	the_method->name = name;
+
+	the_method->f_pointer = function;
+
+	return the_method;
 }

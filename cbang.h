@@ -30,8 +30,11 @@ struct _method {
 	fpointer f_pointer;
 };
 
-void _objc_init();
-var objc_constructor(string class_name);
-var objc_message_send(var o, string message);
+void _cbang_init();
+var cbang_constructor(string class_name);
+var cbang_message_send(var o, string message);
+
+class *cbang_class_init(string name, cpointer constructor);
+method *cbang_method_init(string name, fpointer function);
 
 #endif

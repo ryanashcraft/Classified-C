@@ -8,37 +8,29 @@
 
 #include "cbang.h"
 
-class *objc_null;
+class *this;
 
 var _constructor();
 var _desc(var obj);
 
 class *_objc_null_init() {
-	objc_null = malloc(sizeof(class));
-	assert(objc_null);
-
 	string tname = "Null";
-	objc_null->name = malloc(sizeof(char) * (strlen(tname) + 1));
-	assert(objc_null->name);
-	strcpy(objc_null->name, tname);
-	list *objc_null_vtable = create_list();
-	objc_null->v_table = objc_null_vtable;
+	string name = malloc(sizeof(char) * (strlen(tname) + 1));
+	assert(name);
+	strcpy(name, tname);
+	this = cbang_class_init(name, &_constructor);
 
-	objc_null->constructor = &_constructor;
+	/* Description method */
+	method *desc = malloc(sizeof(method));
+	assert(desc);
+	tname = "describe";
+	name = malloc(sizeof(char) * (strlen(tname) + 1));
+	assert(name);
+	strcpy(name, tname);
+	desc = cbang_method_init(name, &_desc);
+	push_back(this->v_table, desc);
 
-	method *objc_null_desc = malloc(sizeof(method));
-	assert(objc_null_desc);
-
-	string tmethodname = "describe";
-	objc_null_desc->name = malloc(sizeof(char) * (strlen(tmethodname) + 1));
-	assert(objc_null_desc->name);
-	strcpy(objc_null_desc->name, tmethodname);
-
-	objc_null_desc->f_pointer = &_desc;
-
-	push_back(objc_null_vtable, objc_null_desc);
-
-	return objc_null;
+	return this;
 }
 
 obj *_constructor() {
@@ -47,7 +39,7 @@ obj *_constructor() {
 	null = malloc(sizeof(obj));
 	assert(null);
 
-	null->class = objc_null;
+	null->class = this;
 
 	return null;
 }
