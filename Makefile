@@ -28,4 +28,4 @@ $(target) : $(obj) $(cbo) $(misc)
 	gcc $(cflags) -c -o $@ $<
 
 clean:
-	rm -f $(obj) $(cbo) $(target) foo.c
+	rm -f $(obj) $(cbo) $(target)
