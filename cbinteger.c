@@ -15,7 +15,7 @@ class cbinteger_init() {
 		return this;
 	}
 
-	this = mclass(mstring("CBInteger"), NULL, &constructor);
+	this = mclass(mstring("CBInteger"), NULL, &constructor, NULL);
 
 	return this;
 }

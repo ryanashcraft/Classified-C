@@ -5,6 +5,7 @@
 static class this = NULL;
 
 static var constructor();
+static void destructor(var v);
 static var concatenate();
 static var length();
 static var print();
@@ -20,7 +21,7 @@ class cbstring_init() {
 		return this;
 	}
 
-	this = mclass(mstring("CBString"), NULL, &constructor);
+	this = mclass(mstring("CBString"), NULL, &constructor, &destructor);
 
 	m = mmethod(mstring("concatenate"), &concatenate);
 	push_back(this->methods, m);
@@ -39,6 +40,10 @@ var constructor(va_list args) {
 	((cbstring_data)v->data)->value = va_arg(args, string);
 
 	return v;
+}
+
+void destructor(var v) {
+	free(((cbstring_data)v->data)->value);
 }
 
 var concatenate(var v, va_list args) {

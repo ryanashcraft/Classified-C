@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 	var n = construct("CBNull");
 	message(n, "print");
 	printf("\n");
-	release(n);
+	destruct(n);
 
 	var mys = construct("MyClass", 77, mstring("Foo"));
 	message(mys, "concatenate", mstring(" Fighters"));
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
 	var i = message(mys, "length");
 	printf("Length of string \"%s\": %d\n", cbstring_to_string(mys->parent), cbinteger_to_int(i));
-	release(i);
+	destruct(i);
 
-	release(mys);
+	destruct(mys);
 }

@@ -13,7 +13,7 @@ class cbobject_init() {
 		return this;
 	}
 
-	this = mclass(mstring("CBObject"), NULL, &constructor);
+	this = mclass(mstring("CBObject"), NULL, &constructor, NULL);
 
 	m = mmethod(mstring("print"), &print);
 	push_back(this->methods, m);

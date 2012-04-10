@@ -15,7 +15,7 @@ class myclass_init() {
 		return this;
 	}
 
-	this = mclass(mstring("MyClass"), mstring("CBString"), &constructor);
+	this = mclass(mstring("MyClass"), mstring("CBString"), &constructor, NULL);
 
 	m = mmethod(mstring("print"), &print);
 	push_back(this->methods, m);

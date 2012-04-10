@@ -17,12 +17,14 @@ typedef struct _method *method;
 typedef unsigned int uint;
 typedef char *string;
 typedef var (*cpointer) (va_list args);
+typedef void (*dpointer) (var v);
 typedef var (*fpointer) (var v, va_list args);
 
 struct _class {
 	class parent;
 	string name;
 	cpointer constructor;
+	dpointer destructor;
 	list *methods;
 };
 
@@ -41,9 +43,9 @@ void cbang_init();
 void add_class(class);
 var construct(string class_name, ...);
 var message(var v, string message, ...);
-void release(var v);
+void destruct(var v);
 
-class mclass(string name, string parent_class_name, cpointer constructor);
+class mclass(string name, string parent_class_name, cpointer constructor, dpointer destructor);
 method mmethod(string name, fpointer function);
 var mvar(class class);
 

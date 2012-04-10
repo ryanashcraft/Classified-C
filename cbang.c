@@ -121,15 +121,19 @@ int class_name_equals(const void *classp, va_list args) {
 	return 0;
 }
 
-void release(var v) {
-	if (v->data) {
-		free(v->data);
+void destruct(var v) {
+	if (v->type->parent != NULL) {
+		destruct(v->parent);
+	}
+
+	if (v->type->destructor) {
+		v->type->destructor(v);
 	}
 
 	free(v);
 }
 
-class mclass(string name, string parent_class_name, cpointer constructor) {
+class mclass(string name, string parent_class_name, cpointer constructor, dpointer destructor) {
 	class parent_class = NULL;
 
 	class the_class = malloc(sizeof(struct _class));
@@ -148,6 +152,8 @@ class mclass(string name, string parent_class_name, cpointer constructor) {
 	the_class->parent = parent_class;
 
 	the_class->constructor = constructor;
+
+	the_class->destructor = destructor;
 
 	return the_class;
 }
