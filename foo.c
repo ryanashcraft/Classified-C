@@ -13,7 +13,8 @@ int main(int argc, char **argv) {
 	var i = message(s, "length");
 	printf("%d\n", cbinteger_to_int(i));
 	release(i);
-	release(s);
 
-	printf("\n");
+	var n = construct("CBNull");
+	message(n, "print");
+	release(n);
 }

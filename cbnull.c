@@ -10,7 +10,7 @@ class cbnull_init() {
 		return this;
 	}
 
-	this = mclass(mstring("CBNull"), &constructor);
+	this = mclass(mstring("CBNull"), NULL, &constructor);
 
 	return this;
 }

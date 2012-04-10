@@ -13,19 +13,19 @@ string cbstring_to_string(var v) {
 }
 
 class cbstring_init() {
-	method method;
+	method m;
 
 	if (this) {
 		return this;
 	}
 
-	this = mclass(mstring("CBString"), &constructor);
+	this = mclass(mstring("CBString"), NULL, &constructor);
 
-	method = mmethod(mstring("concatenate"), &concatenate);
-	push_back(this->methods, method);
+	m = mmethod(mstring("concatenate"), &concatenate);
+	push_back(this->methods, m);
 
-	method = mmethod(mstring("length"), &length);
-	push_back(this->methods, method);
+	m = mmethod(mstring("length"), &length);
+	push_back(this->methods, m);
 
 	return this;
 }

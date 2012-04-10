@@ -20,12 +20,14 @@ typedef var (*cpointer) (va_list args);
 typedef var (*fpointer) (var v, va_list args);
 
 struct _class {
+	class parent;
 	string name;
 	cpointer constructor;
 	list *methods;
 };
 
 struct _obj {
+	var parent;
 	class type;
 	void *data;
 };
@@ -40,7 +42,7 @@ var construct(string class_name, ...);
 var message(var v, string message, ...);
 void release(var v);
 
-class mclass(string name, cpointer constructor);
+class mclass(string name, string parent_class_name, cpointer constructor);
 method mmethod(string name, fpointer function);
 var mvar(class class);
 

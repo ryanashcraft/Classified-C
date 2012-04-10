@@ -1,6 +1,7 @@
 
 #include "cbang.h"
 
+#include "cbobject.h"
 #include "cbnull.h"
 #include "cbstring.h"
 #include "cbinteger.h"
@@ -13,6 +14,7 @@ int class_name_equals(const void *class, va_list args);
 void cbang_init() {
 	class_list = create_list();
 
+	push_back(class_list, cbobject_init());
 	push_back(class_list, cbnull_init());
 	push_back(class_list, cbstring_init());
 	push_back(class_list, cbinteger_init());
@@ -23,6 +25,11 @@ var message(var v, string message, ...) {
 	va_list argp;
 
 	the_method = get_first_occurrence(v->type->methods, method_name_equals, message);
+
+	while (!the_method && v->parent != NULL) {
+		v = v->parent;
+		the_method = get_first_occurrence(v->type->methods, method_name_equals, message);
+	}
 
 	if (!the_method) {
 		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", v->type->name, message);
@@ -99,7 +106,9 @@ void release(var v) {
 	free(v);
 }
 
-class mclass(string name, cpointer constructor) {
+class mclass(string name, string parent_class_name, cpointer constructor) {
+	class parent_class = NULL;
+
 	class the_class = malloc(sizeof(struct _class));
 	assert(the_class);
 
@@ -107,6 +116,13 @@ class mclass(string name, cpointer constructor) {
 	the_class->methods = methods;
 
 	the_class->name = name;
+
+	if (!parent_class_name) {
+		parent_class = get_first_occurrence(class_list, class_name_equals, "CBObject");
+	} else {
+		parent_class = get_first_occurrence(class_list, class_name_equals, parent_class_name);
+	}
+	the_class->parent = parent_class;
 
 	the_class->constructor = constructor;
 
@@ -128,6 +144,16 @@ var mvar(class type) {
 	var the_var = malloc(sizeof(struct _obj));
 	assert(the_var);
 	the_var->type = type;
+
+	the_var->parent = NULL;
+	/* set data to NULL so that it won't try to free later if never set */
+	the_var->data = NULL;
+
+	var v = the_var;
+	while (v->type->parent != NULL) {
+		v->parent = mvar(v->type->parent);
+		v = v->parent;
+	}
 
 	return the_var;
 }
