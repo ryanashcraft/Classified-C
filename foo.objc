@@ -1,0 +1,22 @@
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "list.h"
+#include "objc.h"
+
+char *strendtrim(char *s);
+
+int main(int argc, char **argv) {
+	string temp;
+
+	_objc_init();
+
+	var a_null = objc_constructor("Null");
+	
+	&temp = [a_null description];
+	printf("%s", temp);
+
+	printf("\n");
+}
