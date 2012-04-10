@@ -8,6 +8,6 @@ struct _cbinteger_data {
 
 int cbinteger_to_int();
 
-class *cbinteger_init();
+class cbinteger_init();
 
 #endif

@@ -10,16 +10,14 @@
 #ifndef CBANG_H
 #define CBANG_H
 
-typedef struct _class class;
-typedef struct _obj obj;
-typedef struct _method method;
-
-typedef obj * var;
+typedef struct _class *class;
+typedef struct _obj *var;
+typedef struct _method *method;
 
 typedef unsigned int uint;
-typedef char * string;
-typedef obj * (*cpointer) (va_list args);
-typedef obj * (*fpointer) (var v, va_list args);
+typedef char *string;
+typedef var (*cpointer) (va_list args);
+typedef var (*fpointer) (var v, va_list args);
 
 struct _class {
 	string name;
@@ -28,7 +26,7 @@ struct _class {
 };
 
 struct _obj {
-	class *class;
+	class type;
 	void *data;
 };
 
@@ -42,9 +40,9 @@ var cbang_constructor(string class_name, ...);
 var cbang_message_send(var v, string message, ...);
 void cbang_release(var v);
 
-class *mclass(string name, cpointer constructor);
-method *mmethod(string name, fpointer function);
-obj *mvar(class *class);
+class mclass(string name, cpointer constructor);
+method mmethod(string name, fpointer function);
+var mvar(class class);
 
 string mstring(string s);
 

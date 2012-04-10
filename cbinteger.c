@@ -2,7 +2,7 @@
 #include "cbang.h"
 #include "cbinteger.h"
 
-static class *this = NULL;
+static class this = NULL;
 
 static var constructor();
 
@@ -10,7 +10,7 @@ int cbinteger_to_int(var v) {
 	return ((struct _cbinteger_data *)v->data)->value;
 }
 
-class *cbinteger_init() {
+class cbinteger_init() {
 	if (this) {
 		return this;
 	}

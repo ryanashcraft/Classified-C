@@ -2,7 +2,7 @@
 #include "cbang.h"
 #include "cbstring.h"
 
-static class *this = NULL;
+static class this = NULL;
 
 static var constructor();
 static var concatenate();
@@ -12,8 +12,8 @@ string cbstring_to_string(var v) {
 	return ((struct _cbstring_data *)v->data)->value;
 }
 
-class *cbstring_init() {
-	method *method;
+class cbstring_init() {
+	method method;
 
 	if (this) {
 		return this;

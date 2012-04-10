@@ -1,11 +1,11 @@
 
 #include "cbang.h"
 
-static class *this = NULL;
+static class this = NULL;
 
 static var constructor();
 
-class *cbnull_init() {
+class cbnull_init() {
 	if (this) {
 		return this;
 	}

@@ -18,25 +18,25 @@ void cbang_init() {
 	push_back(class_list, cbinteger_init());
 }
 
-var cbang_message_send(var o, string message, ...) {
-	method *the_method;
+var cbang_message_send(var v, string message, ...) {
+	method the_method;
 	va_list argp;
 
-	the_method = get_first_occurrence(o->class->methods, method_name_equals, message);
+	the_method = get_first_occurrence(v->type->methods, method_name_equals, message);
 
 	if (!the_method) {
-		fprintf(stderr, "Object of class %s does not respond to message \"%s\"\n", o->class->name, message);
+		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", v->type->name, message);
 		exit(EXIT_FAILURE);
 	}
 
 	va_start(argp, message);
 
-	return the_method->function(o, argp);
+	return the_method->function(v, argp);
 }
 
 int method_name_equals(const void *methodp, va_list args) {
 	string name;
-	method *the_method = (method *)methodp;
+	method the_method = (method)methodp;
 
 	name = malloc(sizeof(char) * strlen(the_method->name));
 	assert(name);
@@ -53,7 +53,7 @@ int method_name_equals(const void *methodp, va_list args) {
 }
 
 var cbang_constructor(string class_name, ...) {
-	class *the_class;
+	class the_class;
 	va_list argp;
 	var retval;
 
@@ -75,7 +75,7 @@ var cbang_constructor(string class_name, ...) {
 
 int class_name_equals(const void *classp, va_list args) {
 	string name;
-	class *the_class = (class *)classp;
+	class the_class = (class)classp;
 
 	name = malloc(sizeof(char) * strlen(the_class->name));
 	assert(name);
@@ -95,12 +95,12 @@ void cbang_release(var v) {
 	if (v->data) {
 		free(v->data);
 	}
-	
+
 	free(v);
 }
 
-class *mclass(string name, cpointer constructor) {
-	class *the_class = malloc(sizeof(class));
+class mclass(string name, cpointer constructor) {
+	class the_class = malloc(sizeof(struct _class));
 	assert(the_class);
 
 	list *methods = create_list();
@@ -113,8 +113,8 @@ class *mclass(string name, cpointer constructor) {
 	return the_class;
 }
 
-method *mmethod(string name, fpointer function) {
-	method *the_method = malloc(sizeof(method));
+method mmethod(string name, fpointer function) {
+	method the_method = malloc(sizeof(struct _method));
 	assert(the_method);
 
 	the_method->name = name;
@@ -124,10 +124,10 @@ method *mmethod(string name, fpointer function) {
 	return the_method;
 }
 
-var mvar(class *class) {
-	var the_var = malloc(sizeof(obj));
+var mvar(class type) {
+	var the_var = malloc(sizeof(struct _obj));
 	assert(the_var);
-	the_var->class = class;
+	the_var->type = type;
 
 	return the_var;
 }
