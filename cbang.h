@@ -39,7 +39,8 @@ struct _method {
 
 void cbang_init();
 var cbang_constructor(string class_name, ...);
-var cbang_message_send(var o, string message, ...);
+var cbang_message_send(var v, string message, ...);
+void cbang_release(var v);
 
 class *mclass(string name, cpointer constructor);
 method *mmethod(string name, fpointer function);

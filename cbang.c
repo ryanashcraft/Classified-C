@@ -91,6 +91,14 @@ int class_name_equals(const void *classp, va_list args) {
 	return 0;
 }
 
+void cbang_release(var v) {
+	if (v->data) {
+		free(v->data);
+	}
+	
+	free(v);
+}
+
 class *mclass(string name, cpointer constructor) {
 	class *the_class = malloc(sizeof(class));
 	assert(the_class);

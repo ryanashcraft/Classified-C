@@ -12,6 +12,8 @@ int main(int argc, char **argv) {
 
 	var i = cbang_message_send(s, "length");
 	printf("%d\n", cbinteger_to_int(i));
+	cbang_release(i);
+	cbang_release(s);
 
 	printf("\n");
 }
