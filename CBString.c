@@ -13,14 +13,6 @@ static void *concatenate(void *v, va_list args);
 static void *length(void *v, va_list args);
 static void *print(void *v, va_list args);
 
-string cbstring_to_string(CBString v) {
-	if (!v) {
-		return NULL;
-	}
-
-	return v->value;
-}
-
 class cbstring_init() {
 	method m;
 
@@ -84,12 +76,12 @@ void *concatenate(void *v, va_list args) {
 
 void *length(void *v, va_list args) {
 	CBString s = (CBString)v;
-	CBInteger length = construct("CBInteger", strlen(cbstring_to_string(s)));
+	CBInteger length = construct("CBInteger", strlen(s->value));
 	return length;
 }
 
 void *print(void *v, va_list args) {
 	CBString s = (CBString)v;
-	printf("%s", cbstring_to_string(s));
+	printf("%s", s->value);
 	return NULL;
 }

@@ -10,8 +10,6 @@ typedef struct _CBString {
 	struct _CBObject parent;
 } *CBString;
 
-string cbstring_to_string();
-
 class cbstring_init();
 
 #endif

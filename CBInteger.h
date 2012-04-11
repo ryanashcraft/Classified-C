@@ -10,8 +10,6 @@ typedef struct _CBInteger {
 	struct _CBObject parent;
 } *CBInteger;
 
-int cbinteger_to_int();
-
 class cbinteger_init();
 
 #endif

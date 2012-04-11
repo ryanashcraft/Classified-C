@@ -7,10 +7,6 @@ static class this = NULL;
 static void *constructor(void *v, void **p, va_list args);
 static void *super(void *v);
 
-int cbinteger_to_int(CBInteger i) {
-	return i->value;
-}
-
 class cbinteger_init() {
 	if (this) {
 		return this;

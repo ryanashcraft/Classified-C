@@ -25,15 +25,18 @@ int main(int argc, char **argv) {
 	printf("\n");
 
 	CBInteger i = message(mys, "length");
-	printf("Length of string: %d\n", cbinteger_to_int(i));
+	printf("Length of string: %d\n", i->value);
 	destruct(i);
 
 	CBStack stack = construct("CBStack");
 	message(stack, "push", construct("CBString", "Ryan"));
 	message(stack, "push", construct("CBString", "Tanner"));
 	message(stack, "pop");
-	message(stack, "pop");
-	printf("%s\n", cbstring_to_string(message(stack, "peek")));
+	// message(stack, "pop");
+	s = message(stack, "peek");
+	if (s) {
+		printf("%s\n", s->value);
+	}
 
 	destruct(mys);
 }
