@@ -50,7 +50,7 @@ void *constructor(void *v, void **p, va_list args) {
 	}
 	
 	s->type = this;
-	s->value = va_arg(args, string);
+	s->value = mstring(va_arg(args, string));
 
 	*p = &s->parent;
 
@@ -78,8 +78,6 @@ void *concatenate(void *v, va_list args) {
 	realloc(part_one, sizeof(char) * (part_one_length + part_two_length + 1));
 
 	memcpy(&part_one[part_one_length], part_two, sizeof(char) * (part_two_length + 1));
-
-	free(part_two);
 
 	return NULL;
 }
