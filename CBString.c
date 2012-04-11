@@ -50,7 +50,7 @@ void *constructor(void *v, void **p, va_list args) {
 }
 
 void destructor(void *v) {
-	CBString s = (CBString)s;
+	CBString s = (CBString)v;
 	free(s->value);
 }
 
@@ -67,9 +67,12 @@ void *concatenate(void *v, va_list args) {
 	int part_one_length = strlen(part_one);
 	int part_two_length = strlen(part_two);
 
-	realloc(part_one, sizeof(char) * (part_one_length + part_two_length + 1));
+	part_one = realloc(part_one, part_one_length + part_two_length + 1);
+	assert(part_one);
+ 	
+	strncat(part_one, part_two, part_two_length);
 
-	memcpy(&part_one[part_one_length], part_two, sizeof(char) * (part_two_length + 1));
+	s->value = part_one;
 
 	return NULL;
 }

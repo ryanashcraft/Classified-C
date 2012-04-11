@@ -61,10 +61,10 @@ int method_name_equals(const void *methodp, va_list args) {
 	string name;
 	method the_method = (method)methodp;
 
-	name = malloc(sizeof(char) * strlen(the_method->name));
+	name = malloc(sizeof(char) * (strlen(the_method->name) + 1));
 	assert(name);
 
-	vsprintf(name, "%s", args);
+	vsnprintf(name, sizeof(char) * (strlen(the_method->name) + 1), "%s", args);
 
 	if (strcmp(the_method->name, name) == 0) {
 		free(name);
@@ -117,10 +117,10 @@ int class_name_equals(const void *classp, va_list args) {
 	string name;
 	class the_class = (class)classp;
 
-	name = malloc(sizeof(char) * strlen(the_class->name));
+	name = malloc(sizeof(char) * (strlen(the_class->name) + 1));
 	assert(name);
 
-	vsprintf(name, "%s", args);
+	vsnprintf(name, sizeof(char) * (strlen(the_class->name) + 1), "%s", args);
 
 	if (strcmp(the_class->name, name) == 0) {
 		free(name);
@@ -178,8 +178,8 @@ method mmethod(string name, fpointer function) {
 }
 
 string mstring(string s) {
-	string the_string = malloc(sizeof(char) * (strlen(s) + 1));
+	string the_string = malloc(strlen(s) + 1);
 	assert(the_string);
-	strlcpy(the_string, s, sizeof(char) * strlen(s) + 1);
+	strlcpy(the_string, s, strlen(s) + 1);
 	return the_string;
 }
