@@ -74,7 +74,7 @@ void *pop(void *v, va_list args) {
 	}
 
 	void *retval = peek(s, NULL);
-	remove_front(s->llist, NULL);
+	remove_front(s->llist, &free);
 	return retval;
 }
 

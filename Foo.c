@@ -18,6 +18,7 @@ int main(int argc, char **argv) {
 	CBString s = construct("CBString", "OH HAI!");
 	message(s, "print");
 	printf("\n");
+	destruct(s);
 
 	MyClass mys = construct("MyClass", 77, "Foo");
 	message(mys, "concatenate", " Fighters");
@@ -27,6 +28,7 @@ int main(int argc, char **argv) {
 	CBInteger i = message(mys, "length");
 	printf("Length of string: %d\n", i->value);
 	destruct(i);
+	destruct(mys);
 
 	CBStack stack = construct("CBStack");
 	message(stack, "push", construct("CBString", "Ryan"));
@@ -37,6 +39,5 @@ int main(int argc, char **argv) {
 	if (s) {
 		printf("%s\n", s->value);
 	}
-
-	destruct(mys);
+	destruct(stack);
 }
