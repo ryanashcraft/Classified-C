@@ -24,7 +24,7 @@ var constructor(va_list args) {
 	var v = mvar(this);
 
 	v->data = malloc(sizeof(struct _cbinteger_data));
-	((struct _cbinteger_data *)v->data)->value = va_arg(args, int);
+	((cbinteger_data)v->data)->value = va_arg(args, int);
 
 	return v;
 }
