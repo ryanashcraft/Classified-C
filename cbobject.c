@@ -1,10 +1,11 @@
 
 #include "CBang.h"
+#include "CBObject.h"
 
 static class this = NULL;
 
-static var constructor();
-static var print();
+static void *constructor(va_list args);
+void *print(void *v, va_list args);
 
 class cbobject_init() {
 	method m;
@@ -21,11 +22,16 @@ class cbobject_init() {
 	return this;
 }
 
-var constructor(va_list args) {
-	return mvar(this);
+void *constructor(va_list args) {
+	CBObject v = malloc(sizeof(struct _CBObject));
+	assert(v);
+	v->meta.type = this;
+	v->meta.parent = NULL;
+
+	return v;
 }
 
-var print(var v, va_list args) {
+void *print(void *v, va_list args) {
 	printf("CBObject");
 	return NULL;
 }

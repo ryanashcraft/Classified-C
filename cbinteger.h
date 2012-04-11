@@ -2,11 +2,10 @@
 #ifndef CB_INTEGER_H
 #define CB_INTEGER_H
 
-typedef struct _cbinteger_data *cbinteger_data;
-
-struct _cbinteger_data {
+typedef struct _CBInteger {
+	struct _obj meta;
 	int value;
-};
+} *CBInteger;
 
 int cbinteger_to_int();
 

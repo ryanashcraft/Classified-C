@@ -16,9 +16,9 @@ typedef struct _method *method;
 
 typedef unsigned int uint;
 typedef char *string;
-typedef var (*cpointer) (va_list args);
-typedef void (*dpointer) (var v);
-typedef var (*fpointer) (var v, va_list args);
+typedef void *(*cpointer) (va_list args);
+typedef void (*dpointer) (void *v);
+typedef void *(*fpointer) (void *v, va_list args);
 
 struct _class {
 	class parent;
@@ -31,7 +31,6 @@ struct _class {
 struct _obj {
 	var parent;
 	class type;
-	void *data;
 };
 
 struct _method {
@@ -41,9 +40,9 @@ struct _method {
 
 void cbang_init();
 void add_class(class);
-var construct(string class_name, ...);
-var message(var v, string message, ...);
-void destruct(var v);
+void *construct(string class_name, ...);
+void *message(void *v, string message, ...);
+void destruct(void *v);
 
 class mclass(string name, string parent_class_name, cpointer constructor, dpointer destructor);
 method mmethod(string name, fpointer function);

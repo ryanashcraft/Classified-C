@@ -4,10 +4,10 @@
 
 static class this = NULL;
 
-static var constructor();
+static void *constructor(va_list args);
 
-int cbinteger_to_int(var v) {
-	return ((struct _cbinteger_data *)v->data)->value;
+int cbinteger_to_int(CBInteger i) {
+	return i->value;
 }
 
 class cbinteger_init() {
@@ -20,11 +20,13 @@ class cbinteger_init() {
 	return this;
 }
 
-var constructor(va_list args) {
-	var v = mvar(this);
+void *constructor(va_list args) {
+	CBInteger i = malloc(sizeof(struct _CBInteger));
+	assert(i);
+	i->meta.type = this;
+	i->meta.parent = NULL;
 
-	v->data = malloc(sizeof(struct _cbinteger_data));
-	((cbinteger_data)v->data)->value = va_arg(args, int);
+	i->value = va_arg(args, int);
 
-	return v;
+	return i;
 }

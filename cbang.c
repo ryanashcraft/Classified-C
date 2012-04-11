@@ -9,7 +9,7 @@
 
 static list *class_list;
 
-var construct_parent(class type, va_list argp);
+void *construct_parent(class type, va_list argp);
 
 int method_name_equals(const void *methodp, va_list args);
 int class_name_equals(const void *class, va_list args);
@@ -34,19 +34,20 @@ void add_class(class c) {
 	}
 }
 
-var message(var v, string message, ...) {
+void *message(void *v, string message, ...) {
+	var meta = ((var)v);
 	method the_method;
 	va_list argp;
 
-	the_method = get_first_occurrence(v->type->methods, method_name_equals, message);
+	the_method = get_first_occurrence(meta->type->methods, method_name_equals, message);
 
-	while (!the_method && v->parent != NULL) {
-		v = v->parent;
-		the_method = get_first_occurrence(v->type->methods, method_name_equals, message);
+	while (!the_method && meta->parent != NULL) {
+		meta = meta->parent;
+		the_method = get_first_occurrence(meta->type->methods, method_name_equals, message);
 	}
 
 	if (!the_method) {
-		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", v->type->name, message);
+		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", meta->type->name, message);
 		exit(EXIT_FAILURE);
 	}
 
@@ -73,10 +74,12 @@ int method_name_equals(const void *methodp, va_list args) {
 	return 0;
 }
 
-var construct(string class_name, ...) {
+void *construct(string class_name, ...) {
 	class the_class;
 	va_list argp;
-	var v;
+	void *v;
+	var m;
+	var par = NULL;
 
 	the_class = get_first_occurrence(class_list, class_name_equals, class_name);
 
@@ -87,22 +90,27 @@ var construct(string class_name, ...) {
 
 	va_start(argp, class_name);
 	v = the_class->constructor(argp);
-	if (v->type->parent != NULL) {
-		v->parent = construct_parent(v->type->parent, argp);
+	m = (var)v;
+	if (m->type->parent != NULL) {
+		par = construct_parent(m->type->parent, argp);
 	}
 	va_end(argp);
 
+	m->parent = par;
 	return v;
 }
 
-var construct_parent(class type, va_list argp) {
-	var v = type->constructor(argp);
+void *construct_parent(class type, va_list argp) {
+	void *v = type->constructor(argp);
+	var m = (var)v;
+	var par = NULL;
 
-	if (v->type->parent != NULL) {
-		v->parent = construct_parent(v->type->parent, argp);
+	if (m->type->parent != NULL) {
+		par = construct_parent(m->type->parent, argp);
 	}
 
-	return v;
+	m->parent = par;
+	return m;
 }
 
 int class_name_equals(const void *classp, va_list args) {
@@ -123,13 +131,15 @@ int class_name_equals(const void *classp, va_list args) {
 	return 0;
 }
 
-void destruct(var v) {
-	if (v->type->parent != NULL) {
-		destruct(v->parent);
+void destruct(void *v) {
+	var m = (var)v;
+
+	if (m->type->parent != NULL) {
+		destruct(m->parent);
 	}
 
-	if (v->type->destructor) {
-		v->type->destructor(v);
+	if (m->type->destructor) {
+		m->type->destructor(v);
 	}
 
 	free(v);
@@ -177,8 +187,6 @@ var mvar(class type) {
 	the_var->type = type;
 
 	the_var->parent = NULL;
-	/* set data to NULL so that it won't try to free later if never set */
-	the_var->data = NULL;
 
 	return the_var;
 }

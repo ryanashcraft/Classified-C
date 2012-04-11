@@ -4,11 +4,11 @@
 
 static class this = NULL;
 
-static var constructor(va_list args);
-static void destructor(var v);
-static var push(var v, va_list args);
-static var pop(var v, va_list args);
-static var peek(var v, va_list args);
+static void *constructor(va_list args);
+static void destructor(void *v);
+static void *push(void *v, va_list args);
+static void *pop(void *v, va_list args);
+static void *peek(void *v, va_list args);
 
 typedef struct _local {
 	list *llist;
@@ -33,38 +33,47 @@ class cbstack_init() {
 	return this;
 }
 
-var constructor(va_list args) {
-	var v = mvar(this);
+void *constructor(va_list args) {
+	CBStack v = malloc(sizeof(struct _local));
+	assert(v);
+	v->meta.type = this;
+	v->meta.parent = NULL;
 
-	v->data = malloc(sizeof(struct _local));
-	((local)v->data)->llist = create_list();
+	v->llist = create_list();
 
 	return v;
 }
 
-void destructor(var v) {
-	empty_list(((local)v->data)->llist, &free);
+void destructor(void *v) {
+	CBStack s = (CBStack)v;
+	empty_list(s->llist, &free);
 }
 
-var push(var v, va_list args) {
+void *push(void *v, va_list args) {
+	CBStack s = (CBStack)v;
+
 	void *data = va_arg(args, void *);
-	push_front(((local)v->data)->llist, data);
+	push_front(s->llist, data);
 	return NULL;
 }
 
-var pop(var v, va_list args) {
-	if (is_empty(((local)v->data)->llist)) {
+void *pop(void *v, va_list args) {
+	CBStack s = (CBStack)v;
+
+	if (is_empty(s->llist)) {
 		return NULL;
 	}
 
 	var retval = peek(v, NULL);
-	remove_front(((local)v->data)->llist, NULL);
+	remove_front(s->llist, NULL);
 	return retval;
 }
 
-var peek(var v, va_list args) {
-	if (is_empty(((local)v->data)->llist)) {
+void *peek(void *v, va_list args) {
+	CBStack s = (CBStack)v;
+
+	if (is_empty(s->llist)) {
 		return NULL;
 	}
-	return front(((local)v->data)->llist);
+	return front(s->llist);
 }

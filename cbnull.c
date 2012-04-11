@@ -1,9 +1,10 @@
 
 #include "CBang.h"
+#include "CBNull.h"
 
 static class this = NULL;
 
-static var constructor();
+static void *constructor(va_list args);
 
 class cbnull_init() {
 	if (this) {
@@ -15,6 +16,11 @@ class cbnull_init() {
 	return this;
 }
 
-var constructor(va_list args) {
-	return mvar(this);
+void *constructor(va_list args) {
+	CBNull v = malloc(sizeof(struct _CBNull));
+	assert(v);
+	v->meta.type = this;
+	v->meta.parent = NULL;
+
+	return v;
 }

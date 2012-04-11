@@ -5,8 +5,8 @@
 
 static class this = NULL;
 
-static var constructor();
-static var print();
+static void *constructor(va_list args);
+static void *print(void *v, va_list args);
 
 class myclass_init() {
 	method m;
@@ -23,16 +23,20 @@ class myclass_init() {
 	return this;
 }
 
-var constructor(va_list args) {
-	var v = mvar(this);
+void *constructor(va_list args) {
+	MyClass v = malloc(sizeof(struct _MyClass));
+	assert(v);
+	var meta = (var)v;
+	meta->type = this;
+	meta->parent = NULL;
 
-	v->data = malloc(sizeof(struct _myclass_data));
-	((myclass_data)v->data)->value = va_arg(args, int);
+	v->value = va_arg(args, int);
 
 	return v;
 }
 
-var print(var v, va_list args) {
-	printf("%d", ((myclass_data)v->data)->value);
+void *print(void *v, va_list args) {
+	MyClass m = (MyClass)v;
+	printf("%d", m->value);
 	return NULL;
 }

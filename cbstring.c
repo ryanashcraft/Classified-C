@@ -4,22 +4,18 @@
 
 static class this = NULL;
 
-static var constructor(va_list args);
-static void destructor(var v);
-static var concatenate(var v, va_list args);
-static var length(var v, va_list args);
-static var print(var v, va_list args);
+static void *constructor(va_list args);
+static void destructor(void *v);
+static void *concatenate(void *v, va_list args);
+static void *length(void *v, va_list args);
+static void *print(void *v, va_list args);
 
-typedef struct _local {
-	string value;
-} *local;
-
-string cbstring_to_string(var v) {
+string cbstring_to_string(CBString v) {
 	if (!v) {
 		return NULL;
 	}
 
-	return ((local)v->data)->value;
+	return v->value;
 }
 
 class cbstring_init() {
@@ -41,21 +37,26 @@ class cbstring_init() {
 	return this;
 }
 
-var constructor(va_list args) {
-	var v = mvar(this);
+void *constructor(va_list args) {
+	CBString v = malloc(sizeof(struct _CBString));
+	assert(v);
+	v->meta.type = this;
+	v->meta.parent = NULL;
 
-	v->data = malloc(sizeof(struct _local));
-	((local)v->data)->value = va_arg(args, string);
+	v->value = va_arg(args, string);
 
 	return v;
 }
 
-void destructor(var v) {
-	free(((local)v->data)->value);
+void destructor(void *v) {
+	CBString s = (CBString)s;
+	free(s->value);
 }
 
-var concatenate(var v, va_list args) {
-	string part_one = ((local)v->data)->value;
+void *concatenate(void *v, va_list args) {
+	CBString s = (CBString)v;
+
+	string part_one = s->value;
 	string part_two = va_arg(args, string);
 	int part_one_length = strlen(part_one);
 	int part_two_length = strlen(part_two);
@@ -69,12 +70,14 @@ var concatenate(var v, va_list args) {
 	return NULL;
 }
 
-var length(var v, va_list args) {
-	var length = construct("CBInteger", strlen(cbstring_to_string(v)));
+void *length(void *v, va_list args) {
+	CBString s = (CBString)v;
+	var length = construct("CBInteger", strlen(cbstring_to_string(s)));
 	return length;
 }
 
-var print(var v, va_list args) {
-	printf("%s", cbstring_to_string(v));
+void *print(void *v, va_list args) {
+	CBString s = (CBString)s;
+	printf("%s", cbstring_to_string(s));
 	return NULL;
 }
