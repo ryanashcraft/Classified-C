@@ -4,13 +4,17 @@
 
 static class this = NULL;
 
-static var constructor();
+static var constructor(va_list args);
 static void destructor(var v);
-static var concatenate();
-static var length();
-static var print();
+static var concatenate(var v, va_list args);
+static var length(var v, va_list args);
+static var print(var v, va_list args);
 
 string cbstring_to_string(var v) {
+	if (!v) {
+		return NULL;
+	}
+	
 	return ((cbstring_data)v->data)->value;
 }
 

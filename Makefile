@@ -6,9 +6,9 @@
 cb=Foo.c
 cbo=Foo.o
 
-src=CBang.c list.c CBObject.c CBNull.c CBString.c CBInteger.c MyClass.c
-obj=CBang.o list.o CBObject.o CBNull.o CBString.o CBInteger.o MyClass.o
-inc=CBang.h list.h CBObject.h CBNull.h CBString.h CBInteger.h MyClass.h
+src=CBang.c list.c CBObject.c CBNull.c CBString.c CBInteger.c CBStack.c MyClass.c
+obj=CBang.o list.o CBObject.o CBNull.o CBString.o CBInteger.o CBStack.o MyClass.o
+inc=CBang.h list.h CBObject.h CBNull.h CBString.h CBInteger.h CBStack.h MyClass.h
 misc=Makefile
 target=foo.out
 cflags=-Wall -g -Werror -pedantic -std=c99

@@ -196,7 +196,9 @@ int remove_front(list* llist, list_op free_func) {
       llist->head = NULL;
   }
   
-  free_func(old_head->data);
+  if (free_func) {
+    free_func(old_head->data);
+  }
   free(old_head);
   
   llist->size--;
@@ -616,7 +618,9 @@ void empty_list(list* llist, list_op free_func) {
 	}
 
 	do {
-		free_func(n->data);
+    if (free_func) {
+  		free_func(n->data);
+    }
 		node_to_remove = n;
 		n = n->next;
 		free(node_to_remove);

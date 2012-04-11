@@ -1,10 +1,11 @@
 
 #include "CBang.h"
 
-#include "CBobject.h"
-#include "CBnull.h"
-#include "CBstring.h"
-#include "CBinteger.h"
+#include "CBObject.h"
+#include "CBNull.h"
+#include "CBString.h"
+#include "CBInteger.h"
+#include "CBStack.h"
 
 static list *class_list;
 
@@ -24,6 +25,7 @@ void cbang_init() {
 	push_back(class_list, cbnull_init());
 	push_back(class_list, cbstring_init());
 	push_back(class_list, cbinteger_init());
+	push_back(class_list, cbstack_init());
 }
 
 void add_class(class c) {

@@ -24,5 +24,12 @@ int main(int argc, char **argv) {
 	printf("Length of string \"%s\": %d\n", cbstring_to_string(mys->parent), cbinteger_to_int(i));
 	destruct(i);
 
+	var stack = construct("CBStack");
+	message(stack, "push", construct("CBString", mstring("Ryan")));
+	message(stack, "push", construct("CBString", mstring("Tanner")));
+	message(stack, "pop");
+	message(stack, "pop");
+	printf("%s\n", cbstring_to_string(message(stack, "peek")));
+
 	destruct(mys);
 }
