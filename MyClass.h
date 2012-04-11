@@ -3,8 +3,9 @@
 #define MY_STRING_H
 
 typedef struct _MyClass {
-	struct _CBString parent;
+	class type;
 	int value;
+	struct _CBString parent;
 } *MyClass;
 
 class myclass_init();

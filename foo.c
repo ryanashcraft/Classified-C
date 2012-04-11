@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
 
 	CBString s = construct("CBString", mstring("OH HAI!"));
 	message(s, "print");
+	printf("\n");
 
 	MyClass mys = construct("MyClass", 77, mstring("Foo"));
 	message(mys, "concatenate", mstring(" Fighters"));
@@ -34,5 +35,5 @@ int main(int argc, char **argv) {
 	message(stack, "pop");
 	printf("%s\n", cbstring_to_string(message(stack, "peek")));
 
-	// destruct(mys);
+	destruct(mys);
 }

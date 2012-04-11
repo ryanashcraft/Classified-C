@@ -5,7 +5,9 @@
 
 static class this = NULL;
 
-static void *constructor(va_list args);
+static void *constructor(void *v, void **p, va_list args);
+static void *super(void *v);
+
 static void *print(void *v, va_list args);
 
 class myclass_init() {
@@ -15,7 +17,7 @@ class myclass_init() {
 		return this;
 	}
 
-	this = mclass(mstring("MyClass"), mstring("CBString"), &constructor, NULL);
+	this = mclass(mstring("MyClass"), mstring("CBString"), &constructor, NULL, &super);
 
 	m = mmethod(mstring("print"), &print);
 	push_back(this->methods, m);
@@ -23,16 +25,26 @@ class myclass_init() {
 	return this;
 }
 
-void *constructor(va_list args) {
-	MyClass v = malloc(sizeof(struct _MyClass));
-	assert(v);
-	var meta = (var)v;
-	meta->type = this;
-	meta->parent = NULL;
+void *constructor(void *v, void **p, va_list args) {
+	MyClass m;
+	if (!v) {
+		m = malloc(sizeof(struct _MyClass));
+		assert(m);
+	} else {
+		m = (MyClass)v;
+	}
 
-	v->value = va_arg(args, int);
+	m->type = this;
+	m->value = va_arg(args, int);
 
-	return v;
+	*p = &m->parent;
+
+	return m;
+}
+
+void *super(void *v) {
+	MyClass m = (MyClass)v;
+	return &m->parent;
 }
 
 void *print(void *v, va_list args) {

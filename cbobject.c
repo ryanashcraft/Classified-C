@@ -4,7 +4,7 @@
 
 static class this = NULL;
 
-static void *constructor(va_list args);
+static void *constructor(void *v, void **p, va_list args);
 void *print(void *v, va_list args);
 
 class cbobject_init() {
@@ -14,7 +14,7 @@ class cbobject_init() {
 		return this;
 	}
 
-	this = mclass(mstring("CBObject"), NULL, &constructor, NULL);
+	this = mclass(mstring("CBObject"), NULL, &constructor, NULL, NULL);
 
 	m = mmethod(mstring("print"), &print);
 	push_back(this->methods, m);
@@ -22,13 +22,19 @@ class cbobject_init() {
 	return this;
 }
 
-void *constructor(va_list args) {
-	CBObject v = malloc(sizeof(struct _CBObject));
-	assert(v);
-	v->meta.type = this;
-	v->meta.parent = NULL;
+void *constructor(void *v, void **p, va_list args) {
+	CBObject o;
+	if (!v) {
+		o = malloc(sizeof(struct _CBObject));
+		assert(o);
+	} else {
+		o = (CBObject)v;
+	}
+	o->type = this;
 
-	return v;
+	*p = NULL;
+
+	return o;
 }
 
 void *print(void *v, va_list args) {

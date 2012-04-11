@@ -1,11 +1,14 @@
 
 #include "CBang.h"
 #include "CBString.h"
+#include "CBInteger.h"
 
 static class this = NULL;
 
-static void *constructor(va_list args);
+static void *constructor(void *v, void **p, va_list args);
 static void destructor(void *v);
+static void *super(void *);
+
 static void *concatenate(void *v, va_list args);
 static void *length(void *v, va_list args);
 static void *print(void *v, va_list args);
@@ -25,7 +28,7 @@ class cbstring_init() {
 		return this;
 	}
 
-	this = mclass(mstring("CBString"), NULL, &constructor, &destructor);
+	this = mclass(mstring("CBString"), NULL, &constructor, &destructor, &super);
 
 	m = mmethod(mstring("concatenate"), &concatenate);
 	push_back(this->methods, m);
@@ -37,20 +40,31 @@ class cbstring_init() {
 	return this;
 }
 
-void *constructor(va_list args) {
-	CBString v = malloc(sizeof(struct _CBString));
-	assert(v);
-	v->meta.type = this;
-	v->meta.parent = NULL;
+void *constructor(void *v, void **p, va_list args) {
+	CBString s;
+	if (!v) {
+		s = malloc(sizeof(struct _CBString));
+		assert(s);
+	} else {
+		s= (CBString)v;
+	}
+	
+	s->type = this;
+	s->value = va_arg(args, string);
 
-	v->value = va_arg(args, string);
+	*p = &s->parent;
 
-	return v;
+	return s;
 }
 
 void destructor(void *v) {
 	CBString s = (CBString)s;
 	free(s->value);
+}
+
+void *super(void *v) {
+	CBString s = (CBString)v;
+	return &s->parent;
 }
 
 void *concatenate(void *v, va_list args) {
@@ -72,12 +86,12 @@ void *concatenate(void *v, va_list args) {
 
 void *length(void *v, va_list args) {
 	CBString s = (CBString)v;
-	var length = construct("CBInteger", strlen(cbstring_to_string(s)));
+	CBInteger length = construct("CBInteger", strlen(cbstring_to_string(s)));
 	return length;
 }
 
 void *print(void *v, va_list args) {
-	CBString s = (CBString)s;
+	CBString s = (CBString)v;
 	printf("%s", cbstring_to_string(s));
 	return NULL;
 }

@@ -4,15 +4,13 @@
 
 static class this = NULL;
 
-static void *constructor(va_list args);
+static void *constructor(void *v, void **p, va_list args);
 static void destructor(void *v);
+static void *super(void *v);
+
 static void *push(void *v, va_list args);
 static void *pop(void *v, va_list args);
 static void *peek(void *v, va_list args);
-
-typedef struct _local {
-	list *llist;
-} *local;
 
 class cbstack_init() {
 	method m;
@@ -21,7 +19,7 @@ class cbstack_init() {
 		return this;
 	}
 
-	this = mclass(mstring("CBStack"), NULL, &constructor, &destructor);
+	this = mclass(mstring("CBStack"), NULL, &constructor, &destructor, &super);
 
 	m = mmethod(mstring("push"), &push);
 	push_back(this->methods, m);
@@ -33,20 +31,31 @@ class cbstack_init() {
 	return this;
 }
 
-void *constructor(va_list args) {
-	CBStack v = malloc(sizeof(struct _local));
-	assert(v);
-	v->meta.type = this;
-	v->meta.parent = NULL;
+void *constructor(void *v, void **p, va_list args) {
+	CBStack s;
+	if (!v) {
+		s = malloc(sizeof(struct _CBStack));
+		assert(s);
+	}  else {
+		s = (CBStack)s;
+	}
 
-	v->llist = create_list();
+	s->type = this;
+	s->llist = create_list();
 
-	return v;
+	*p = &s->parent;
+
+	return s;
 }
 
 void destructor(void *v) {
 	CBStack s = (CBStack)v;
 	empty_list(s->llist, &free);
+}
+
+void *super(void *v) {
+	CBStack s = (CBStack)v;
+	return &s->parent;
 }
 
 void *push(void *v, va_list args) {
@@ -64,7 +73,7 @@ void *pop(void *v, va_list args) {
 		return NULL;
 	}
 
-	var retval = peek(v, NULL);
+	void *retval = peek(s, NULL);
 	remove_front(s->llist, NULL);
 	return retval;
 }

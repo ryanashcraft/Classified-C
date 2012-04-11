@@ -3,7 +3,7 @@
 #define CB_OBJECT_H
 
 typedef struct _CBObject {
-	struct _obj meta;
+	class type;
 } *CBObject;
 
 class cbobject_init();

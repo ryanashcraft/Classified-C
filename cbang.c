@@ -9,7 +9,7 @@
 
 static list *class_list;
 
-void *construct_parent(class type, va_list argp);
+void *construct_parent(void *v, class type, va_list argp);
 
 int method_name_equals(const void *methodp, va_list args);
 int class_name_equals(const void *class, va_list args);
@@ -35,19 +35,20 @@ void add_class(class c) {
 }
 
 void *message(void *v, string message, ...) {
-	var meta = ((var)v);
+	class type = ((CBObject)v)->type;
 	method the_method;
 	va_list argp;
 
-	the_method = get_first_occurrence(meta->type->methods, method_name_equals, message);
+	the_method = get_first_occurrence(type->methods, method_name_equals, message);
 
-	while (!the_method && meta->parent != NULL) {
-		meta = meta->parent;
-		the_method = get_first_occurrence(meta->type->methods, method_name_equals, message);
+	while (!the_method && type->parent != NULL) {
+		v = type->super(v);
+		type = type->parent;
+		the_method = get_first_occurrence(type->methods, method_name_equals, message);
 	}
 
 	if (!the_method) {
-		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", meta->type->name, message);
+		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", type->name, message);
 		exit(EXIT_FAILURE);
 	}
 
@@ -77,40 +78,39 @@ int method_name_equals(const void *methodp, va_list args) {
 void *construct(string class_name, ...) {
 	class the_class;
 	va_list argp;
-	void *v;
-	var m;
-	var par = NULL;
+	void *v = NULL;
+	void *p = NULL; /* why do i have to set this to NULL? */
 
 	the_class = get_first_occurrence(class_list, class_name_equals, class_name);
 
 	if (!the_class) {
 		fprintf(stderr, "Cannot construct object of class \"%s\"\n", class_name);
-		exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);	
 	}
 
 	va_start(argp, class_name);
-	v = the_class->constructor(argp);
-	m = (var)v;
-	if (m->type->parent != NULL) {
-		par = construct_parent(m->type->parent, argp);
+
+	v = the_class->constructor(v, &p, argp);
+
+	if (the_class->parent != NULL) {
+		construct_parent(p, the_class->parent, argp);
 	}
+
 	va_end(argp);
 
-	m->parent = par;
 	return v;
 }
 
-void *construct_parent(class type, va_list argp) {
-	void *v = type->constructor(argp);
-	var m = (var)v;
-	var par = NULL;
+void *construct_parent(void *v, class type, va_list argp) {
+	void *p = NULL;
 
-	if (m->type->parent != NULL) {
-		par = construct_parent(m->type->parent, argp);
+	v = type->constructor(v, &p, argp);
+
+	if (type->parent != NULL) {
+		construct_parent(p, type->parent, argp);
 	}
 
-	m->parent = par;
-	return m;
+	return v;
 }
 
 int class_name_equals(const void *classp, va_list args) {
@@ -132,20 +132,16 @@ int class_name_equals(const void *classp, va_list args) {
 }
 
 void destruct(void *v) {
-	var m = (var)v;
+	class type = ((CBObject)v)->type;
 
-	if (m->type->parent != NULL) {
-		destruct(m->parent);
-	}
-
-	if (m->type->destructor) {
-		m->type->destructor(v);
+	if (type->destructor) {
+		type->destructor(v);
 	}
 
 	free(v);
 }
 
-class mclass(string name, string parent_class_name, cpointer constructor, dpointer destructor) {
+class mclass(string name, string parent_class_name, cpointer constructor, dpointer destructor, spointer super) {
 	class parent_class = NULL;
 
 	class the_class = malloc(sizeof(struct _class));
@@ -164,8 +160,8 @@ class mclass(string name, string parent_class_name, cpointer constructor, dpoint
 	the_class->parent = parent_class;
 
 	the_class->constructor = constructor;
-
 	the_class->destructor = destructor;
+	the_class->super = super;
 
 	return the_class;
 }
@@ -179,16 +175,6 @@ method mmethod(string name, fpointer function) {
 	the_method->function = function;
 
 	return the_method;
-}
-
-var mvar(class type) {
-	var the_var = malloc(sizeof(struct _obj));
-	assert(the_var);
-	the_var->type = type;
-
-	the_var->parent = NULL;
-
-	return the_var;
 }
 
 string mstring(string s) {
