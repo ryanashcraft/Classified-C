@@ -49,6 +49,9 @@ void *super(void *v) {
 
 void *print(void *v, va_list args) {
 	MyClass m = (MyClass)v;
-	printf("%d", m->value);
+	printf("%d ", m->value);
+
+	message(super(m), "print");
+
 	return NULL;
 }
