@@ -10,12 +10,16 @@ static var concatenate(var v, va_list args);
 static var length(var v, va_list args);
 static var print(var v, va_list args);
 
+typedef struct _local {
+	string value;
+} *local;
+
 string cbstring_to_string(var v) {
 	if (!v) {
 		return NULL;
 	}
-	
-	return ((cbstring_data)v->data)->value;
+
+	return ((local)v->data)->value;
 }
 
 class cbstring_init() {
@@ -40,18 +44,18 @@ class cbstring_init() {
 var constructor(va_list args) {
 	var v = mvar(this);
 
-	v->data = malloc(sizeof(struct _cbstring_data));
-	((cbstring_data)v->data)->value = va_arg(args, string);
+	v->data = malloc(sizeof(struct _local));
+	((local)v->data)->value = va_arg(args, string);
 
 	return v;
 }
 
 void destructor(var v) {
-	free(((cbstring_data)v->data)->value);
+	free(((local)v->data)->value);
 }
 
 var concatenate(var v, va_list args) {
-	string part_one = ((cbstring_data)v->data)->value;
+	string part_one = ((local)v->data)->value;
 	string part_two = va_arg(args, string);
 	int part_one_length = strlen(part_one);
 	int part_two_length = strlen(part_two);
