@@ -184,6 +184,6 @@ var mvar(class type) {
 string mstring(string s) {
 	string the_string = malloc(sizeof(char) * (strlen(s) + 1));
 	assert(the_string);
-	strcpy(the_string, s);
+	strlcpy(the_string, s, sizeof(char) * strlen(s) + 1);
 	return the_string;
 }
