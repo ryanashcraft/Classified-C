@@ -7,7 +7,6 @@ int main(int argc, char **argv) {
 	add_class(myclass_init());
 
 	CBFile f = construct("CBFile", "Makefile");
-
 	CBScanner s = construct("CBScanner", f);
 	CBInteger i = construct("CBInteger", 1);
 	while (i->value != 0) {
@@ -15,15 +14,10 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "%s ", token->value);
 		destruct(token);
 
-		if (i) {
-			destruct(i);
-		}
+		destruct(i);
 		i = message(s, "has_next");
 	}
-
-	if (i) {
-		destruct(i);
-	}
+	destruct(i);
 	destruct(s);
 	destruct(f);
 

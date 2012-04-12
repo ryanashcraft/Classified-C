@@ -128,6 +128,10 @@ int class_name_equals(const void *classp, va_list *args) {
 }
 
 void destruct(void *v) {
+	if (!v) {
+		return;
+	}
+	
 	class type = ((CBObject)v)->type;
 
 	if (type->destructor) {
