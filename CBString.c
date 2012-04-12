@@ -42,8 +42,7 @@ void *constructor(void *v, void **p, va_list *args) {
 	}
 	
 	s->type = this;
-	string t = va_arg(*args, string);
-	s->value = mstring(t);
+	s->value = mstring(va_arg(*args, string));
 
 	*p = &s->parent;
 

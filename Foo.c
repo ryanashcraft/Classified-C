@@ -15,15 +15,13 @@ int main(int argc, char **argv) {
 	printf("\n");
 	destruct(n);
 
-	string oij = mstring("OH HAI!");
-	CBString s = construct("CBString", oij);
+	CBString s = construct("CBString", "OH HAI!");
 	message(s, "print");
 	printf("\n");
 	destruct(s);
 
-	oij = mstring("Foo");
-	MyClass mys = construct("MyClass", 77, oij);
-	message(mys, "concatenate", mstring(" Fighters"));
+	MyClass mys = construct("MyClass", 77, "Foo");
+	message(mys, "concatenate", " Fighters");
 	message(mys, "print");
 	printf("\n");
 
@@ -33,8 +31,8 @@ int main(int argc, char **argv) {
 	destruct(mys);
 
 	CBStack stack = construct("CBStack");
-	message(stack, "push", construct("CBString", mstring("Ryan")));
-	message(stack, "push", construct("CBString", mstring("Tanner")));
+	message(stack, "push", construct("CBString", "Ryan"));
+	message(stack, "push", construct("CBString", "Tanner"));
 	message(stack, "pop");
 	// message(stack, "pop");
 	s = message(stack, "peek");
