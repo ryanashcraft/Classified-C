@@ -1,7 +1,6 @@
 
 #include "CBang.h"
 #include "CBString.h"
-#include "CBInteger.h"
 
 static class this = NULL;
 

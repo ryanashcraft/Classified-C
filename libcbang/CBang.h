@@ -46,3 +46,9 @@ method mmethod(string name, fpointer function);
 string mstring(string s);
 
 #endif
+
+#include "CBObject.h"
+#include "CBNull.h"
+#include "CBString.h"
+#include "CBInteger.h"
+#include "CBStack.h"

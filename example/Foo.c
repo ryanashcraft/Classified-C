@@ -1,9 +1,5 @@
 
-#include "CBang.h"
-#include "CBNull.h"
-#include "CBString.h"
-#include "CBInteger.h"
-#include "CBStack.h"
+#include "../libcbang/CBang.h"
 #include "MyClass.h"
 
 int main(int argc, char **argv) {

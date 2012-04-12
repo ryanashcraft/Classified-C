@@ -2,8 +2,6 @@
 #ifndef CB_STACK_H
 #define CB_STACK_H
 
-#include "CBObject.h"
-
 typedef struct _CBStack {
 	class type;
 	list *llist;

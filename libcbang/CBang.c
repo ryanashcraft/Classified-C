@@ -1,12 +1,6 @@
 
 #include "CBang.h"
 
-#include "CBObject.h"
-#include "CBNull.h"
-#include "CBString.h"
-#include "CBInteger.h"
-#include "CBStack.h"
-
 static list *class_list;
 
 void *construct_parent(void *v, class type, va_list *argp);
