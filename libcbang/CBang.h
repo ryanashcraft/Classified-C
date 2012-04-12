@@ -52,3 +52,5 @@ string mstring(string s);
 #include "CBString.h"
 #include "CBInteger.h"
 #include "CBStack.h"
+#include "CBFile.h"
+#include "CBScanner.h"

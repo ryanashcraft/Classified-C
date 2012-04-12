@@ -20,6 +20,8 @@ void cbang_init() {
 	push_back(class_list, cbstring_init());
 	push_back(class_list, cbinteger_init());
 	push_back(class_list, cbstack_init());
+	push_back(class_list, cbfile_init());
+	push_back(class_list, cbscanner_init());
 }
 
 void add_class(class c) {
