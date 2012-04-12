@@ -9,10 +9,10 @@
 
 static list *class_list;
 
-void *construct_parent(void *v, class type, va_list argp);
+void *construct_parent(void *v, class type, va_list *argp);
 
-int method_name_equals(const void *methodp, va_list args);
-int class_name_equals(const void *class, va_list args);
+int method_name_equals(const void *methodp, va_list *args);
+int class_name_equals(const void *class, va_list *args);
 
 void cbang_init() {
 	if (class_list) {
@@ -54,17 +54,17 @@ void *message(void *v, string message, ...) {
 
 	va_start(argp, message);
 
-	return the_method->function(v, argp);
+	return the_method->function(v, &argp);
 }
 
-int method_name_equals(const void *methodp, va_list args) {
+int method_name_equals(const void *methodp, va_list *args) {
 	string name;
 	method the_method = (method)methodp;
 
 	name = malloc(sizeof(char) * (strlen(the_method->name) + 1));
 	assert(name);
 
-	vsnprintf(name, sizeof(char) * (strlen(the_method->name) + 1), "%s", args);
+	vsnprintf(name, sizeof(char) * (strlen(the_method->name) + 1), "%s", *	args);
 
 	if (strcmp(the_method->name, name) == 0) {
 		free(name);
@@ -90,10 +90,10 @@ void *construct(string class_name, ...) {
 
 	va_start(argp, class_name);
 
-	v = the_class->constructor(v, &p, argp);
+	v = the_class->constructor(v, &p, &argp);
 
 	if (the_class->parent != NULL) {
-		construct_parent(p, the_class->parent, argp);
+		construct_parent(p, the_class->parent, &argp);
 	}
 
 	va_end(argp);
@@ -101,7 +101,7 @@ void *construct(string class_name, ...) {
 	return v;
 }
 
-void *construct_parent(void *v, class type, va_list argp) {
+void *construct_parent(void *v, class type, va_list *argp) {
 	void *p = NULL;
 
 	v = type->constructor(v, &p, argp);
@@ -113,14 +113,14 @@ void *construct_parent(void *v, class type, va_list argp) {
 	return v;
 }
 
-int class_name_equals(const void *classp, va_list args) {
+int class_name_equals(const void *classp, va_list *args) {
 	string name;
 	class the_class = (class)classp;
 
 	name = malloc(sizeof(char) * (strlen(the_class->name) + 1));
 	assert(name);
 
-	vsnprintf(name, sizeof(char) * (strlen(the_class->name) + 1), "%s", args);
+	vsnprintf(name, sizeof(char) * (strlen(the_class->name) + 1), "%s", *args);
 
 	if (strcmp(the_class->name, name) == 0) {
 		free(name);
@@ -180,6 +180,6 @@ method mmethod(string name, fpointer function) {
 string mstring(string s) {
 	string the_string = malloc(strlen(s) + 1);
 	assert(the_string);
-	strlcpy(the_string, s, strlen(s) + 1);
+	strncpy(the_string, s, strlen(s) + 1);
 	return the_string;
 }

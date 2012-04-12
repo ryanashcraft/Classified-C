@@ -15,10 +15,10 @@ typedef struct _method *method;
 
 typedef unsigned int uint;
 typedef char *string;
-typedef void *(*cpointer) (void *v, void **p, va_list args);
+typedef void *(*cpointer) (void *v, void **p, va_list *args);
 typedef void (*dpointer) (void *v);
 typedef void *(*spointer) (void *v);
-typedef void *(*fpointer) (void *v, va_list args);
+typedef void *(*fpointer) (void *v, va_list *args);
 
 struct _class {
 	class parent;

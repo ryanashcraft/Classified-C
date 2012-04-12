@@ -4,7 +4,7 @@
 
 static class this = NULL;
 
-static void *constructor(void *v, void **p, va_list args);
+static void *constructor(void *v, void **p, va_list *args);
 static void *super(void *v);
 
 class cbnull_init() {
@@ -17,7 +17,7 @@ class cbnull_init() {
 	return this;
 }
 
-void *constructor(void *v, void **p, va_list args) {
+void *constructor(void *v, void **p, va_list *args) {
 	CBNull n;
 	if (!v) {
 		n = calloc(1, sizeof(struct _CBNull));

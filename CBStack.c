@@ -4,13 +4,13 @@
 
 static class this = NULL;
 
-static void *constructor(void *v, void **p, va_list args);
+static void *constructor(void *v, void **p, va_list *args);
 static void destructor(void *v);
 static void *super(void *v);
 
-static void *push(void *v, va_list args);
-static void *pop(void *v, va_list args);
-static void *peek(void *v, va_list args);
+static void *push(void *v, va_list *args);
+static void *pop(void *v, va_list *args);
+static void *peek(void *v, va_list *args);
 
 class cbstack_init() {
 	method m;
@@ -31,13 +31,13 @@ class cbstack_init() {
 	return this;
 }
 
-void *constructor(void *v, void **p, va_list args) {
+void *constructor(void *v, void **p, va_list *args) {
 	CBStack s;
 	if (!v) {
 		s = malloc(sizeof(struct _CBStack));
 		assert(s);
 	}  else {
-		s = (CBStack)s;
+		s = (CBStack)v;
 	}
 
 	s->type = this;
@@ -58,15 +58,15 @@ void *super(void *v) {
 	return &s->parent;
 }
 
-void *push(void *v, va_list args) {
+void *push(void *v, va_list *args) {
 	CBStack s = (CBStack)v;
 
-	void *data = va_arg(args, void *);
+	void *data = va_arg(*args, void *);
 	push_front(s->llist, data);
 	return NULL;
 }
 
-void *pop(void *v, va_list args) {
+void *pop(void *v, va_list *args) {
 	CBStack s = (CBStack)v;
 
 	if (is_empty(s->llist)) {
@@ -78,7 +78,7 @@ void *pop(void *v, va_list args) {
 	return retval;
 }
 
-void *peek(void *v, va_list args) {
+void *peek(void *v, va_list *args) {
 	CBStack s = (CBStack)v;
 
 	if (is_empty(s->llist)) {

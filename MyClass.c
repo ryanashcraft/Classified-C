@@ -5,10 +5,10 @@
 
 static class this = NULL;
 
-static void *constructor(void *v, void **p, va_list args);
+static void *constructor(void *v, void **p, va_list *args);
 static void *super(void *v);
 
-static void *print(void *v, va_list args);
+static void *print(void *v, va_list *args);
 
 class myclass_init() {
 	method m;
@@ -25,7 +25,7 @@ class myclass_init() {
 	return this;
 }
 
-void *constructor(void *v, void **p, va_list args) {
+void *constructor(void *v, void **p, va_list *args) {
 	MyClass m;
 	if (!v) {
 		m = malloc(sizeof(struct _MyClass));
@@ -35,7 +35,7 @@ void *constructor(void *v, void **p, va_list args) {
 	}
 
 	m->type = this;
-	m->value = va_arg(args, int);
+	m->value = va_arg(*args, int);
 
 	*p = &m->parent;
 
@@ -47,7 +47,7 @@ void *super(void *v) {
 	return &m->parent;
 }
 
-void *print(void *v, va_list args) {
+void *print(void *v, va_list *args) {
 	MyClass m = (MyClass)v;
 	printf("%d ", m->value);
 

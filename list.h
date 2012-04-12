@@ -19,7 +19,7 @@
 typedef void (*list_op)(void*);
 /* A function pointer type that points to a function that takes in a const void* and returns an int call it list_pred */
 typedef int (*list_pred)(const void*);
-typedef int (*list_pred_args)(const void*, va_list argp);
+typedef int (*list_pred_args)(const void*, va_list *argp);
 /* A function pointer type that points to a function that takes in 2 const void*'s and returns an int call it equal_op 
    this should return 0 if the data is not equal and 1 (or non-zero) if it is equal*/
 typedef int (*equal_op)(const void*, const void*);

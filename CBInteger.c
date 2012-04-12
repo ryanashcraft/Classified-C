@@ -4,7 +4,7 @@
 
 static class this = NULL;
 
-static void *constructor(void *v, void **p, va_list args);
+static void *constructor(void *v, void **p, va_list *args);
 static void *super(void *v);
 
 class cbinteger_init() {
@@ -17,17 +17,17 @@ class cbinteger_init() {
 	return this;
 }
 
-void *constructor(void *v, void **p, va_list args) {
+void *constructor(void *v, void **p, va_list *args) {
 	CBInteger i;
 	if (!v) {
 		i = malloc(sizeof(struct _CBInteger));
 		assert(i);
 	} else {
-		i = (CBInteger)i;
+		i = (CBInteger)v;
 	}
 
 	i->type = this;
-	i->value = va_arg(args, int);
+	i->value = va_arg(*args, int);
 
 	*p = &i->parent;
 

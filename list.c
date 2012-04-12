@@ -502,7 +502,7 @@ void* get_first_occurrence(list* llist, list_pred_args test_func, ...) {
   }
   
   if (llist->head->next == llist->head) {
-      if (test_func(llist->head->data, argp)) {
+      if (test_func(llist->head->data, &argp)) {
           va_end(argp);
           return llist->head->data;
       } else {
@@ -512,7 +512,7 @@ void* get_first_occurrence(list* llist, list_pred_args test_func, ...) {
   }
   
   do {
-      if (test_func(n->data, argp)) {
+      if (test_func(n->data, &argp)) {
           va_end(argp);
           return n->data;
       }

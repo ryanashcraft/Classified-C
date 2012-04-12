@@ -4,8 +4,8 @@
 
 static class this = NULL;
 
-static void *constructor(void *v, void **p, va_list args);
-void *print(void *v, va_list args);
+static void *constructor(void *v, void **p, va_list *args);
+void *print(void *v, va_list *args);
 
 class cbobject_init() {
 	method m;
@@ -22,7 +22,7 @@ class cbobject_init() {
 	return this;
 }
 
-void *constructor(void *v, void **p, va_list args) {
+void *constructor(void *v, void **p, va_list *args) {
 	CBObject o;
 	if (!v) {
 		o = malloc(sizeof(struct _CBObject));
@@ -37,7 +37,7 @@ void *constructor(void *v, void **p, va_list args) {
 	return o;
 }
 
-void *print(void *v, va_list args) {
+void *print(void *v, va_list *args) {
 	printf("CBObject");
 	return NULL;
 }

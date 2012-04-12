@@ -5,13 +5,13 @@
 
 static class this = NULL;
 
-static void *constructor(void *v, void **p, va_list args);
+static void *constructor(void *v, void **p, va_list *args);
 static void destructor(void *v);
 static void *super(void *);
 
-static void *concatenate(void *v, va_list args);
-static void *length(void *v, va_list args);
-static void *print(void *v, va_list args);
+static void *concatenate(void *v, va_list *args);
+static void *length(void *v, va_list *args);
+static void *print(void *v, va_list *args);
 
 class cbstring_init() {
 	method m;
@@ -32,17 +32,18 @@ class cbstring_init() {
 	return this;
 }
 
-void *constructor(void *v, void **p, va_list args) {
+void *constructor(void *v, void **p, va_list *args) {
 	CBString s;
 	if (!v) {
 		s = malloc(sizeof(struct _CBString));
 		assert(s);
 	} else {
-		s= (CBString)v;
+		s = (CBString)v;
 	}
 	
 	s->type = this;
-	s->value = mstring(va_arg(args, string));
+	string t = va_arg(*args, string);
+	s->value = mstring(t);
 
 	*p = &s->parent;
 
@@ -59,11 +60,11 @@ void *super(void *v) {
 	return &s->parent;
 }
 
-void *concatenate(void *v, va_list args) {
+void *concatenate(void *v, va_list *args) {
 	CBString s = (CBString)v;
 
 	string part_one = s->value;
-	string part_two = va_arg(args, string);
+	string part_two = mstring(va_arg(*args, string));
 	int part_one_length = strlen(part_one);
 	int part_two_length = strlen(part_two);
 
@@ -77,13 +78,13 @@ void *concatenate(void *v, va_list args) {
 	return NULL;
 }
 
-void *length(void *v, va_list args) {
+void *length(void *v, va_list *args) {
 	CBString s = (CBString)v;
 	CBInteger length = construct("CBInteger", strlen(s->value));
 	return length;
 }
 
-void *print(void *v, va_list args) {
+void *print(void *v, va_list *args) {
 	CBString s = (CBString)v;
 	printf("%s", s->value);
 	return NULL;
