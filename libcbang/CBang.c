@@ -9,7 +9,7 @@
 
 #include "CBang.h"
 
-static list *class_list;
+static list *class_list = NULL;
 
 void *construct_parent(void *v, class type, va_list *argp);
 
@@ -17,15 +17,18 @@ int method_name_equals(const void *methodp, va_list *args);
 int class_name_equals(const void *class, va_list *args);
 
 /**
-  Initialize the class list and the standard classes.
+  Initialize the class list and the standard classes
  */
 void cbang_init() {
+	// Return the class list if it is already instantiated
 	if (class_list) {
 		return;
 	}
 
+	// Instantiate the class list. 
 	class_list = create_list();
 
+	// Initialize and register standard classes to the class list
 	push_back(class_list, cbobject_init());
 	push_back(class_list, cbnull_init());
 	push_back(class_list, cbstring_init());
@@ -36,11 +39,12 @@ void cbang_init() {
 }
 
 /**
-  Add a class to the class list (if it isn't already added).
+  Add a class to the class list (if it isn't already added)
 
   @param c the class to add
  */
 void add_class(class c) {
+	// If the class isn't currently in the class list, then add it. 
 	if (find_occurrence(class_list, c, NULL) == 0) {
 		push_back(class_list, c);
 	}
@@ -67,25 +71,32 @@ void add_class(class c) {
   @return the object returned from the function call
  */
 void *message(void *v, string message, ...) {
-	class type = ((CBObject)v)->type;
 	method the_method;
 	va_list argp;
+	class type = ((CBObject)v)->type;
 
+	// Try to get the method from the object's type
 	the_method = get_first_occurrence(type->methods, method_name_equals, message);
 
+	// While the method isn't found and there is a parent, then look in the
+	// parent's type
 	while (!the_method && type->parent != NULL) {
 		v = type->super(v);
 		type = type->parent;
 		the_method = get_first_occurrence(type->methods, method_name_equals, message);
 	}
 
+	// If the method is never found, then error and exit out
 	if (!the_method) {
 		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", type->name, message);
 		exit(EXIT_FAILURE);
 	}
 
+	// Instantiate the variable argument list for the method's parameters
 	va_start(argp, message);
 
+	// Call the method's function pointer with the object and a reference
+	// to the variable argument list
 	return the_method->function(v, &argp);
 }
 
@@ -114,6 +125,12 @@ int method_name_equals(const void *methodp, va_list *args) {
   If the class name argument doesn't match any classes in the class list, then
   report the error and exit.
 
+  Upon finding the class that correspodns to the given class name, then use the
+  constructor of that class to allocate and construct the object. If the object's
+  class has any parent classes, then continue to construct the object with that
+  parent class' constructor (except this time, the pointer that is passed into
+  the constructor is pointing to an inner "parent" member of the original object).
+
   @param class_name the name of the class that the object is to be constructed by
   @param ...        variable arguments that will be passed as parameters to the
                     object's constructor
@@ -123,26 +140,40 @@ int method_name_equals(const void *methodp, va_list *args) {
 void *construct(string class_name, ...) {
 	class the_class;
 	va_list argp;
-	void *v = NULL;
-	void *p = NULL; /* make sure to set to NULL */
 
+	// Pointer for the object that will be returned
+	// Needs to be set to NULL on declaration or bad things might happen
+	void *v = NULL;
+	// Pointer that might be set to a pointer of the object's parent struct
+	void *p = NULL;
+
+	// Try to get the class with name class_name
 	the_class = get_first_occurrence(class_list, class_name_equals, class_name);
 
+	// If no class is found, then error and exit out
 	if (!the_class) {
 		fprintf(stderr, "Cannot construct object of class \"%s\"\n", class_name);
 		exit(EXIT_FAILURE);	
 	}
 
+	// Instantiate the variable argument list for the constructor's parameters
 	va_start(argp, class_name);
 
+	// Call the class's constructor with a pointer for the object, a pointer for
+	// the object's parent struct (which is a member of the object's struct),
+	// and the variable argument list
 	v = the_class->constructor(v, &p, &argp);
 
+	// If there is a parent, then construct the parent with the pointer to the
+	// object's parent struct and the remaining variable arguments
 	if (the_class->parent != NULL) {
 		construct_parent(p, the_class->parent, &argp);
 	}
 
+	// End the variable argument list
 	va_end(argp);
 
+	// Return the original object
 	return v;
 }
 
@@ -158,14 +189,22 @@ void *construct(string class_name, ...) {
   @return the object v
  */
 void *construct_parent(void *v, class type, va_list *argp) {
+	// Pointer that might be set to a pointer of the object's parent struct
 	void *p = NULL;
 
+	// Call the constructor on the object with a pointer that can be set to the
+	// object's parent struct
 	v = type->constructor(v, &p, argp);
 
+	// If there is a parent, then construct the parent with the pointer to the
+	// object's parent struct and the remaining variable arguments
 	if (type->parent != NULL) {
+		// Recursive call with terminating condition when the object passed in
+		// doesn't have a parent
 		construct_parent(p, type->parent, argp);
 	}
 
+	// Return the object
 	return v;
 }
 
@@ -194,16 +233,21 @@ int class_name_equals(const void *classp, va_list *args) {
   @param v the object to destruct
  */
 void destruct(void *v) {
+	// If the obejct is NULL, then return out
 	if (!v) {
 		return;
 	}
 	
+	// The class of the object
 	class type = ((CBObject)v)->type;
 
+	// Call the destructor, if it is defined in the class, with the object
+	// to free any internally allocated members of the object
 	if (type->destructor) {
 		type->destructor(v);
 	}
 
+	// Free the object
 	free(v);
 }
 
