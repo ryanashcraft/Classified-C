@@ -5,9 +5,7 @@
 extern Class StackClass;
 
 typedef struct _CBStack {
-	Class class;
-	list *methods;
-	Object parent;
+	OBJECT_BASE
 	
 	list *llist;
 } *Stack;

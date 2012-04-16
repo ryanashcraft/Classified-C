@@ -31,6 +31,7 @@ void *initWithFile(void *v, va_list *args) {
 	o->class = ScannerClass;
 	o->methods = ScannerClass->instance_methods;
 	o->parent = message(ObjectClass, "init");
+	o->retaincount = 1;
 
 	o->file = va_arg(*args, File);
 
@@ -39,8 +40,14 @@ void *initWithFile(void *v, va_list *args) {
 
 void *release(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
+	--o->retaincount;
 	message(o->parent, "release");
-	free(o);
+
+	if (o->retaincount == 0) {
+		free(o);
+		return NULL;
+	}
+
 	return o;
 }
 

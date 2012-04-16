@@ -25,13 +25,20 @@ void *init(void *v, va_list *args) {
 	o->class = ObjectClass;
 	o->methods = ObjectClass->instance_methods;
 	o->parent = NULL;
+	o->retaincount = 1;
 
 	return o;
 }
 
 void *release(void *v, va_list *args) {
 	Object o = (Object)v;
-	free(o);
+	--o->retaincount;
+
+	if (o->retaincount == 0) {
+		free(o);
+		return NULL;
+	}
+
 	return o;
 }
 

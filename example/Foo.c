@@ -8,12 +8,12 @@ int main(int argc, char **argv) {
 
 	Object o = message(ObjectClass, "init");
 	message(o, "print");
-	message(o, "release");
+	o = message(o, "release");
 	printf("\n");
 
 	String st = message(StringClass, "initWithString", "test");
 	message(st, "print");
-	message(st, "release");
+	st = message(st, "release");
 	printf("\n");
 
 	File f = message(FileClass, "initWithFilename", "../README.md");
@@ -24,23 +24,23 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "%s ", token->value);
 		message(token, "release");
 
-		message(i, "release");
+		i = message(i, "release");
 		i = message(s, "has_next");
 	}
-	message(i, "release");
-	message(s, "release");
-	message(f, "release");
+	i = message(i, "release");
+	s = message(s, "release");
+	f = message(f, "release");
 	printf("\n");
 
 	Null n = message(NullClass, "init");
 	message(n, "print");
 	printf("\n");
-	message(n, "release");
+	n = message(n, "release");
 
 	String ohhai = message(StringClass, "initWithString", "OH HAI!");
 	message(ohhai, "print");
 	printf("\n");
-	message(ohhai, "release");
+	ohhai = message(ohhai, "release");
 
 	Foo mys = message(FooClass, "init", 77, "Foo");
 	message(mys, "concatenate", " Fighters");
@@ -49,8 +49,8 @@ int main(int argc, char **argv) {
 
 	i = message(mys, "length");
 	printf("Length of string: %d\n", i->value);
-	message(i, "release");
-	message(mys, "release");
+	i = message(i, "release");
+	mys = message(mys, "release");
 
 	Stack stack = message(StackClass, "init");
 	message(stack, "push", message(StringClass, "initWithString", "Ryan"));
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 	if (str) {
 		printf("%s\n", str->value);
 	}
-	message(stack, "release");
+	stack = message(stack, "release");
 
 	printf("\n");
 }

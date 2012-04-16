@@ -33,6 +33,7 @@ void *init(void *v, va_list *args) {
 	o->class = StackClass;
 	o->methods = StackClass->instance_methods;
 	o->parent = message(ObjectClass, "init");
+	o->retaincount = 1;
 
 	o->llist = create_list();
 
@@ -41,9 +42,15 @@ void *init(void *v, va_list *args) {
 
 void *release(void *v, va_list *args) {
 	Stack o = (Stack)v;
+	--o->retaincount;
 	message(o->parent, "release");
-	free_list(o->llist, &message_release);
-	free(o);
+
+	if (o->retaincount == 0) {
+		free_list(o->llist, &message_release);
+		free(o);
+		return NULL;
+	}
+
 	return o;
 }
 

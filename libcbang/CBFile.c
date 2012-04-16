@@ -25,6 +25,7 @@ void *initWithFilename(void *v, va_list *args) {
 	o->class = FileClass;
 	o->methods = FileClass->instance_methods;
 	o->parent = message(ObjectClass, "init");
+	o->retaincount = 1;
 
 	o->filename = mstring(va_arg(*args, string));
 	o->file = fopen(o->filename, "r");
@@ -34,9 +35,16 @@ void *initWithFilename(void *v, va_list *args) {
 
 void *release(void *v, va_list *args) {
 	File o = (File)v;
-	fclose(o->file);
-	free(o->filename);
+	--o->retaincount;
 	message(o->parent, "release");
-	free(o);
+
+	if (o->retaincount == 0) {
+		fclose(o->file);
+		free(o->filename);
+		free(o);
+
+		return NULL;
+	}
+
 	return o;
 }

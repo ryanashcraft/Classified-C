@@ -5,9 +5,7 @@
 extern Class StringClass;
 
 typedef struct _CBString {
-	Class class;
-	list *methods;
-	Object parent;
+	OBJECT_BASE
 	
 	string value;
 } *String;

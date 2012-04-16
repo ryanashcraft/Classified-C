@@ -25,6 +25,7 @@ void *initWithInt(void *v, va_list *args) {
 	o->class = IntegerClass;
 	o->methods = IntegerClass->instance_methods;
 	o->parent = message(ObjectClass, "init");
+	o->retaincount = 1;
 
 	o->value = va_arg(*args, int);
 
@@ -33,7 +34,13 @@ void *initWithInt(void *v, va_list *args) {
 
 void *release(void *v, va_list *args) {
 	Integer o = (Integer)v;
+	--o->retaincount;
 	message(o->parent, "release");
-	free(o);
+
+	if (o->retaincount == 0) {
+		free(o);
+		return NULL;
+	}
+
 	return o;
 }

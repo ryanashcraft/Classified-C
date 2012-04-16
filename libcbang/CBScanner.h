@@ -5,9 +5,7 @@
 extern Class ScannerClass;
 
 typedef struct _CBScanner {
-	Class class;
-	list *methods;
-	Object parent;
+	OBJECT_BASE
 	
 	File file;
 } *Scanner;

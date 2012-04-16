@@ -31,6 +31,7 @@ void *initWithString(void *v, va_list *args) {
 	o->class = StringClass;
 	o->methods = StringClass->instance_methods;
 	o->parent = message(ObjectClass, "init");
+	o->retaincount = 1;
 
 	o->value = mstring(va_arg(*args, string));
 
@@ -39,9 +40,15 @@ void *initWithString(void *v, va_list *args) {
 
 void *release(void *v, va_list *args) {
 	String o = (String)v;
-	free(o->value);
+	--o->retaincount;
 	message(o->parent, "release");
-	free(o);
+
+	if (o->retaincount == 0) {
+		free(o->value);
+		free(o);
+		return NULL;
+	}
+
 	return o;
 }
 

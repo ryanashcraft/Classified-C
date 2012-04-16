@@ -3,9 +3,7 @@
 #define CB_CLASS_H
 
 struct _CBClass {
-	Class class;
-	list *methods;
-	Object parent;
+	OBJECT_BASE
 
 	list *instance_methods;
 	string name;

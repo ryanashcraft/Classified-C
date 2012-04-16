@@ -28,6 +28,7 @@ void *init(void *v, va_list *args) {
 	c->class = ClassClass;
 	c->methods = create_list();
 	c->parent = NULL;
+	c->retaincount = 1;
 
 	c->instance_methods = create_list();
 	c->name = mstring(va_arg(*args, string));

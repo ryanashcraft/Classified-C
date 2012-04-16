@@ -5,9 +5,7 @@
 extern Class FileClass;
 
 typedef struct _CBFile {
-	Class class;
-	list *methods;
-	Object parent;
+	OBJECT_BASE
 	
 	string filename;
 	FILE *file;
