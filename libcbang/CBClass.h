@@ -5,9 +5,11 @@
 struct _CBClass {
 	Class class;
 	list *methods;
-	Class parent;
+	Object parent;
+
 	list *instance_methods;
 	string name;
+	Class parent_class;
 };
 
 extern Class ClassClass;
