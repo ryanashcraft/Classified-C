@@ -26,10 +26,8 @@ struct _method {
 
 void cbang_init();
 void *message(void *v, string message, ...);
-void destruct(void *v);
 
 method mmethod(string name, fpointer function);
-
 string mstring(string s);
 
 #endif

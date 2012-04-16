@@ -14,9 +14,7 @@ void file_class_init() {
 
 	FileClass = message(ClassClass, "init", "FileClass", ObjectClass, &super);
 
-	m = mmethod(mstring("initWithFilename"), &initWithFilename);
-	push_back(FileClass->methods, m);
-	m = mmethod(mstring("release"), &release);
+	m = mmethod("initWithFilename", &initWithFilename);
 	push_back(FileClass->methods, m);
 }
 
@@ -30,9 +28,9 @@ void *initWithFilename(void *v, va_list *args) {
 	f->class = FileClass;
 	f->filename = mstring(va_arg(*args, string));
 	f->file = fopen(f->filename, "r");
-
+	
 	f->methods = create_list();
-	m = mmethod(mstring("release"), &release);
+	m = mmethod("release", &release);
 	push_back(f->methods, m);
 
 	message(ObjectClass, "initWithPointer", &(f->parent));
@@ -49,5 +47,8 @@ void *release(void *v, va_list *args) {
 	File f = (File)v;
 	fclose(f->file);
 	free(f->filename);
+	message(super(f), "release");
+	free_list(f->methods, free);
+	free(f);
 	return f;
 }

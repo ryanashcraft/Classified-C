@@ -39,11 +39,11 @@ void *init(void *v, va_list *args) {
 	assert(o);
 
 	o->class = ObjectClass;
+	
 	o->methods = create_list();
-
-	m = mmethod(mstring("print"), &print);
+	m = mmethod("release", &release);
 	push_back(o->methods, m);
-	m = mmethod(mstring("release"), &release);
+	m = mmethod("print", &print);
 	push_back(o->methods, m);
 
 	return o;
@@ -54,11 +54,11 @@ void *initWithPointer(void *v, va_list *args) {
 	Object o = va_arg(*args, Object);
 
 	o->class = ObjectClass;
-	o->methods = create_list();
 
-	m = mmethod(mstring("print"), &print);
+	o->methods = create_list();
+	m = mmethod("release", &release);
 	push_back(o->methods, m);
-	m = mmethod(mstring("release"), &release);
+	m = mmethod("print", &print);
 	push_back(o->methods, m);
 
 	return o;
@@ -74,5 +74,8 @@ void *print(void *v, va_list *args) {
 }
 
 void *release(void *v, va_list *args) {
-	return v;
+	Object o = (Object)v;
+	free_list(o->methods, &free);
+	// free(o);
+	return o;
 }

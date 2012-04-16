@@ -20,14 +20,15 @@ int main(int argc, char **argv) {
 	while (i->value != 0) {
 		String token = message(s, "next");
 		fprintf(stderr, "%s ", token->value);
-		destruct(token);
+		message(token, "release");
 
-		destruct(i);
+		message(i, "release");
 		i = message(s, "has_next");
 	}
-	destruct(i);
-	destruct(s);
-	destruct(f);
+	message(i, "release");
+	message(s, "release");
+	message(f, "release");
+	printf("\n");
 
 	// CBNull n = construct("CBNull");
 	// message(n, "print");
@@ -49,16 +50,16 @@ int main(int argc, char **argv) {
 	// destruct(i);
 	// destruct(mys);
 
-	// CBStack stack = construct("CBStack");
-	// message(stack, "push", construct("CBString", "Ryan"));
-	// message(stack, "push", construct("CBString", "Tanner"));
+	Stack stack = message(StackClass, "init");
+	message(stack, "push", message(StringClass, "initWithString", "Ryan"));
+	message(stack, "push", message(StringClass, "initWithString", "Tanner"));
+	message(stack, "pop");
 	// message(stack, "pop");
-	// // message(stack, "pop");
-	// s = message(stack, "peek");
-	// if (s) {
-	// 	printf("%s\n", s->value);
-	// }
-	// destruct(stack);
+	String str = message(stack, "peek");
+	if (str) {
+		printf("%s\n", str->value);
+	}
+	message(stack, "release");
 
 	printf("\n");
 }

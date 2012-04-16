@@ -77,6 +77,7 @@ int find_occurrence(list* llist, const void* search, equal_op compare_func);
 
 /* Freeing */
 void empty_list(list* llist, list_op free_func);
+void free_list(list *llist, list_op free_func);
 
 /* Traversal */
 void traverse(list* llist, list_op do_func);

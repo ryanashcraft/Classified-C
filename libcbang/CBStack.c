@@ -12,12 +12,14 @@ static void *push(void *v, va_list *args);
 static void *pop(void *v, va_list *args);
 static void *peek(void *v, va_list *args);
 
+void message_release(void *v);
+
 void stack_class_init() {
 	method m;
 
 	StackClass = message(ClassClass, "init", "StackClass", ObjectClass, &super);
 
-	m = mmethod(mstring("init"), &init);
+	m = mmethod("init", &init);
 	push_back(StackClass->methods, m);
 }
 
@@ -25,20 +27,20 @@ void *init(void *v, va_list *args) {
 	Stack s;
 	method m;
 
-	s = malloc(sizeof(struct _CBStack));
+	s = calloc(1, sizeof(struct _CBStack));
 	assert(s);
 
 	s->class = StackClass;
 	s->llist = create_list();
 
 	s->methods = create_list();
-	m = mmethod(mstring("release"), &release);
+	m = mmethod("release", &release);
 	push_back(s->methods, m);
-	m = mmethod(mstring("push"), &push);
+	m = mmethod("push", &push);
 	push_back(s->methods, m);
-	m = mmethod(mstring("pop"), &pop);
+	m = mmethod("pop", &pop);
 	push_back(s->methods, m);
-	m = mmethod(mstring("peek"), &peek);
+	m = mmethod("peek", &peek);
 	push_back(s->methods, m);
 
 	message(ObjectClass, "initWithPointer", &(s->parent));
@@ -53,8 +55,15 @@ void *super(void *v) {
 
 void *release(void *v, va_list *args) {
 	Stack s = (Stack)v;
-	empty_list(s->llist, &free);
+	message(super(s), "release");
+	free_list(s->methods, &free);
+	empty_list(s->llist, &message_release);
+	free(s);
 	return s;
+}
+
+void message_release(void *v) {
+	message(v, "release");	
 }
 
 void *push(void *v, va_list *args) {

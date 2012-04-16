@@ -17,9 +17,7 @@ void string_class_init() {
 
 	StringClass = message(ClassClass, "init", "StringClass", ObjectClass, &super);
 
-	m = mmethod(mstring("initWithString"), &initWithString);
-	push_back(StringClass->methods, m);
-	m = mmethod(mstring("release"), &release);
+	m = mmethod("initWithString", &initWithString);
 	push_back(StringClass->methods, m);
 }
 
@@ -32,13 +30,15 @@ void *initWithString(void *v, va_list *args) {
 	
 	s->class = StringClass;
 	s->value = mstring(va_arg(*args, string));
-
+	
 	s->methods = create_list();
-	m = mmethod(mstring("concatenate"), &concatenate);
+	m = mmethod("release", &release);
 	push_back(s->methods, m);
-	m = mmethod(mstring("length"), &length);
+	m = mmethod("concatenate", &concatenate);
 	push_back(s->methods, m);
-	m = mmethod(mstring("print"), &print);
+	m = mmethod("length", &length);
+	push_back(s->methods, m);
+	m = mmethod("print", &print);
 	push_back(s->methods, m);
 
 	message(ObjectClass, "initWithPointer", &(s->parent));
@@ -54,7 +54,9 @@ void *super(void *v) {
 void *release(void *v, va_list *args) {
 	String s = (String)v;
 	free(s->value);
-
+	message(super(s), "release");
+	free_list(s->methods, &free);
+	free(s);
 	return s;
 }
 

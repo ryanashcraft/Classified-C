@@ -17,7 +17,7 @@ void class_class_init() {
 	ClassClass->parent_class = NULL;
 
 	ClassClass->methods = create_list();
-	m = mmethod(mstring("init"), &init);
+	m = mmethod("init", &init);
 	push_back(ClassClass->methods, m);
 }
 
@@ -26,6 +26,7 @@ void *init(void *v, va_list *args) {
 	assert(c);
 
 	c->class = ClassClass;
+	
 	c->methods = create_list();
 	c->name = mstring(va_arg(*args, string));
 	c->parent_class = va_arg(*args, Class);

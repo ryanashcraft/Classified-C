@@ -631,6 +631,11 @@ void empty_list(list* llist, list_op free_func) {
     llist->head = NULL;
 }
 
+void free_list(list* llist, list_op free_func) {
+  empty_list(llist, free_func);
+  free(llist);
+}
+
 /** traverse
   *
   * Traverses the linked list calling a function on each node's data.

@@ -95,25 +95,6 @@ int method_name_equals(const void *methodp, va_list *args) {
 }
 
 /**
-  Destruct an object by calling its destructor and freeing the object.
-
-  @param v the object to destruct
- */
-void destruct(void *v) {
-	// If the obejct is NULL, then return out
-	if (!v) {
-		return;
-	}
-	
-	// Call the destructor, if it is defined in the class, with the object
-	// to free any internally allocated members of the object
-	message(v, "release");
-
-	// Free the object
-	free(v);
-}
-
-/**
   Helper function for creating a new method.
 
   @param name     the name of the method
