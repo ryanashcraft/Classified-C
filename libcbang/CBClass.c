@@ -14,7 +14,7 @@ void class_class_init() {
 
 	ClassClass->class = ObjectClass;
 	ClassClass->name = mstring("ClassClass");
-	ClassClass->parent_class = NULL;
+	ClassClass->parent = NULL;
 
 	ClassClass->methods = create_list();
 	m = mmethod("init", &init);
@@ -27,10 +27,9 @@ void *init(void *v, va_list *args) {
 
 	c->class = ClassClass;
 	c->methods = create_list();
-	c->parent = NULL;
 	c->instance_methods = create_list();
 	c->name = mstring(va_arg(*args, string));
-	c->parent_class = va_arg(*args, Class);
+	c->parent = va_arg(*args, Class);
 
 	return c;
 }
