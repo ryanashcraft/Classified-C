@@ -2,12 +2,15 @@
 #ifndef CB_INTEGER_H
 #define CB_INTEGER_H
 
+extern Class IntegerClass;
+
 typedef struct _CBInteger {
-	class type;
+	Class class;
+	list *methods;
 	int value;
 	struct _CBObject parent;
-} *CBInteger;
+} *Integer;
 
-class cbinteger_init();
+void integer_class_init();
 
 #endif

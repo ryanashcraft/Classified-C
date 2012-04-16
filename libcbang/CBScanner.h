@@ -2,12 +2,15 @@
 #ifndef CB_SCANNER_H
 #define CB_SCANNER_H
 
-typedef struct _CBScanner {
-	class type;
-	CBFile file;
-	struct _CBObject parent;
-} *CBScanner;
+extern Class ScannerClass;
 
-class cbscanner_init();
+typedef struct _CBScanner {
+	Class class;
+	list *methods;
+	File file;
+	struct _CBObject parent;
+} *Scanner;
+
+void scanner_class_init();
 
 #endif

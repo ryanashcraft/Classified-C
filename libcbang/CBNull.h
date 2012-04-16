@@ -2,11 +2,15 @@
 #ifndef CB_NULL_H
 #define CB_NULL_H
 
-typedef struct _CBNull {
-	class type;
-	struct _CBObject parent;
-} *CBNull;
+extern Class NullClass;
 
-class cbnull_init();
+typedef struct _CBNull {
+	Class class;
+	list *methods;
+	string name;
+	struct _CBObject parent;
+} *Null;
+
+void null_class_init();
 
 #endif

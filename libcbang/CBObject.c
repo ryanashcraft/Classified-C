@@ -2,42 +2,77 @@
 #include "CBang.h"
 #include "CBObject.h"
 
-static class this = NULL;
+Class ObjectClass = NULL;
 
-static void *constructor(void *v, void **p, va_list *args);
-void *print(void *v, va_list *args);
+static void *init(void *v, va_list *args);
+static void *initWithPointer(void *v, va_list *args);
+static void *super(void *v);
 
-class cbobject_init() {
+static void *print(void *v, va_list *args);
+static void *release(void *v, va_list *args);
+
+void object_class_init() {
 	method m;
 
-	if (this) {
-		return this;
-	}
 
-	this = mclass(mstring("CBObject"), NULL, &constructor, NULL, NULL);
+	// ObjectClass->class = ObjectClass;
+	// ObjectClass->name = mstring("ObjectClass");
 
-	m = mmethod(mstring("print"), &print);
-	push_back(this->methods, m);
+	// ObjectClass = malloc(sizeof(struct _CBObject));
+	// assert(ObjectClass);
+	// ObjectClass->class = ObjectClass;
 
-	return this;
+	ObjectClass = message(ClassClass, "init", "ObjectClass", NULL, &super);
+
+	ObjectClass->methods = create_list();
+	m = mmethod("initWithPointer", &initWithPointer);
+	push_back(ObjectClass->methods, m);
+	m = mmethod("init", &init);
+	push_back(ObjectClass->methods, m);
+
+	ObjectClass->parent_class = NULL;
 }
 
-void *constructor(void *v, void **p, va_list *args) {
-	CBObject o;
-	if (!v) {
-		o = malloc(sizeof(struct _CBObject));
-		assert(o);
-	} else {
-		o = (CBObject)v;
-	}
-	o->type = this;
+void *init(void *v, va_list *args) {
+	method m;
+	Object o = malloc(sizeof(struct _CBObject));
+	assert(o);
 
-	*p = NULL;
+	o->class = ObjectClass;
+	o->methods = create_list();
+
+	m = mmethod(mstring("print"), &print);
+	push_back(o->methods, m);
+	m = mmethod(mstring("release"), &release);
+	push_back(o->methods, m);
 
 	return o;
 }
 
-void *print(void *v, va_list *args) {
-	printf("CBObject");
+void *initWithPointer(void *v, va_list *args) {
+	method m;
+	Object o = va_arg(*args, Object);
+
+	o->class = ObjectClass;
+	o->methods = create_list();
+
+	m = mmethod(mstring("print"), &print);
+	push_back(o->methods, m);
+	m = mmethod(mstring("release"), &release);
+	push_back(o->methods, m);
+
+	return o;
+}
+
+void *super(void *v) {
 	return NULL;
+}
+
+void *print(void *v, va_list *args) {
+	fprintf(stderr, "Object");
+	return NULL;
+}
+
+void *release(void *v, va_list *args) {
+	return v;
 }

@@ -2,12 +2,15 @@
 #ifndef CB_STACK_H
 #define CB_STACK_H
 
-typedef struct _CBStack {
-	class type;
-	list *llist;
-	struct _CBObject parent;
-} *CBStack;
+extern Class StackClass;
 
-class cbstack_init();
+typedef struct _CBStack {
+	Class class;
+	list *llist;
+	list *methods;
+	struct _CBObject parent;
+} *Stack;
+
+void stack_class_init();
 
 #endif

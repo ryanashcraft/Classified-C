@@ -2,64 +2,64 @@
 #include "CBang.h"
 #include "CBString.h"
 
-static class this = NULL;
+Class StringClass = NULL;
 
-static void *constructor(void *v, void **p, va_list *args);
-static void destructor(void *v);
-static void *super(void *);
+static void *initWithString(void *v, va_list *args);
+static void *super(void *v);
 
+static void *release(void *v, va_list *args);
 static void *concatenate(void *v, va_list *args);
 static void *length(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 
-class cbstring_init() {
+void string_class_init() {
 	method m;
 
-	if (this) {
-		return this;
-	}
+	StringClass = message(ClassClass, "init", "StringClass", ObjectClass, &super);
 
-	this = mclass(mstring("CBString"), NULL, &constructor, &destructor, &super);
-
-	m = mmethod(mstring("concatenate"), &concatenate);
-	push_back(this->methods, m);
-	m = mmethod(mstring("length"), &length);
-	push_back(this->methods, m);
-	m = mmethod(mstring("print"), &print);
-	push_back(this->methods, m);
-
-	return this;
+	m = mmethod(mstring("initWithString"), &initWithString);
+	push_back(StringClass->methods, m);
+	m = mmethod(mstring("release"), &release);
+	push_back(StringClass->methods, m);
 }
 
-void *constructor(void *v, void **p, va_list *args) {
-	CBString s;
-	if (!v) {
-		s = malloc(sizeof(struct _CBString));
-		assert(s);
-	} else {
-		s = (CBString)v;
-	}
+void *initWithString(void *v, va_list *args) {
+	String s;
+	method m;
+
+	s = malloc(sizeof(struct _CBString));
+	assert(s);
 	
-	s->type = this;
+	s->class = StringClass;
 	s->value = mstring(va_arg(*args, string));
 
-	*p = &s->parent;
+	s->methods = create_list();
+	m = mmethod(mstring("concatenate"), &concatenate);
+	push_back(s->methods, m);
+	m = mmethod(mstring("length"), &length);
+	push_back(s->methods, m);
+	m = mmethod(mstring("print"), &print);
+	push_back(s->methods, m);
+
+	message(ObjectClass, "initWithPointer", &(s->parent));
 
 	return s;
 }
 
-void destructor(void *v) {
-	CBString s = (CBString)v;
-	free(s->value);
+void *super(void *v) {
+	Integer i = (Integer)v;
+	return &(i->parent);
 }
 
-void *super(void *v) {
-	CBString s = (CBString)v;
-	return &s->parent;
+void *release(void *v, va_list *args) {
+	String s = (String)v;
+	free(s->value);
+
+	return s;
 }
 
 void *concatenate(void *v, va_list *args) {
-	CBString s = (CBString)v;
+	String s = (String)v;
 
 	string part_one = s->value;
 	string part_two = mstring(va_arg(*args, string));
@@ -77,13 +77,13 @@ void *concatenate(void *v, va_list *args) {
 }
 
 void *length(void *v, va_list *args) {
-	CBString s = (CBString)v;
-	CBInteger length = construct("CBInteger", strlen(s->value));
+	String s = (String)v;
+	Integer length = message(IntegerClass, "initWithInt", strlen(s->value));
 	return length;
 }
 
 void *print(void *v, va_list *args) {
-	CBString s = (CBString)v;
+	String s = (String)v;
 	printf("%s", s->value);
 	return NULL;
 }

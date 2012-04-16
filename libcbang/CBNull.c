@@ -2,37 +2,38 @@
 #include "CBang.h"
 #include "CBNull.h"
 
-static class this = NULL;
+Class NullClass = NULL;
 
-static void *constructor(void *v, void **p, va_list *args);
+static void *init(void *v, va_list *args);
 static void *super(void *v);
 
-class cbnull_init() {
-	if (this) {
-		return this;
-	}
+void null_class_init() {
+	method m;
 
-	this = mclass(mstring("CBNull"), NULL, &constructor, NULL, &super);
+	NullClass = message(ClassClass, "init", "NullClass", ObjectClass, &super);
 
-	return this;
+	m = mmethod(mstring("init"), &init);
+	push_back(NullClass->methods, m);
 }
 
-void *constructor(void *v, void **p, va_list *args) {
-	CBNull n;
+void *init(void *v, va_list *args) {
+	Null n;
+
 	if (!v) {
 		n = calloc(1, sizeof(struct _CBNull));
 		assert(n);
 	} else {
-		n = (CBNull)v;
+		n = (Null)v;
 	}
-	n->type = this;
 
-	*p = &n->parent;
+	n->class = NullClass;
+
+	message(ObjectClass, "initWithPointer", &(n->parent));
 
 	return n;
 }
 
 void *super(void *v) {
-	CBNull n = (CBNull)v;
-	return &n->parent;
+	Null n = (Null)v;
+	return &(n->parent);
 }

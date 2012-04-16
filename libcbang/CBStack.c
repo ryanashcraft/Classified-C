@@ -2,64 +2,63 @@
 #include "CBang.h"
 #include "CBStack.h"
 
-static class this = NULL;
+Class StackClass = NULL;
 
-static void *constructor(void *v, void **p, va_list *args);
-static void destructor(void *v);
+static void *init(void *v, va_list *args);
 static void *super(void *v);
 
+static void *release(void *v, va_list *args);
 static void *push(void *v, va_list *args);
 static void *pop(void *v, va_list *args);
 static void *peek(void *v, va_list *args);
 
-class cbstack_init() {
+void stack_class_init() {
 	method m;
 
-	if (this) {
-		return this;
-	}
+	StackClass = message(ClassClass, "init", "StackClass", ObjectClass, &super);
 
-	this = mclass(mstring("CBStack"), NULL, &constructor, &destructor, &super);
-
-	m = mmethod(mstring("push"), &push);
-	push_back(this->methods, m);
-	m = mmethod(mstring("pop"), &pop);
-	push_back(this->methods, m);
-	m = mmethod(mstring("peek"), &peek);
-	push_back(this->methods, m);
-
-	return this;
+	m = mmethod(mstring("init"), &init);
+	push_back(StackClass->methods, m);
 }
 
-void *constructor(void *v, void **p, va_list *args) {
-	CBStack s;
-	if (!v) {
-		s = malloc(sizeof(struct _CBStack));
-		assert(s);
-	}  else {
-		s = (CBStack)v;
-	}
+void *init(void *v, va_list *args) {
+	Stack s;
+	method m;
 
-	s->type = this;
+	s = malloc(sizeof(struct _CBStack));
+	assert(s);
+
+	s->class = StackClass;
 	s->llist = create_list();
 
-	*p = &s->parent;
+	s->methods = create_list();
+	m = mmethod(mstring("release"), &release);
+	push_back(s->methods, m);
+	m = mmethod(mstring("push"), &push);
+	push_back(s->methods, m);
+	m = mmethod(mstring("pop"), &pop);
+	push_back(s->methods, m);
+	m = mmethod(mstring("peek"), &peek);
+	push_back(s->methods, m);
+
+	message(ObjectClass, "initWithPointer", &(s->parent));
 
 	return s;
 }
 
-void destructor(void *v) {
-	CBStack s = (CBStack)v;
-	empty_list(s->llist, &free);
+void *super(void *v) {
+	Stack s = (Stack)v;
+	return &(s->parent);
 }
 
-void *super(void *v) {
-	CBStack s = (CBStack)v;
-	return &s->parent;
+void *release(void *v, va_list *args) {
+	Stack s = (Stack)v;
+	empty_list(s->llist, &free);
+	return s;
 }
 
 void *push(void *v, va_list *args) {
-	CBStack s = (CBStack)v;
+	Stack s = (Stack)v;
 
 	void *data = va_arg(*args, void *);
 	push_front(s->llist, data);
@@ -67,7 +66,7 @@ void *push(void *v, va_list *args) {
 }
 
 void *pop(void *v, va_list *args) {
-	CBStack s = (CBStack)v;
+	Stack s = (Stack)v;
 
 	if (is_empty(s->llist)) {
 		return NULL;
@@ -79,7 +78,7 @@ void *pop(void *v, va_list *args) {
 }
 
 void *peek(void *v, va_list *args) {
-	CBStack s = (CBStack)v;
+	Stack s = (Stack)v;
 
 	if (is_empty(s->llist)) {
 		return NULL;

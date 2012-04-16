@@ -4,59 +4,51 @@
 
 #define TOKEN_BUFFER_SIZE 256
 
-static class this = NULL;
+Class ScannerClass = NULL;
 
-static void *constructor(void *v, void **p, va_list *args);
-static void destructor(void *v);
+static void *initWithFile(void *v, va_list *args);
 static void *super(void *v);
 
 static void *next(void *v, va_list *args);
 static void *has_next(void *v, va_list *args);
 
-class cbscanner_init() {
+void scanner_class_init() {
 	method m;
 
-	if (this) {
-		return this;
-	}
+	ScannerClass = message(ClassClass, "init", "ScannerClass", ObjectClass, &super);
 
-	this = mclass(mstring("CBScanner"), NULL, &constructor, &destructor, &super);
-
-	m = mmethod(mstring("next"), &next);
-	push_back(this->methods, m);
-	m = mmethod(mstring("has_next"), &has_next);
-	push_back(this->methods, m);
-
-	return this;
+	m = mmethod("initWithFile", &initWithFile);
+	push_back(ScannerClass->methods, m);
 }
 
-void *constructor(void *v, void **p, va_list *args) {
-	CBScanner s;
-	if (!v) {
-		s = calloc(1, sizeof(struct _CBScanner));
-		assert(s);
-	} else {
-		s = (CBScanner)v;
-	}
+void *initWithFile(void *v, va_list *args) {
+	Scanner s;
+	method m;
 
-	s->type = this;
-	s->file = va_arg(*args, CBFile);
+	s = calloc(1, sizeof(struct _CBScanner));
+	assert(s);
 
-	*p = &s->parent;
+	s->class = ScannerClass;
+	s->file = va_arg(*args, File);
+
+	s->methods = create_list();
+	m = mmethod("next", &next);
+	push_back(s->methods, m);
+	m = mmethod("has_next", &has_next);
+	push_back(s->methods, m);
+
+	message(ObjectClass, "initWithPointer", &(s->parent));
 
 	return s;
 }
 
-void destructor(void *v) {
-}
-
 void *super(void *v) {
-	CBScanner s = (CBScanner)v;
-	return &s->parent;
+	Scanner s = (Scanner)v;
+	return &(s->parent);
 }
 
 void *next(void *v, va_list *args) {
-	CBScanner s = (CBScanner)v;
+	Scanner s = (Scanner)v;
 	FILE *f = s->file->file;
 
 	string buffer = calloc(1, TOKEN_BUFFER_SIZE);
@@ -80,7 +72,7 @@ void *next(void *v, va_list *args) {
 		buffer[i] = c;
 	} while (++i);
 
-	CBString token = construct("CBString", buffer);
+	String token = message(StringClass, "initWithString", buffer);
 
 	free(buffer);
 
@@ -88,7 +80,7 @@ void *next(void *v, va_list *args) {
 }
 
 void *has_next(void *v, va_list *args) {
-	CBScanner s = (CBScanner)v;
+	Scanner s = (Scanner)v;
 	FILE *f = s->file->file;
 	int has_next = 1;
 	char c = 0;
@@ -99,7 +91,7 @@ void *has_next(void *v, va_list *args) {
 	}
 	ungetc(c, f);
 
-	CBInteger retval = construct("CBInteger", has_next);
+	Integer retval = message(IntegerClass, "initWithInt", has_next);
 
 	return retval;
 }

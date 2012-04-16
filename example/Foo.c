@@ -4,13 +4,21 @@
 
 int main(int argc, char **argv) {
 	cbang_init();
-	add_class(myclass_init());
+	// myclass_init();
 
-	CBFile f = construct("CBFile", "Makefile");
-	CBScanner s = construct("CBScanner", f);
-	CBInteger i = construct("CBInteger", 1);
+	Object o = message(ObjectClass, "init");
+	message(o, "print");
+	printf("\n");
+
+	String st = message(StringClass, "initWithString", "test");
+	message(st, "print");
+	printf("\n");
+
+	File f = message(FileClass, "initWithFilename", "Makefile");
+	Scanner s = message(ScannerClass, "initWithFile", f);
+	Integer i = message(IntegerClass, "initWithInt", 1);
 	while (i->value != 0) {
-		CBString token = message(s, "next");
+		String token = message(s, "next");
 		fprintf(stderr, "%s ", token->value);
 		destruct(token);
 

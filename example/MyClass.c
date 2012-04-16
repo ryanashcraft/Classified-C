@@ -2,55 +2,49 @@
 #include "../libcbang/CBang.h"
 #include "MyClass.h"
 
-static class this = NULL;
+Class FooClass = NULL;
 
-static void *constructor(void *v, void **p, va_list *args);
-static void *super(void *v);
+static void *initWithInt(void *v, va_list *args);
 
 static void *print(void *v, va_list *args);
 
-class myclass_init() {
+void foo_class_init() {
 	method m;
 
-	if (this) {
-		return this;
-	}
+	FooClass = message(ClassClass, "init", StringClass, "FooClass");
 
-	this = mclass(mstring("MyClass"), mstring("CBString"), &constructor, NULL, &super);
-
-	m = mmethod(mstring("print"), &print);
-	push_back(this->methods, m);
-
-	return this;
+	m = mmethod(mstring("initWithInt"), &initWithInt);
+	push_back(FooClass->methods, m);
 }
 
-void *constructor(void *v, void **p, va_list *args) {
-	MyClass m;
+void *initWithInt(void *v, va_list *args) {
+	Foo f;
+	method m;
+
 	if (!v) {
-		m = malloc(sizeof(struct _MyClass));
-		assert(m);
+		f = malloc(sizeof(struct _MyClass));
+		assert(f);
 	} else {
-		m = (MyClass)v;
+		f = (Foo)v;
 	}
 
-	m->type = this;
-	m->value = va_arg(*args, int);
+	f->class = FooClass;
+	f->value = va_arg(*args, int);
 
-	*p = &m->parent;
+	f->methods = create_list();
+	m = mmethod(mstring("print"), &print);
+	push_back(f->methods, m);
 
-	return m;
-}
+	message(ObjectClass, "init", &(f->parent));
 
-void *super(void *v) {
-	MyClass m = (MyClass)v;
-	return &m->parent;
+	return f;
 }
 
 void *print(void *v, va_list *args) {
-	MyClass m = (MyClass)v;
-	printf("%d ", m->value);
+	Foo f = (Foo)v;
+	printf("%d ", f->value);
 
-	message(super(m), "print");
+	message(&(f->parent), "print");
 
 	return NULL;
 }

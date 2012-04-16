@@ -2,39 +2,36 @@
 #include "CBang.h"
 #include "CBInteger.h"
 
-static class this = NULL;
+Class IntegerClass = NULL;
 
-static void *constructor(void *v, void **p, va_list *args);
+static void *initWithInt(void *v, va_list *args);
 static void *super(void *v);
 
-class cbinteger_init() {
-	if (this) {
-		return this;
-	}
+void integer_class_init() {
+	method m;
 
-	this = mclass(mstring("CBInteger"), NULL, &constructor, NULL, &super);
+	IntegerClass = message(ClassClass, "init", "IntegerClass", ObjectClass, &super);
 
-	return this;
+	m = mmethod(mstring("initWithInt"), &initWithInt);
+	push_back(IntegerClass->methods, m);
 }
 
-void *constructor(void *v, void **p, va_list *args) {
-	CBInteger i;
-	if (!v) {
-		i = malloc(sizeof(struct _CBInteger));
-		assert(i);
-	} else {
-		i = (CBInteger)v;
-	}
+void *initWithInt(void *v, va_list *args) {
+	Integer i;
 
-	i->type = this;
+	i = malloc(sizeof(struct _CBInteger));
+	assert(i);
+
+	i->class = IntegerClass;
+	i->methods = create_list();
 	i->value = va_arg(*args, int);
 
-	*p = &i->parent;
+	message(ObjectClass, "initWithPointer", &(i->parent));
 
 	return i;
 }
 
 void *super(void *v) {
-	CBInteger i = (CBInteger)v;
-	return &i->parent;
+	Integer i = (Integer)v;
+	return &(i->parent);
 }

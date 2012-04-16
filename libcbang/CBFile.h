@@ -2,13 +2,16 @@
 #ifndef CB_FILE_H
 #define CB_FILE_H
 
+extern Class FileClass;
+
 typedef struct _CBFile {
-	class type;
+	Class class;
+	list *methods;
 	string filename;
 	FILE *file;
 	struct _CBObject parent;
-} *CBFile;
+} *File;
 
-class cbfile_init();
+void file_class_init();
 
 #endif

@@ -2,10 +2,15 @@
 #ifndef CB_OBJECT_H
 #define CB_OBJECT_H
 
-typedef struct _CBObject {
-	class type;
-} *CBObject;
+typedef struct _CBObject *Object;
 
-class cbobject_init();
+struct _CBObject {
+	Class class;
+	list *methods;
+};
+
+extern Class ObjectClass;
+
+void object_class_init();
 
 #endif
