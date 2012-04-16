@@ -56,7 +56,7 @@ void *concatenate(void *v, va_list *args) {
 	String o = (String)v;
 
 	string part_one = o->value;
-	string part_two = mstring(va_arg(*args, string));
+	string part_two = va_arg(*args, string);
 	int part_one_length = strlen(part_one);
 	int part_two_length = strlen(part_two);
 

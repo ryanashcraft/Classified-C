@@ -45,6 +45,7 @@ int main(int argc, char **argv) {
 	Foo mys = message(FooClass, "init", 77, "Foo");
 	message(mys, "concatenate", " Fighters");
 	message(mys, "print");
+	message(mys, "release");
 	printf("\n");
 
 	// CBInteger i = message(mys, "length");
