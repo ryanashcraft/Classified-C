@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 	message(st, "release");
 	printf("\n");
 
-	File f = message(FileClass, "initWithFilename", "Makefile");
+	File f = message(FileClass, "initWithFilename", "../README.md");
 	Scanner s = message(ScannerClass, "initWithFile", f);
 	Integer i = message(IntegerClass, "initWithInt", 1);
 	while (i->value != 0) {
