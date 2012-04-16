@@ -11,7 +11,7 @@ static void *release(void *v, va_list *args);
 void file_class_init() {
 	method m;
 
-	FileClass = message(ClassClass, "init", "FileClass", ObjectClass);
+	FileClass = message(ClassClass, "init", "File", ObjectClass);
 
 	m = mmethod("initWithFilename", &initWithFilename);
 	push_back(FileClass->methods, m);

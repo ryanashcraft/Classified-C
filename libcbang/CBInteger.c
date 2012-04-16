@@ -11,7 +11,7 @@ static void *release(void *v, va_list *args);
 void integer_class_init() {
 	method m;
 
-	IntegerClass = message(ClassClass, "init", "IntegerClass", ObjectClass);
+	IntegerClass = message(ClassClass, "init", "Integer", ObjectClass);
 
 	m = mmethod("initWithInt", &initWithInt);
 	push_back(IntegerClass->methods, m);

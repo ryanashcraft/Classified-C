@@ -16,7 +16,7 @@ void message_release(void *v);
 void stack_class_init() {
 	method m;
 
-	StackClass = message(ClassClass, "init", "StackClass", ObjectClass);
+	StackClass = message(ClassClass, "init", "Stack", ObjectClass);
 
 	m = mmethod("init", &init);
 	push_back(StackClass->methods, m);

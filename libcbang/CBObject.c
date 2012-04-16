@@ -12,7 +12,7 @@ static void *print(void *v, va_list *args);
 void object_class_init() {
 	method m;
 
-	ObjectClass = message(ClassClass, "init", "ObjectClass", NULL);
+	ObjectClass = message(ClassClass, "init", "Object", NULL);
 
 	m = mmethod("init", &init);
 	push_back(ObjectClass->methods, m);

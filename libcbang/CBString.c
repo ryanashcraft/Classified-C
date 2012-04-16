@@ -14,7 +14,7 @@ static void *print(void *v, va_list *args);
 void string_class_init() {
 	method m;
 
-	StringClass = message(ClassClass, "init", "StringClass", ObjectClass);
+	StringClass = message(ClassClass, "init", "String", ObjectClass);
 
 	m = mmethod("initWithString", &initWithString);
 	push_back(StringClass->methods, m);

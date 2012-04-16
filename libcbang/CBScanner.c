@@ -15,7 +15,7 @@ static void *has_next(void *v, va_list *args);
 void scanner_class_init() {
 	method m;
 
-	ScannerClass = message(ClassClass, "init", "ScannerClass", ObjectClass);
+	ScannerClass = message(ClassClass, "init", "Scanner", ObjectClass);
 
 	m = mmethod("initWithFile", &initWithFile);
 	push_back(ScannerClass->methods, m);

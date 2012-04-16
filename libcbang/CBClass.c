@@ -13,7 +13,7 @@ void class_class_init() {
 	assert(ClassClass);
 
 	ClassClass->class = ObjectClass;
-	ClassClass->name = mstring("ClassClass");
+	ClassClass->name = mstring("Class");
 	ClassClass->parent = NULL;
 
 	ClassClass->methods = create_list();

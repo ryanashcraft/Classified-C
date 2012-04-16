@@ -11,7 +11,7 @@ static void *release(void *v, va_list *args);
 void null_class_init() {
 	method m;
 
-	NullClass = message(ClassClass, "init", "NullClass", ObjectClass);
+	NullClass = message(ClassClass, "init", "Null", ObjectClass);
 
 	m = mmethod("init", &init);
 	push_back(NullClass->methods, m);
