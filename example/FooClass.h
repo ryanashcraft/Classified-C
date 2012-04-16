@@ -5,9 +5,7 @@
 extern Class FooClass;
 
 typedef struct _Foo {
-	Class class;
-	list *methods;
-	Object parent;
+	OBJECT_BASE
 
 	int value;
 } *Foo;

@@ -6,14 +6,14 @@ Class FileClass = NULL;
 
 static void *initWithFilename(void *v, va_list *args);
 
-static void *release(void *v, va_list *args);
+static void *dealloc(void *v, va_list *args);
 
 void file_class_init() {
 	FileClass = message(ClassClass, "init", "File", ObjectClass);
 
 	push_back(FileClass->methods, mmethod("initWithFilename", &initWithFilename));
 	
-	push_back(FileClass->instance_methods, mmethod("release", &release));
+	push_back(FileClass->instance_methods, mmethod("dealloc", &dealloc));
 }
 
 void *initWithFilename(void *v, va_list *args) {
@@ -22,10 +22,15 @@ void *initWithFilename(void *v, va_list *args) {
 	o = calloc(1, sizeof(struct _CBFile));
 	assert(o);
 
+	Object root = va_arg(*args, Object);
+	if (!root) {
+		root = (Object)o;
+	}
+
 	o->class = FileClass;
 	o->methods = FileClass->instance_methods;
-	o->parent = message(ObjectClass, "init");
-	o->retaincount = 1;
+	o->parent = message(ObjectClass, "init", o);
+	o->root = root;
 
 	o->filename = mstring(va_arg(*args, string));
 	o->file = fopen(o->filename, "r");
@@ -33,18 +38,11 @@ void *initWithFilename(void *v, va_list *args) {
 	return o;
 }
 
-void *release(void *v, va_list *args) {
+void *dealloc(void *v, va_list *args) {
 	File o = (File)v;
-	--o->retaincount;
-	message(o->parent, "release");
-
-	if (o->retaincount == 0) {
-		fclose(o->file);
-		free(o->filename);
-		free(o);
-
-		return NULL;
-	}
-
-	return o;
+	message(o->parent, "dealloc");
+	fclose(o->file);
+	free(o->filename);
+	free(o);
+	return NULL;
 }

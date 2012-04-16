@@ -6,7 +6,7 @@ Class StackClass = NULL;
 
 static void *init(void *v, va_list *args);
 
-static void *release(void *v, va_list *args);
+static void *dealloc(void *v, va_list *args);
 static void *push(void *v, va_list *args);
 static void *pop(void *v, va_list *args);
 static void *peek(void *v, va_list *args);
@@ -16,9 +16,11 @@ void message_release(void *v);
 void stack_class_init() {
 	StackClass = message(ClassClass, "init", "Stack", ObjectClass);
 
+	// Define class methods
 	push_back(StackClass->methods, mmethod("init", &init));
 
-	push_back(StackClass->instance_methods, mmethod("release", &release));
+	// Define instance methods
+	push_back(StackClass->instance_methods, mmethod("dealloc", &dealloc));
 	push_back(StackClass->instance_methods, mmethod("push", &push));
 	push_back(StackClass->instance_methods, mmethod("pop", &pop));
 	push_back(StackClass->instance_methods, mmethod("peek", &peek));
@@ -30,28 +32,27 @@ void *init(void *v, va_list *args) {
 	o = calloc(1, sizeof(struct _CBStack));
 	assert(o);
 
+	Object root = va_arg(*args, Object);
+	if (!root) {
+		root = (Object)o;
+	}
+
 	o->class = StackClass;
 	o->methods = StackClass->instance_methods;
-	o->parent = message(ObjectClass, "init");
-	o->retaincount = 1;
+	o->parent = message(ObjectClass, "init", root);
+	o->root = root;
 
 	o->llist = create_list();
 
 	return o;
 }
 
-void *release(void *v, va_list *args) {
+void *dealloc(void *v, va_list *args) {
 	Stack o = (Stack)v;
-	--o->retaincount;
-	message(o->parent, "release");
-
-	if (o->retaincount == 0) {
-		free_list(o->llist, &message_release);
-		free(o);
-		return NULL;
-	}
-
-	return o;
+	message(o->parent, "dealloc");
+	free_list(o->llist, &message_release);
+	free(o);
+	return NULL;
 }
 
 void message_release(void *v) {

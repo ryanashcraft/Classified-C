@@ -6,7 +6,7 @@ Class FooClass = NULL;
 
 static void *init(void *v, va_list *args);
 
-static void *release(void *v, va_list *args);
+static void *dealloc(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 
 void foo_class_init() {
@@ -17,7 +17,7 @@ void foo_class_init() {
 	push_back(FooClass->methods, mmethod("init", &init));
 
 	// Register instance methods
-	push_back(FooClass->instance_methods, mmethod("release", &release));
+	push_back(FooClass->instance_methods, mmethod("dealloc", &dealloc));
 	push_back(FooClass->instance_methods, mmethod("print", &print));
 }
 
@@ -26,24 +26,28 @@ void *init(void *v, va_list *args) {
 	Foo o = calloc(1, sizeof(struct _Foo));
 	assert(o);
 
+	Object root = va_arg(*args, Object);
+	if (!root) {
+		root = (Object)o;
+	}
+
+	int value = va_arg(*args, int);
+
 	// Set instance variables
 	o->class = FooClass;
 	o->methods = FooClass->instance_methods;
-	o->value = va_arg(*args, int);
-	o->parent = message(StringClass, "initWithString", va_arg(*args, string));
+	o->parent = message(StringClass, "initWithString", root, va_arg(*args, string));
+	o->root = root;
+
+	o->value = value;
 
 	return o;
 }
 
-void *release(void *v, va_list *args) {
+void *dealloc(void *v, va_list *args) {
 	Foo o = (Foo)v;
-
-	// Release parent
-	message(o->parent, "release");
-
-	// Free
-	free(o);
-	
+	message(o->parent, "dealloc");
+	free(o);	
 	return o;
 }
 

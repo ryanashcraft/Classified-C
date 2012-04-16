@@ -8,7 +8,7 @@ Class ScannerClass = NULL;
 
 static void *initWithFile(void *v, va_list *args);
 
-static void *release(void *v, va_list *args);
+static void *dealloc(void *v, va_list *args);
 static void *next(void *v, va_list *args);
 static void *has_next(void *v, va_list *args);
 
@@ -17,7 +17,7 @@ void scanner_class_init() {
 
 	push_back(ScannerClass->methods, mmethod("initWithFile", &initWithFile));
 
-	push_back(ScannerClass->instance_methods, mmethod("release", &release));
+	push_back(ScannerClass->instance_methods, mmethod("dealloc", &dealloc));
 	push_back(ScannerClass->instance_methods, mmethod("next", &next));
 	push_back(ScannerClass->instance_methods, mmethod("has_next", &has_next));
 }
@@ -28,27 +28,26 @@ void *initWithFile(void *v, va_list *args) {
 	o = calloc(1, sizeof(struct _CBScanner));
 	assert(o);
 
+	Object root = va_arg(*args, Object);
+	if (!root) {
+		root = (Object)o;
+	}
+
 	o->class = ScannerClass;
 	o->methods = ScannerClass->instance_methods;
-	o->parent = message(ObjectClass, "init");
-	o->retaincount = 1;
+	o->parent = message(ObjectClass, "init", root);
+	o->root = root;
 
 	o->file = va_arg(*args, File);
 
 	return o;
 }
 
-void *release(void *v, va_list *args) {
+void *dealloc(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
-	--o->retaincount;
-	message(o->parent, "release");
-
-	if (o->retaincount == 0) {
-		free(o);
-		return NULL;
-	}
-
-	return o;
+	message(o->parent, "dealloc");
+	free(o);
+	return NULL;
 }
 
 void *next(void *v, va_list *args) {
@@ -76,7 +75,7 @@ void *next(void *v, va_list *args) {
 		buffer[i] = c;
 	} while (++i);
 
-	String token = message(StringClass, "initWithString", buffer);
+	String token = message(StringClass, "initWithString", NULL, buffer);
 
 	free(buffer);
 
@@ -95,7 +94,7 @@ void *has_next(void *v, va_list *args) {
 	}
 	ungetc(c, f);
 
-	Integer retval = message(IntegerClass, "initWithInt", has_next);
+	Integer retval = message(IntegerClass, "initWithInt", NULL, has_next);
 
 	return retval;
 }
