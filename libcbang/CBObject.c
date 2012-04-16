@@ -21,8 +21,6 @@ void object_class_init() {
 	push_back(ObjectClass->instance_methods, m);
 	m = mmethod("print", &print);
 	push_back(ObjectClass->instance_methods, m);
-
-	ObjectClass->parent_class = NULL;
 }
 
 void *init(void *v, va_list *args) {
