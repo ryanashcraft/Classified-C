@@ -13,19 +13,13 @@ static void *next(void *v, va_list *args);
 static void *has_next(void *v, va_list *args);
 
 void scanner_class_init() {
-	method m;
-
 	ScannerClass = message(ClassClass, "init", "Scanner", ObjectClass);
 
-	m = mmethod("initWithFile", &initWithFile);
-	push_back(ScannerClass->methods, m);
+	push_back(ScannerClass->methods, mmethod("initWithFile", &initWithFile));
 
-	m = mmethod("release", &release);
-	push_back(ScannerClass->instance_methods, m);
-	m = mmethod("next", &next);
-	push_back(ScannerClass->instance_methods, m);
-	m = mmethod("has_next", &has_next);
-	push_back(ScannerClass->instance_methods, m);
+	push_back(ScannerClass->instance_methods, mmethod("release", &release));
+	push_back(ScannerClass->instance_methods, mmethod("next", &next));
+	push_back(ScannerClass->instance_methods, mmethod("has_next", &has_next));
 }
 
 void *initWithFile(void *v, va_list *args) {

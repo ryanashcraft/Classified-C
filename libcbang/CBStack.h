@@ -8,6 +8,7 @@ typedef struct _CBStack {
 	Class class;
 	list *methods;
 	Object parent;
+	
 	list *llist;
 } *Stack;
 

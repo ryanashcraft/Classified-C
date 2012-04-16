@@ -9,15 +9,11 @@ static void *init(void *v, va_list *args);
 static void *release(void *v, va_list *args);
 
 void null_class_init() {
-	method m;
-
 	NullClass = message(ClassClass, "init", "Null", ObjectClass);
 
-	m = mmethod("init", &init);
-	push_back(NullClass->methods, m);
-
-	m = mmethod("release", &release);
-	push_back(NullClass->instance_methods, m);
+	push_back(NullClass->methods, mmethod("init", &init));
+	
+	push_back(NullClass->instance_methods, mmethod("release", &release));
 }
 
 void *init(void *v, va_list *args) {

@@ -8,6 +8,7 @@ typedef struct _CBScanner {
 	Class class;
 	list *methods;
 	Object parent;
+	
 	File file;
 } *Scanner;
 

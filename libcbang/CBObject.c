@@ -10,17 +10,12 @@ static void *release(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 
 void object_class_init() {
-	method m;
-
 	ObjectClass = message(ClassClass, "init", "Object", NULL);
 
-	m = mmethod("init", &init);
-	push_back(ObjectClass->methods, m);
+	push_back(ObjectClass->methods, mmethod("init", &init));
 
-	m = mmethod("release", &release);
-	push_back(ObjectClass->instance_methods, m);
-	m = mmethod("print", &print);
-	push_back(ObjectClass->instance_methods, m);
+	push_back(ObjectClass->instance_methods, mmethod("release", &release));
+	push_back(ObjectClass->instance_methods, mmethod("print", &print));
 }
 
 void *init(void *v, va_list *args) {

@@ -8,6 +8,7 @@ typedef struct _CBString {
 	Class class;
 	list *methods;
 	Object parent;
+	
 	string value;
 } *String;
 

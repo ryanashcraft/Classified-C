@@ -9,15 +9,11 @@ static void *initWithFilename(void *v, va_list *args);
 static void *release(void *v, va_list *args);
 
 void file_class_init() {
-	method m;
-
 	FileClass = message(ClassClass, "init", "File", ObjectClass);
 
-	m = mmethod("initWithFilename", &initWithFilename);
-	push_back(FileClass->methods, m);
-
-	m = mmethod("release", &release);
-	push_back(FileClass->instance_methods, m);
+	push_back(FileClass->methods, mmethod("initWithFilename", &initWithFilename));
+	
+	push_back(FileClass->instance_methods, mmethod("release", &release));
 }
 
 void *initWithFilename(void *v, va_list *args) {

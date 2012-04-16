@@ -8,6 +8,7 @@ typedef struct _CBFile {
 	Class class;
 	list *methods;
 	Object parent;
+	
 	string filename;
 	FILE *file;
 } *File;

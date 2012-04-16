@@ -9,15 +9,11 @@ static void *initWithInt(void *v, va_list *args);
 static void *release(void *v, va_list *args);
 
 void integer_class_init() {
-	method m;
-
 	IntegerClass = message(ClassClass, "init", "Integer", ObjectClass);
 
-	m = mmethod("initWithInt", &initWithInt);
-	push_back(IntegerClass->methods, m);
-
-	m = mmethod("release", &release);
-	push_back(IntegerClass->instance_methods, m);
+	push_back(IntegerClass->methods, mmethod("initWithInt", &initWithInt));
+	
+	push_back(IntegerClass->instance_methods, mmethod("release", &release));
 }
 
 void *initWithInt(void *v, va_list *args) {

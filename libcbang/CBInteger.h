@@ -8,6 +8,7 @@ typedef struct _CBInteger {
 	Class class;
 	list *methods;
 	Object parent;
+	
 	int value;
 } *Integer;
 

@@ -12,21 +12,14 @@ static void *length(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 
 void string_class_init() {
-	method m;
-
 	StringClass = message(ClassClass, "init", "String", ObjectClass);
 
-	m = mmethod("initWithString", &initWithString);
-	push_back(StringClass->methods, m);
+	push_back(StringClass->methods, mmethod("initWithString", &initWithString));
 
-	m = mmethod("release", &release);
-	push_back(StringClass->instance_methods, m);
-	m = mmethod("concatenate", &concatenate);
-	push_back(StringClass->instance_methods, m);
-	m = mmethod("length", &length);
-	push_back(StringClass->instance_methods, m);
-	m = mmethod("print", &print);
-	push_back(StringClass->instance_methods, m);
+	push_back(StringClass->instance_methods, mmethod("release", &release));
+	push_back(StringClass->instance_methods, mmethod("concatenate", &concatenate));
+	push_back(StringClass->instance_methods, mmethod("length", &length));
+	push_back(StringClass->instance_methods, mmethod("print", &print));
 }
 
 void *initWithString(void *v, va_list *args) {

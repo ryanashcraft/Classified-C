@@ -14,21 +14,14 @@ static void *peek(void *v, va_list *args);
 void message_release(void *v);
 
 void stack_class_init() {
-	method m;
-
 	StackClass = message(ClassClass, "init", "Stack", ObjectClass);
 
-	m = mmethod("init", &init);
-	push_back(StackClass->methods, m);
+	push_back(StackClass->methods, mmethod("init", &init));
 
-	m = mmethod("release", &release);
-	push_back(StackClass->instance_methods, m);
-	m = mmethod("push", &push);
-	push_back(StackClass->instance_methods, m);
-	m = mmethod("pop", &pop);
-	push_back(StackClass->instance_methods, m);
-	m = mmethod("peek", &peek);
-	push_back(StackClass->instance_methods, m);
+	push_back(StackClass->instance_methods, mmethod("release", &release));
+	push_back(StackClass->instance_methods, mmethod("push", &push));
+	push_back(StackClass->instance_methods, mmethod("pop", &pop));
+	push_back(StackClass->instance_methods, mmethod("peek", &peek));
 }
 
 void *init(void *v, va_list *args) {
