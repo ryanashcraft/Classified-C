@@ -8,10 +8,12 @@ int main(int argc, char **argv) {
 
 	Object o = message(ObjectClass, "init");
 	message(o, "print");
+	message(o, "release");
 	printf("\n");
 
 	String st = message(StringClass, "initWithString", "test");
 	message(st, "print");
+	message(st, "release");
 	printf("\n");
 
 	File f = message(FileClass, "initWithFilename", "Makefile");
