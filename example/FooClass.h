@@ -7,9 +7,9 @@ extern Class FooClass;
 typedef struct _MyClass {
 	Class class;
 	list *methods;
+	Object parent;
 	string name;
 	int value;
-	struct _CBString parent;
 } *Foo;
 
 void foo_class_init();

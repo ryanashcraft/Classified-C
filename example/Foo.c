@@ -1,10 +1,10 @@
 
 #include "../libcbang/CBang.h"
-#include "MyClass.h"
+#include "FooClass.h"
 
 int main(int argc, char **argv) {
 	cbang_init();
-	// myclass_init();
+	foo_class_init();
 
 	Object o = message(ObjectClass, "init");
 	message(o, "print");
@@ -42,10 +42,10 @@ int main(int argc, char **argv) {
 	// printf("\n");
 	// destruct(s);
 
-	// MyClass mys = construct("MyClass", 77, "Foo");
-	// message(mys, "concatenate", " Fighters");
-	// message(mys, "print");
-	// printf("\n");
+	Foo mys = message(FooClass, "init", 77, "Foo");
+	message(mys, "concatenate", " Fighters");
+	message(mys, "print");
+	printf("\n");
 
 	// CBInteger i = message(mys, "length");
 	// printf("Length of string: %d\n", i->value);
