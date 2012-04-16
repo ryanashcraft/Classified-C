@@ -50,6 +50,9 @@ int main(int argc, char **argv) {
 	i = message(mys, "length");
 	printf("Length of string: %d\n", i->value);
 	i = message(i, "release");
+	mys = message(mys, "retain");
+	mys = message(mys, "release");
+	i = message(mys, "length");
 	mys = message(mys, "release");
 
 	Stack stack = message(StackClass, "init", NULL);

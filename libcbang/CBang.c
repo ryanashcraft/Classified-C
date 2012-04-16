@@ -63,7 +63,7 @@ void *message(void *v, string message, ...) {
 
 	// If the method is never found, then error and exit out
 	if (!the_method) {
-		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", o->class->name, message);
+		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", ((Object)v)->class->name, message);
 		exit(EXIT_FAILURE);
 	}
 
