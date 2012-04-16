@@ -31,9 +31,10 @@ void *init(void *v, va_list *args) {
 
 	o->class = FooClass;
 	o->methods = FooClass->instance_methods;
-	o->parent = message(StringClass, "initWithString", args);
 
 	o->value = va_arg(*args, int);
+
+	o->parent = message(StringClass, "initWithString", va_arg(*args, string));
 
 	return o;
 }
