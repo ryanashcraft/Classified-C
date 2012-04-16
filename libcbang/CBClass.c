@@ -26,11 +26,10 @@ void *init(void *v, va_list *args) {
 	assert(c);
 
 	c->class = ClassClass;
-	
 	c->methods = create_list();
+	c->parent = NULL;
 	c->name = mstring(va_arg(*args, string));
 	c->parent_class = va_arg(*args, Class);
-	c->super = va_arg(*args, spointer);
 
 	return c;
 }

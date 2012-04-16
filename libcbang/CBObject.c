@@ -6,23 +6,14 @@ Class ObjectClass = NULL;
 
 static void *init(void *v, va_list *args);
 static void *initWithPointer(void *v, va_list *args);
-static void *super(void *v);
 
-static void *print(void *v, va_list *args);
 static void *release(void *v, va_list *args);
+static void *print(void *v, va_list *args);
 
 void object_class_init() {
 	method m;
 
-
-	// ObjectClass->class = ObjectClass;
-	// ObjectClass->name = mstring("ObjectClass");
-
-	// ObjectClass = malloc(sizeof(struct _CBObject));
-	// assert(ObjectClass);
-	// ObjectClass->class = ObjectClass;
-
-	ObjectClass = message(ClassClass, "init", "ObjectClass", NULL, &super);
+	ObjectClass = message(ClassClass, "init", "ObjectClass", NULL);
 
 	ObjectClass->methods = create_list();
 	m = mmethod("initWithPointer", &initWithPointer);
@@ -46,6 +37,8 @@ void *init(void *v, va_list *args) {
 	m = mmethod("print", &print);
 	push_back(o->methods, m);
 
+	o->parent = NULL;
+
 	return o;
 }
 
@@ -64,8 +57,11 @@ void *initWithPointer(void *v, va_list *args) {
 	return o;
 }
 
-void *super(void *v) {
-	return NULL;
+void *release(void *v, va_list *args) {
+	Object o = (Object)v;
+	free_list(o->methods, &free);
+	free(o);
+	return o;
 }
 
 void *print(void *v, va_list *args) {
@@ -73,9 +69,3 @@ void *print(void *v, va_list *args) {
 	return NULL;
 }
 
-void *release(void *v, va_list *args) {
-	Object o = (Object)v;
-	free_list(o->methods, &free);
-	// free(o);
-	return o;
-}

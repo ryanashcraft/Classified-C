@@ -5,9 +5,9 @@
 struct _CBClass {
 	Class class;
 	list *methods;
+	Object parent;
 	string name;
 	Class parent_class;
-	spointer super;
 };
 
 extern Class ClassClass;

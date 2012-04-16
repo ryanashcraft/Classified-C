@@ -7,6 +7,7 @@ typedef struct _CBObject *Object;
 struct _CBObject {
 	Class class;
 	list *methods;
+	Object parent;
 };
 
 extern Class ObjectClass;

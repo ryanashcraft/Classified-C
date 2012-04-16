@@ -7,8 +7,8 @@ extern Class ScannerClass;
 typedef struct _CBScanner {
 	Class class;
 	list *methods;
+	Object parent;
 	File file;
-	struct _CBObject parent;
 } *Scanner;
 
 void scanner_class_init();

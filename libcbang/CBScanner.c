@@ -7,15 +7,15 @@
 Class ScannerClass = NULL;
 
 static void *initWithFile(void *v, va_list *args);
-static void *super(void *v);
 
+static void *release(void *v, va_list *args);
 static void *next(void *v, va_list *args);
 static void *has_next(void *v, va_list *args);
 
 void scanner_class_init() {
 	method m;
 
-	ScannerClass = message(ClassClass, "init", "ScannerClass", ObjectClass, &super);
+	ScannerClass = message(ClassClass, "init", "ScannerClass", ObjectClass);
 
 	m = mmethod("initWithFile", &initWithFile);
 	push_back(ScannerClass->methods, m);
@@ -32,19 +32,24 @@ void *initWithFile(void *v, va_list *args) {
 	s->file = va_arg(*args, File);
 
 	s->methods = create_list();
+	m = mmethod("release", &release);
+	push_back(s->methods, m);
 	m = mmethod("next", &next);
 	push_back(s->methods, m);
 	m = mmethod("has_next", &has_next);
 	push_back(s->methods, m);
 
-	message(ObjectClass, "initWithPointer", &(s->parent));
+	s->parent = message(ObjectClass, "init");
 
 	return s;
 }
 
-void *super(void *v) {
+void *release(void *v, va_list *args) {
 	Scanner s = (Scanner)v;
-	return &(s->parent);
+	message(s->parent, "release");
+	free_list(s->methods, &free);
+	free(s);
+	return s;
 }
 
 void *next(void *v, va_list *args) {

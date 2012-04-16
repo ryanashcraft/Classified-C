@@ -7,8 +7,8 @@ extern Class StringClass;
 typedef struct _CBString {
 	Class class;
 	list *methods;
+	Object parent;
 	string value;
-	struct _CBObject parent;
 } *String;
 
 void string_class_init();

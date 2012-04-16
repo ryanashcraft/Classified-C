@@ -7,8 +7,8 @@ extern Class IntegerClass;
 typedef struct _CBInteger {
 	Class class;
 	list *methods;
+	Object parent;
 	int value;
-	struct _CBObject parent;
 } *Integer;
 
 void integer_class_init();

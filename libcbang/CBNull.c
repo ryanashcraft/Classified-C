@@ -5,14 +5,13 @@
 Class NullClass = NULL;
 
 static void *init(void *v, va_list *args);
-static void *super(void *v);
 
 static void *release(void *v, va_list *args);
 
 void null_class_init() {
 	method m;
 
-	NullClass = message(ClassClass, "init", "NullClass", ObjectClass, &super);
+	NullClass = message(ClassClass, "init", "NullClass", ObjectClass);
 
 	m = mmethod("init", &init);
 	push_back(NullClass->methods, m);
@@ -31,19 +30,14 @@ void *init(void *v, va_list *args) {
 	m = mmethod("release", &release);
 	push_back(n->methods, m);
 
-	message(ObjectClass, "initWithPointer", &(n->parent));
+	n->parent = message(ObjectClass, "init");
 
 	return n;
 }
 
-void *super(void *v) {
-	Null n = (Null)v;
-	return &(n->parent);
-}
-
 void *release(void *v, va_list *args) {
 	Null n = (Null)v;
-	message(super(n), "release");
+	message(n->parent, "release");
 	free_list(n->methods, free);
 	free(n);
 	return n;

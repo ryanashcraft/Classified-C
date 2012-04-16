@@ -56,8 +56,8 @@ void *message(void *v, string message, ...) {
 
 	// While the method isn't found and there is a parent, then look in the
 	// parent's type
-	while (!the_method && o->class->parent_class != NULL) {
-		o = o->class->super(o);
+	while (!the_method && o->parent != NULL) {
+		o = o->parent;
 		the_method = get_first_occurrence(o->methods, method_name_equals, message);
 	}
 

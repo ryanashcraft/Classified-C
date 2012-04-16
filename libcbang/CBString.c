@@ -5,7 +5,6 @@
 Class StringClass = NULL;
 
 static void *initWithString(void *v, va_list *args);
-static void *super(void *v);
 
 static void *release(void *v, va_list *args);
 static void *concatenate(void *v, va_list *args);
@@ -15,7 +14,7 @@ static void *print(void *v, va_list *args);
 void string_class_init() {
 	method m;
 
-	StringClass = message(ClassClass, "init", "StringClass", ObjectClass, &super);
+	StringClass = message(ClassClass, "init", "StringClass", ObjectClass);
 
 	m = mmethod("initWithString", &initWithString);
 	push_back(StringClass->methods, m);
@@ -41,20 +40,15 @@ void *initWithString(void *v, va_list *args) {
 	m = mmethod("print", &print);
 	push_back(s->methods, m);
 
-	message(ObjectClass, "initWithPointer", &(s->parent));
+	s->parent = message(ObjectClass, "init");
 
 	return s;
-}
-
-void *super(void *v) {
-	Integer i = (Integer)v;
-	return &(i->parent);
 }
 
 void *release(void *v, va_list *args) {
 	String s = (String)v;
 	free(s->value);
-	message(super(s), "release");
+	message(s->parent, "release");
 	free_list(s->methods, &free);
 	free(s);
 	return s;

@@ -5,7 +5,6 @@
 Class StackClass = NULL;
 
 static void *init(void *v, va_list *args);
-static void *super(void *v);
 
 static void *release(void *v, va_list *args);
 static void *push(void *v, va_list *args);
@@ -17,7 +16,7 @@ void message_release(void *v);
 void stack_class_init() {
 	method m;
 
-	StackClass = message(ClassClass, "init", "StackClass", ObjectClass, &super);
+	StackClass = message(ClassClass, "init", "StackClass", ObjectClass);
 
 	m = mmethod("init", &init);
 	push_back(StackClass->methods, m);
@@ -43,21 +42,16 @@ void *init(void *v, va_list *args) {
 	m = mmethod("peek", &peek);
 	push_back(s->methods, m);
 
-	message(ObjectClass, "initWithPointer", &(s->parent));
+	s->parent = message(ObjectClass, "init");
 
 	return s;
 }
 
-void *super(void *v) {
-	Stack s = (Stack)v;
-	return &(s->parent);
-}
-
 void *release(void *v, va_list *args) {
 	Stack s = (Stack)v;
-	message(super(s), "release");
+	message(s->parent, "release");
 	free_list(s->methods, &free);
-	empty_list(s->llist, &message_release);
+	free_list(s->llist, &message_release);
 	free(s);
 	return s;
 }

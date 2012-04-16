@@ -7,8 +7,8 @@ extern Class StackClass;
 typedef struct _CBStack {
 	Class class;
 	list *methods;
+	Object parent;
 	list *llist;
-	struct _CBObject parent;
 } *Stack;
 
 void stack_class_init();

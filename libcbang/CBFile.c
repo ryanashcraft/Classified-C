@@ -5,14 +5,13 @@
 Class FileClass = NULL;
 
 static void *initWithFilename(void *v, va_list *args);
-static void *super(void *v);
 
 static void *release(void *v, va_list *args);
 
 void file_class_init() {
 	method m;
 
-	FileClass = message(ClassClass, "init", "FileClass", ObjectClass, &super);
+	FileClass = message(ClassClass, "init", "FileClass", ObjectClass);
 
 	m = mmethod("initWithFilename", &initWithFilename);
 	push_back(FileClass->methods, m);
@@ -33,21 +32,16 @@ void *initWithFilename(void *v, va_list *args) {
 	m = mmethod("release", &release);
 	push_back(f->methods, m);
 
-	message(ObjectClass, "initWithPointer", &(f->parent));
+	f->parent = message(ObjectClass, "init");
 
 	return f;
-}
-
-void *super(void *v) {
-	File f = (File)v;
-	return &(f->parent);
 }
 
 void *release(void *v, va_list *args) {
 	File f = (File)v;
 	fclose(f->file);
 	free(f->filename);
-	message(super(f), "release");
+	message(f->parent, "release");
 	free_list(f->methods, free);
 	free(f);
 	return f;

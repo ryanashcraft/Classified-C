@@ -7,7 +7,7 @@ extern Class NullClass;
 typedef struct _CBNull {
 	Class class;
 	list *methods;
-	struct _CBObject parent;
+	Object parent;
 } *Null;
 
 void null_class_init();
