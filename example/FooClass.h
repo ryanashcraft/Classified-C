@@ -4,11 +4,11 @@
 
 extern Class FooClass;
 
-typedef struct _MyClass {
+typedef struct _Foo {
 	Class class;
 	list *methods;
 	Object parent;
-	string name;
+
 	int value;
 } *Foo;
 
