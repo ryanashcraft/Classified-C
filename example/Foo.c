@@ -32,26 +32,25 @@ int main(int argc, char **argv) {
 	message(f, "release");
 	printf("\n");
 
-	// CBNull n = construct("CBNull");
-	// message(n, "print");
-	// printf("\n");
-	// destruct(n);
+	Null n = message(NullClass, "init");
+	message(n, "print");
+	printf("\n");
+	message(n, "release");
 
-	// CBString s = construct("CBString", "OH HAI!");
-	// message(s, "print");
-	// printf("\n");
-	// destruct(s);
+	String ohhai = message(StringClass, "initWithString", "OH HAI!");
+	message(ohhai, "print");
+	printf("\n");
+	message(ohhai, "release");
 
 	Foo mys = message(FooClass, "init", 77, "Foo");
 	message(mys, "concatenate", " Fighters");
 	message(mys, "print");
-	message(mys, "release");
 	printf("\n");
 
-	// CBInteger i = message(mys, "length");
-	// printf("Length of string: %d\n", i->value);
-	// destruct(i);
-	// destruct(mys);
+	i = message(mys, "length");
+	printf("Length of string: %d\n", i->value);
+	message(i, "release");
+	message(mys, "release");
 
 	Stack stack = message(StackClass, "init");
 	message(stack, "push", message(StringClass, "initWithString", "Ryan"));
