@@ -20,40 +20,38 @@ void stack_class_init() {
 
 	m = mmethod("init", &init);
 	push_back(StackClass->methods, m);
+
+	m = mmethod("release", &release);
+	push_back(StackClass->instance_methods, m);
+	m = mmethod("push", &push);
+	push_back(StackClass->instance_methods, m);
+	m = mmethod("pop", &pop);
+	push_back(StackClass->instance_methods, m);
+	m = mmethod("peek", &peek);
+	push_back(StackClass->instance_methods, m);
 }
 
 void *init(void *v, va_list *args) {
-	Stack s;
-	method m;
+	Stack o;
 
-	s = calloc(1, sizeof(struct _CBStack));
-	assert(s);
+	o = calloc(1, sizeof(struct _CBStack));
+	assert(o);
 
-	s->class = StackClass;
-	s->llist = create_list();
+	o->class = StackClass;
+	o->methods = StackClass->instance_methods;
+	o->parent = message(ObjectClass, "init");
 
-	s->methods = create_list();
-	m = mmethod("release", &release);
-	push_back(s->methods, m);
-	m = mmethod("push", &push);
-	push_back(s->methods, m);
-	m = mmethod("pop", &pop);
-	push_back(s->methods, m);
-	m = mmethod("peek", &peek);
-	push_back(s->methods, m);
+	o->llist = create_list();
 
-	s->parent = message(ObjectClass, "init");
-
-	return s;
+	return o;
 }
 
 void *release(void *v, va_list *args) {
-	Stack s = (Stack)v;
-	message(s->parent, "release");
-	free_list(s->methods, &free);
-	free_list(s->llist, &message_release);
-	free(s);
-	return s;
+	Stack o = (Stack)v;
+	message(o->parent, "release");
+	free_list(o->llist, &message_release);
+	free(o);
+	return o;
 }
 
 void message_release(void *v) {
@@ -61,30 +59,30 @@ void message_release(void *v) {
 }
 
 void *push(void *v, va_list *args) {
-	Stack s = (Stack)v;
+	Stack o = (Stack)v;
 
 	void *data = va_arg(*args, void *);
-	push_front(s->llist, data);
+	push_front(o->llist, data);
 	return NULL;
 }
 
 void *pop(void *v, va_list *args) {
-	Stack s = (Stack)v;
+	Stack o = (Stack)v;
 
-	if (is_empty(s->llist)) {
+	if (is_empty(o->llist)) {
 		return NULL;
 	}
 
-	void *retval = peek(s, NULL);
-	remove_front(s->llist, &free);
+	void *retval = peek(o, NULL);
+	remove_front(o->llist, &free);
 	return retval;
 }
 
 void *peek(void *v, va_list *args) {
-	Stack s = (Stack)v;
+	Stack o = (Stack)v;
 
-	if (is_empty(s->llist)) {
+	if (is_empty(o->llist)) {
 		return NULL;
 	}
-	return front(s->llist);
+	return front(o->llist);
 }

@@ -15,34 +15,32 @@ void file_class_init() {
 
 	m = mmethod("initWithFilename", &initWithFilename);
 	push_back(FileClass->methods, m);
+
+	m = mmethod("release", &release);
+	push_back(FileClass->instance_methods, m);
 }
 
 void *initWithFilename(void *v, va_list *args) {
-	File f;
-	method m;
+	File o;
 
-	f = calloc(1, sizeof(struct _CBFile));
-	assert(f);
+	o = calloc(1, sizeof(struct _CBFile));
+	assert(o);
 
-	f->class = FileClass;
-	f->filename = mstring(va_arg(*args, string));
-	f->file = fopen(f->filename, "r");
-	
-	f->methods = create_list();
-	m = mmethod("release", &release);
-	push_back(f->methods, m);
+	o->class = FileClass;
+	o->methods = FileClass->instance_methods;
+	o->parent = message(ObjectClass, "init");
 
-	f->parent = message(ObjectClass, "init");
+	o->filename = mstring(va_arg(*args, string));
+	o->file = fopen(o->filename, "r");
 
-	return f;
+	return o;
 }
 
 void *release(void *v, va_list *args) {
-	File f = (File)v;
-	fclose(f->file);
-	free(f->filename);
-	message(f->parent, "release");
-	free_list(f->methods, free);
-	free(f);
-	return f;
+	File o = (File)v;
+	fclose(o->file);
+	free(o->filename);
+	message(o->parent, "release");
+	free(o);
+	return o;
 }

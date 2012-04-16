@@ -19,42 +19,40 @@ void scanner_class_init() {
 
 	m = mmethod("initWithFile", &initWithFile);
 	push_back(ScannerClass->methods, m);
+
+	m = mmethod("release", &release);
+	push_back(ScannerClass->instance_methods, m);
+	m = mmethod("next", &next);
+	push_back(ScannerClass->instance_methods, m);
+	m = mmethod("has_next", &has_next);
+	push_back(ScannerClass->instance_methods, m);
 }
 
 void *initWithFile(void *v, va_list *args) {
-	Scanner s;
-	method m;
+	Scanner o;
 
-	s = calloc(1, sizeof(struct _CBScanner));
-	assert(s);
+	o = calloc(1, sizeof(struct _CBScanner));
+	assert(o);
 
-	s->class = ScannerClass;
-	s->file = va_arg(*args, File);
+	o->class = ScannerClass;
+	o->methods = ScannerClass->instance_methods;
+	o->parent = message(ObjectClass, "init");
 
-	s->methods = create_list();
-	m = mmethod("release", &release);
-	push_back(s->methods, m);
-	m = mmethod("next", &next);
-	push_back(s->methods, m);
-	m = mmethod("has_next", &has_next);
-	push_back(s->methods, m);
+	o->file = va_arg(*args, File);
 
-	s->parent = message(ObjectClass, "init");
-
-	return s;
+	return o;
 }
 
 void *release(void *v, va_list *args) {
-	Scanner s = (Scanner)v;
-	message(s->parent, "release");
-	free_list(s->methods, &free);
-	free(s);
-	return s;
+	Scanner o = (Scanner)v;
+	message(o->parent, "release");
+	free(o);
+	return o;
 }
 
 void *next(void *v, va_list *args) {
-	Scanner s = (Scanner)v;
-	FILE *f = s->file->file;
+	Scanner o = (Scanner)v;
+	FILE *f = o->file->file;
 
 	string buffer = calloc(1, TOKEN_BUFFER_SIZE);
 	assert(buffer);
@@ -85,8 +83,8 @@ void *next(void *v, va_list *args) {
 }
 
 void *has_next(void *v, va_list *args) {
-	Scanner s = (Scanner)v;
-	FILE *f = s->file->file;
+	Scanner o = (Scanner)v;
+	FILE *f = o->file->file;
 	int has_next = 1;
 	char c = 0;
 

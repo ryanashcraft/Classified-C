@@ -6,6 +6,7 @@ struct _CBClass {
 	Class class;
 	list *methods;
 	Object parent;
+	list *instance_methods;
 	string name;
 	Class parent_class;
 };

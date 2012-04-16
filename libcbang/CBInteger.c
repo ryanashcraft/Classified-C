@@ -15,30 +15,29 @@ void integer_class_init() {
 
 	m = mmethod("initWithInt", &initWithInt);
 	push_back(IntegerClass->methods, m);
+
+	m = mmethod("release", &release);
+	push_back(IntegerClass->instance_methods, m);
 }
 
 void *initWithInt(void *v, va_list *args) {
-	Integer i;
-	method m;
+	Integer o;
 
-	i = malloc(sizeof(struct _CBInteger));
-	assert(i);
+	o = calloc(1, sizeof(struct _CBInteger));
+	assert(o);
 
-	i->class = IntegerClass;
-	i->value = va_arg(*args, int);
+	o->class = IntegerClass;
+	o->methods = IntegerClass->instance_methods;
+	o->parent = message(ObjectClass, "init");
 
-	i->methods = create_list();
-	m = mmethod("release", &release);
+	o->value = va_arg(*args, int);
 
-	i->parent = message(ObjectClass, "init");
-
-	return i;
+	return o;
 }
 
 void *release(void *v, va_list *args) {
-	Integer i = (Integer)v;
-	message(i->parent, "release");
-	free_list(i->methods, &free);
-	free(i);
-	return i;
+	Integer o = (Integer)v;
+	message(o->parent, "release");
+	free(o);
+	return o;
 }

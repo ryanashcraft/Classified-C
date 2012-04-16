@@ -15,30 +15,27 @@ void null_class_init() {
 
 	m = mmethod("init", &init);
 	push_back(NullClass->methods, m);
+
+	m = mmethod("release", &release);
+	push_back(NullClass->instance_methods, m);
 }
 
 void *init(void *v, va_list *args) {
-	Null n;
-	method m;
+	Null o;
 
-	n = calloc(1, sizeof(struct _CBNull));
-	assert(n);
+	o = calloc(1, sizeof(struct _CBNull));
+	assert(o);
 
-	n->class = NullClass;
+	o->class = NullClass;
+	o->methods = NullClass->instance_methods;
+	o->parent = message(ObjectClass, "init");
 
-	n->methods = create_list();
-	m = mmethod("release", &release);
-	push_back(n->methods, m);
-
-	n->parent = message(ObjectClass, "init");
-
-	return n;
+	return o;
 }
 
 void *release(void *v, va_list *args) {
-	Null n = (Null)v;
-	message(n->parent, "release");
-	free_list(n->methods, free);
-	free(n);
-	return n;
+	Null o = (Null)v;
+	message(o->parent, "release");
+	free(o);
+	return o;
 }
