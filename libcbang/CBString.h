@@ -4,12 +4,6 @@
 
 extern Class StringClass;
 
-typedef struct _CBString {
-	OBJECT_BASE
-	
-	string value;
-} *String;
-
 void string_class_init();
 
 #endif

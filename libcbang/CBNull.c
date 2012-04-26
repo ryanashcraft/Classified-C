@@ -4,6 +4,10 @@
 
 Class NullClass = NULL;
 
+typedef struct _CBNull {
+	OBJECT_BASE
+} *Null;
+
 static void *init(void *v, va_list *args);
 
 static void *dealloc(void *v, va_list *args);

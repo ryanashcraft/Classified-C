@@ -6,6 +6,12 @@
 
 Class ScannerClass = NULL;
 
+typedef struct _CBScanner {
+	OBJECT_BASE
+	
+	var file;
+} *Scanner;
+
 static void *initWithFile(void *v, va_list *args);
 
 static void *dealloc(void *v, va_list *args);
@@ -38,7 +44,7 @@ void *initWithFile(void *v, va_list *args) {
 	o->parent = message(ObjectClass, "init", root);
 	o->root = root;
 
-	o->file = va_arg(*args, File);
+	o->file = va_arg(*args, var);
 
 	return o;
 }
@@ -52,7 +58,7 @@ void *dealloc(void *v, va_list *args) {
 
 void *next(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
-	FILE *f = o->file->file;
+	FILE *f = message(o->file, "file");
 
 	string buffer = calloc(1, TOKEN_BUFFER_SIZE);
 	assert(buffer);
@@ -75,7 +81,7 @@ void *next(void *v, va_list *args) {
 		buffer[i] = c;
 	} while (++i);
 
-	String token = message(StringClass, "initWithString", NULL, buffer);
+	var token = message(StringClass, "initWithString", NULL, buffer);
 
 	free(buffer);
 
@@ -84,7 +90,7 @@ void *next(void *v, va_list *args) {
 
 void *has_next(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
-	FILE *f = o->file->file;
+	FILE *f = message(o->file, "file");
 	int has_next = 1;
 	char c = 0;
 
@@ -94,7 +100,7 @@ void *has_next(void *v, va_list *args) {
 	}
 	ungetc(c, f);
 
-	Integer retval = message(IntegerClass, "initWithInt", NULL, has_next);
+	var retval = message(IntegerClass, "initWithInt", NULL, has_next);
 
 	return retval;
 }

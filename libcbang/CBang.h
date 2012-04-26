@@ -15,6 +15,8 @@ typedef void *(*fpointer) (void *v, va_list *args);
 typedef void *(*spointer) (void *v);
 typedef struct _CBClass *Class;
 
+typedef struct _CBObject *var;
+
 typedef struct _method {
 	string name;
 	fpointer function;
@@ -36,3 +38,6 @@ string mstring(string s);
 #include "CBStack.h"
 #include "CBFile.h"
 #include "CBScanner.h"
+
+#define YES ((size_t *)1)
+#define NO ((size_t *)0)

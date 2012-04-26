@@ -4,12 +4,6 @@
 
 extern Class StackClass;
 
-typedef struct _CBStack {
-	OBJECT_BASE
-	
-	list *llist;
-} *Stack;
-
 void stack_class_init();
 
 #endif

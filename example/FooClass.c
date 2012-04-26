@@ -4,6 +4,12 @@
 
 Class FooClass = NULL;
 
+typedef struct _Foo {
+	OBJECT_BASE
+
+	int value;
+} *Foo;
+
 static void *init(void *v, va_list *args);
 
 static void *dealloc(void *v, va_list *args);

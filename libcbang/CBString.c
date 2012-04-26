@@ -4,12 +4,19 @@
 
 Class StringClass = NULL;
 
+typedef struct _CBString {
+	OBJECT_BASE
+	
+	string value;
+} *String;
+
 static void *initWithString(void *v, va_list *args);
 
 static void *dealloc(void *v, va_list *args);
 static void *concatenate(void *v, va_list *args);
 static void *length(void *v, va_list *args);
 static void *print(void *v, va_list *args);
+static void *toCString(void *v, va_list *args);
 
 void string_class_init() {
 	StringClass = message(ClassClass, "init", "String", ObjectClass);
@@ -20,6 +27,7 @@ void string_class_init() {
 	push_back(StringClass->instance_methods, mmethod("concatenate", &concatenate));
 	push_back(StringClass->instance_methods, mmethod("length", &length));
 	push_back(StringClass->instance_methods, mmethod("print", &print));
+	push_back(StringClass->instance_methods, mmethod("toCString", &toCString));
 }
 
 void *initWithString(void *v, va_list *args) {
@@ -71,7 +79,7 @@ void *concatenate(void *v, va_list *args) {
 
 void *length(void *v, va_list *args) {
 	String o = (String)v;
-	Integer length = message(IntegerClass, "initWithInt", NULL, strlen(o->value));
+	var length = message(IntegerClass, "initWithInt", NULL, strlen(o->value));
 	return length;
 }
 
@@ -79,4 +87,9 @@ void *print(void *v, va_list *args) {
 	String o = (String)v;
 	printf("%s", o->value);
 	return NULL;
+}
+
+void *toCString(void *v, va_list *args) {
+	String o = (String)v;
+	return o->value;
 }

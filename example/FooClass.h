@@ -4,12 +4,6 @@
 
 extern Class FooClass;
 
-typedef struct _Foo {
-	OBJECT_BASE
-
-	int value;
-} *Foo;
-
 void foo_class_init();
 
 #endif

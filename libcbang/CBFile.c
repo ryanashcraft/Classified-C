@@ -4,9 +4,17 @@
 
 Class FileClass = NULL;
 
+typedef struct _CBFile {
+	OBJECT_BASE
+	
+	string filename;
+	FILE *file;
+} *File;
+
 static void *initWithFilename(void *v, va_list *args);
 
 static void *dealloc(void *v, va_list *args);
+static void *file(void *v, va_list *args);
 
 void file_class_init() {
 	FileClass = message(ClassClass, "init", "File", ObjectClass);
@@ -14,6 +22,7 @@ void file_class_init() {
 	push_back(FileClass->methods, mmethod("initWithFilename", &initWithFilename));
 	
 	push_back(FileClass->instance_methods, mmethod("dealloc", &dealloc));
+	push_back(FileClass->instance_methods, mmethod("file", &file));
 }
 
 void *initWithFilename(void *v, va_list *args) {
@@ -45,4 +54,9 @@ void *dealloc(void *v, va_list *args) {
 	free(o->filename);
 	free(o);
 	return NULL;
+}
+
+static void *file(void *v, va_list *args) {
+	File o = (File)v;
+	return o->file;
 }

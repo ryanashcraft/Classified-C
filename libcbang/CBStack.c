@@ -4,6 +4,12 @@
 
 Class StackClass = NULL;
 
+typedef struct _CBStack {
+	OBJECT_BASE
+	
+	list *llist;
+} *Stack;
+
 static void *init(void *v, va_list *args);
 
 static void *dealloc(void *v, va_list *args);
