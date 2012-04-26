@@ -46,7 +46,7 @@ void cbang_init() {
 
   @return the object returned from the function call
  */
-void *message(void *v, string message, ...) {
+void *msg(void *v, string message, ...) {
 	method the_method;
 	va_list argp;
 	Object o = (Object)v;

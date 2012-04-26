@@ -12,7 +12,7 @@ static void *retain(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 
 void object_class_init() {
-	ObjectClass = message(ClassClass, "init", "Object", NULL);
+	ObjectClass = msg(ClassClass, "init", "Object", NULL);
 
 	push_back(ObjectClass->methods, mmethod("init", &init));
 
@@ -46,7 +46,7 @@ void *release(void *v, va_list *args) {
 	--o->retaincount;
 
 	if (o->retaincount == 0) {
-		return message(o->root, "dealloc");
+		return msg(o->root, "dealloc");
 	}
 
 	return o->root;

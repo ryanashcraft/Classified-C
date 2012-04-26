@@ -19,7 +19,7 @@ static void *print(void *v, va_list *args);
 static void *toCString(void *v, va_list *args);
 
 void string_class_init() {
-	StringClass = message(ClassClass, "init", "String", ObjectClass);
+	StringClass = msg(ClassClass, "init", "String", ObjectClass);
 
 	push_back(StringClass->methods, mmethod("initWithString", &initWithString));
 
@@ -43,7 +43,7 @@ void *initWithString(void *v, va_list *args) {
 
 	o->class = StringClass;
 	o->methods = StringClass->instance_methods;
-	o->parent = message(ObjectClass, "init", root);
+	o->parent = msg(ObjectClass, "init", root);
 	o->root = root;
 
 	o->value = mstring(va_arg(*args, string));
@@ -53,7 +53,7 @@ void *initWithString(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	String o = (String)v;
-	message(o->parent, "dealloc");
+	msg(o->parent, "dealloc");
 	free(o->value);
 	free(o);
 	return NULL;
@@ -79,7 +79,7 @@ void *concatenate(void *v, va_list *args) {
 
 void *length(void *v, va_list *args) {
 	String o = (String)v;
-	var length = message(IntegerClass, "initWithInt", NULL, strlen(o->value));
+	var length = msg(IntegerClass, "initWithInt", NULL, strlen(o->value));
 	return length;
 }
 

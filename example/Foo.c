@@ -6,64 +6,64 @@ int main(int argc, char **argv) {
 	cbang_init();
 	foo_class_init();
 
-	var o = message(ObjectClass, "init", NULL);
-	message(o, "print");
-	o = message(o, "release");
+	var o = msg(ObjectClass, "init", NULL);
+	msg(o, "print");
+	o = msg(o, "release");
 	printf("\n");
 
-	var st = message(StringClass, "initWithString", NULL, "test");
-	message(st, "print");
-	st = message(st, "release");
+	var st = msg(StringClass, "initWithString", NULL, "test");
+	msg(st, "print");
+	st = msg(st, "release");
 	printf("\n");
 
-	var f = message(FileClass, "initWithFilename", NULL, "../README.md");
-	var s = message(ScannerClass, "initWithFile", NULL, f);
-	var i = message(IntegerClass, "initWithInt", NULL, 1);
-	while (!message(i, "equals", 0)) {
-		var token = message(s, "next");
-		fprintf(stderr, "%s ", (string)message(token, "toCString"));
-		message(token, "release");
+	var f = msg(FileClass, "initWithFilename", NULL, "../README.md");
+	var s = msg(ScannerClass, "initWithFile", NULL, f);
+	var i = msg(IntegerClass, "initWithInt", NULL, 1);
+	while (!msg(i, "equals", 0)) {
+		var token = msg(s, "next");
+		fprintf(stderr, "%s ", (string)msg(token, "toCString"));
+		msg(token, "release");
 
-		i = message(i, "release");
-		i = message(s, "has_next");
+		i = msg(i, "release");
+		i = msg(s, "has_next");
 	}
-	i = message(i, "release");
-	s = message(s, "release");
-	f = message(f, "release");
+	i = msg(i, "release");
+	s = msg(s, "release");
+	f = msg(f, "release");
 	printf("\n");
 
-	var n = message(NullClass, "init", NULL);
-	message(n, "print");
+	var n = msg(NullClass, "init", NULL);
+	msg(n, "print");
 	printf("\n");
-	n = message(n, "release");
+	n = msg(n, "release");
 
-	var ohhai = message(StringClass, "initWithString", NULL, "OH HAI!");
-	message(ohhai, "print");
+	var ohhai = msg(StringClass, "initWithString", NULL, "OH HAI!");
+	msg(ohhai, "print");
 	printf("\n");
-	ohhai = message(ohhai, "release");
+	ohhai = msg(ohhai, "release");
 
-	Foo mys = message(FooClass, "init", NULL, 77, "Foo");
-	message(mys, "concatenate", " Fighters");
-	message(mys, "print");
+	var mys = msg(FooClass, "init", NULL, 77, "Foo");
+	msg(mys, "concatenate", " Fighters");
+	msg(mys, "print");
 	printf("\n");
 
-	i = message(mys, "length");
-	printf("Length of string: %ld\n", (long)message(i, "toCInt"));
-	i = message(i, "release");
-	mys = message(mys, "retain");
-	mys = message(mys, "release");
-	i = message(mys, "length");
-	mys = message(mys, "release");
+	i = msg(mys, "length");
+	printf("Length of string: %ld\n", (long)msg(i, "toCInt"));
+	i = msg(i, "release");
+	mys = msg(mys, "retain");
+	mys = msg(mys, "release");
+	i = msg(mys, "length");
+	mys = msg(mys, "release");
 
-	var stack = message(StackClass, "init", NULL);
-	message(stack, "push", message(StringClass, "initWithString", NULL, "Ryan"));
-	message(stack, "push", message(StringClass, "initWithString", NULL, "Tanner"));
-	message(stack, "pop");
-	var str = message(stack, "peek");
+	var stack = msg(StackClass, "init", NULL);
+	msg(stack, "push", msg(StringClass, "initWithString", NULL, "Ryan"));
+	msg(stack, "push", msg(StringClass, "initWithString", NULL, "Tanner"));
+	msg(stack, "pop");
+	var str = msg(stack, "peek");
 	if (str) {
-		printf("%s\n", (string)message(str, "toCString"));
+		printf("%s\n", (string)msg(str, "toCString"));
 	}
-	stack = message(stack, "release");
+	stack = msg(stack, "release");
 
 	printf("\n");
 }

@@ -17,7 +17,7 @@ static void *dealloc(void *v, va_list *args);
 static void *file(void *v, va_list *args);
 
 void file_class_init() {
-	FileClass = message(ClassClass, "init", "File", ObjectClass);
+	FileClass = msg(ClassClass, "init", "File", ObjectClass);
 
 	push_back(FileClass->methods, mmethod("initWithFilename", &initWithFilename));
 	
@@ -38,7 +38,7 @@ void *initWithFilename(void *v, va_list *args) {
 
 	o->class = FileClass;
 	o->methods = FileClass->instance_methods;
-	o->parent = message(ObjectClass, "init", o);
+	o->parent = msg(ObjectClass, "init", o);
 	o->root = root;
 
 	o->filename = mstring(va_arg(*args, string));
@@ -49,7 +49,7 @@ void *initWithFilename(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	File o = (File)v;
-	message(o->parent, "dealloc");
+	msg(o->parent, "dealloc");
 	fclose(o->file);
 	free(o->filename);
 	free(o);

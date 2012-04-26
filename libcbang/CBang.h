@@ -23,7 +23,7 @@ typedef struct _method {
 } *method;
 
 void cbang_init();
-void *message(void *v, string message, ...);
+void *msg(void *v, string message, ...);
 
 method mmethod(string name, fpointer function);
 string mstring(string s);

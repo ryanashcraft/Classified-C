@@ -13,7 +13,7 @@ static void *init(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
 
 void null_class_init() {
-	NullClass = message(ClassClass, "init", "Null", ObjectClass);
+	NullClass = msg(ClassClass, "init", "Null", ObjectClass);
 
 	push_back(NullClass->methods, mmethod("init", &init));
 	
@@ -33,7 +33,7 @@ void *init(void *v, va_list *args) {
 
 	o->class = NullClass;
 	o->methods = NullClass->instance_methods;
-	o->parent = message(ObjectClass, "init", root);
+	o->parent = msg(ObjectClass, "init", root);
 	o->root = root;
 
 	return o;
@@ -41,7 +41,7 @@ void *init(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	Null o = (Null)v;
-	message(o->parent, "dealloc");
+	msg(o->parent, "dealloc");
 	free(o);
 	return NULL;
 }

@@ -19,7 +19,7 @@ static void *next(void *v, va_list *args);
 static void *has_next(void *v, va_list *args);
 
 void scanner_class_init() {
-	ScannerClass = message(ClassClass, "init", "Scanner", ObjectClass);
+	ScannerClass = msg(ClassClass, "init", "Scanner", ObjectClass);
 
 	push_back(ScannerClass->methods, mmethod("initWithFile", &initWithFile));
 
@@ -41,7 +41,7 @@ void *initWithFile(void *v, va_list *args) {
 
 	o->class = ScannerClass;
 	o->methods = ScannerClass->instance_methods;
-	o->parent = message(ObjectClass, "init", root);
+	o->parent = msg(ObjectClass, "init", root);
 	o->root = root;
 
 	o->file = va_arg(*args, var);
@@ -51,14 +51,14 @@ void *initWithFile(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
-	message(o->parent, "dealloc");
+	msg(o->parent, "dealloc");
 	free(o);
 	return NULL;
 }
 
 void *next(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
-	FILE *f = message(o->file, "file");
+	FILE *f = msg(o->file, "file");
 
 	string buffer = calloc(1, TOKEN_BUFFER_SIZE);
 	assert(buffer);
@@ -81,7 +81,7 @@ void *next(void *v, va_list *args) {
 		buffer[i] = c;
 	} while (++i);
 
-	var token = message(StringClass, "initWithString", NULL, buffer);
+	var token = msg(StringClass, "initWithString", NULL, buffer);
 
 	free(buffer);
 
@@ -90,7 +90,7 @@ void *next(void *v, va_list *args) {
 
 void *has_next(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
-	FILE *f = message(o->file, "file");
+	FILE *f = msg(o->file, "file");
 	int has_next = 1;
 	char c = 0;
 
@@ -100,7 +100,7 @@ void *has_next(void *v, va_list *args) {
 	}
 	ungetc(c, f);
 
-	var retval = message(IntegerClass, "initWithInt", NULL, has_next);
+	var retval = msg(IntegerClass, "initWithInt", NULL, has_next);
 
 	return retval;
 }

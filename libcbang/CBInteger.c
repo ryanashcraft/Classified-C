@@ -17,7 +17,7 @@ static void *toCInt(void *v, va_list *args);
 static void *equals(void *v, va_list *args);
 
 void integer_class_init() {
-	IntegerClass = message(ClassClass, "init", "Integer", ObjectClass);
+	IntegerClass = msg(ClassClass, "init", "Integer", ObjectClass);
 
 	push_back(IntegerClass->methods, mmethod("initWithInt", &initWithInt));
 	
@@ -39,7 +39,7 @@ void *initWithInt(void *v, va_list *args) {
 
 	o->class = IntegerClass;
 	o->methods = IntegerClass->instance_methods;
-	o->parent = message(ObjectClass, "init", root);
+	o->parent = msg(ObjectClass, "init", root);
 	o->root = root;
 
 	o->value = va_arg(*args, size_t);
@@ -49,7 +49,7 @@ void *initWithInt(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	Integer o = (Integer)v;
-	message(o->parent, "dealloc");
+	msg(o->parent, "dealloc");
 	free(o);
 	return NULL;
 }

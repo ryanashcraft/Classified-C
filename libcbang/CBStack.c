@@ -20,7 +20,7 @@ static void *peek(void *v, va_list *args);
 void message_release(void *v);
 
 void stack_class_init() {
-	StackClass = message(ClassClass, "init", "Stack", ObjectClass);
+	StackClass = msg(ClassClass, "init", "Stack", ObjectClass);
 
 	// Define class methods
 	push_back(StackClass->methods, mmethod("init", &init));
@@ -45,7 +45,7 @@ void *init(void *v, va_list *args) {
 
 	o->class = StackClass;
 	o->methods = StackClass->instance_methods;
-	o->parent = message(ObjectClass, "init", root);
+	o->parent = msg(ObjectClass, "init", root);
 	o->root = root;
 
 	o->llist = create_list();
@@ -55,14 +55,14 @@ void *init(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	Stack o = (Stack)v;
-	message(o->parent, "dealloc");
+	msg(o->parent, "dealloc");
 	free_list(o->llist, &message_release);
 	free(o);
 	return NULL;
 }
 
 void message_release(void *v) {
-	message(v, "release");	
+	msg(v, "release");	
 }
 
 void *push(void *v, va_list *args) {

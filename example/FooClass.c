@@ -17,7 +17,7 @@ static void *print(void *v, va_list *args);
 
 void foo_class_init() {
 	// Define FooClass
-	FooClass = message(ClassClass, "init", "Foo", StringClass);
+	FooClass = msg(ClassClass, "init", "Foo", StringClass);
 
 	// Register static methods
 	push_back(FooClass->methods, mmethod("init", &init));
@@ -42,7 +42,7 @@ void *init(void *v, va_list *args) {
 	// Set instance variables
 	o->class = FooClass;
 	o->methods = FooClass->instance_methods;
-	o->parent = message(StringClass, "initWithString", root, va_arg(*args, string));
+	o->parent = msg(StringClass, "initWithString", root, va_arg(*args, string));
 	o->root = root;
 
 	o->value = value;
@@ -52,7 +52,7 @@ void *init(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	message(o->parent, "dealloc");
+	msg(o->parent, "dealloc");
 	free(o);	
 	return o;
 }
@@ -60,6 +60,6 @@ void *dealloc(void *v, va_list *args) {
 void *print(void *v, va_list *args) {
 	Foo o = (Foo)v;
 	printf("%d ", o->value);
-	message(o->parent, "print");
+	msg(o->parent, "print");
 	return NULL;
 }
