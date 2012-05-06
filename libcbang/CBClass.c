@@ -4,7 +4,7 @@
 
 Class ClassClass = NULL;
 
-static void *init(void *v, va_list *args);
+static void *new(void *v, va_list *args);
 
 void class_class_init() {
 	method m;
@@ -12,27 +12,38 @@ void class_class_init() {
 	ClassClass = malloc(sizeof(struct _CBClass));
 	assert(ClassClass);
 
-	ClassClass->class = ObjectClass;
-	ClassClass->name = mstring("Class");
-	ClassClass->parent = NULL;
+	ClassClass->base.class = ClassClass;
+	ClassClass->base.root = ClassClass;
+	ClassClass->base.parent = ObjectClass;
+	ClassClass->base.retaincount = 1;
 
-	ClassClass->methods = create_list();
-	m = mmethod("init", &init);
-	push_back(ClassClass->methods, m);
+	ClassClass->parent_class = ObjectClass;
+
+	ClassClass->static_methods = create_list();
+
+	ClassClass->instance_methods = create_list();
+	m = mmethod("new", &new);
+	push_back(ClassClass->instance_methods, m);
+
+	ClassClass->name = mstring("Class");
 }
 
-void *init(void *v, va_list *args) {
-	Class c = malloc(sizeof(struct _CBClass));
-	assert(c);
+Class new_class(string name, Class parent_class) {
+	Class c = cballoc(sizeof(struct _CBClass));
+	object_init(c, ClassClass);
+	c->base.root = c;
 
-	c->class = ClassClass;
-	c->methods = create_list();
-	c->parent = NULL;
-	c->root = (Object)c;
-
+	c->parent_class = parent_class;
+	c->static_methods = create_list();
 	c->instance_methods = create_list();
-	c->name = mstring(va_arg(*args, string));
-	c->parent_class = va_arg(*args, Class);
+	c->name = mstring(name);
 
 	return c;
+}
+
+void *new(void *v, va_list *args) {
+	string name = va_arg(*args, string);
+	Class parent_class = va_arg(*args, Class);
+
+	return new_class(name, parent_class);
 }

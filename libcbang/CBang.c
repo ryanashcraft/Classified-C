@@ -20,10 +20,10 @@ void cbang_init() {
 	object_class_init();
 	null_class_init();
 	string_class_init();
-	integer_class_init();
-	stack_class_init();
-	file_class_init();
-	scanner_class_init();
+	// integer_class_init();
+	// stack_class_init();
+	// file_class_init();
+	// scanner_class_init();
 }
 
 /**
@@ -50,20 +50,36 @@ void *msg(void *v, string message, ...) {
 	method the_method;
 	va_list argp;
 	Object o = (Object)v;
+	Class c = o->root;
+	boolean object_is_class = (o->parent == ClassClass) ? YES : NO;
 
 	// Try to get the method from the object's type
-	the_method = get_first_occurrence(o->methods, method_name_equals, message);
+	if (object_is_class) {
+		the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
+	} else {
+		the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
+	}
 
 	// While the method isn't found and there is a parent, then look in the
 	// parent's type
-	while (!the_method && o->parent != NULL) {
-		o = o->parent;
-		the_method = get_first_occurrence(o->methods, method_name_equals, message);
+	while (!the_method && c->parent_class != NULL) {
+		c = c->parent_class;
+
+		if (object_is_class) {
+			the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
+		} else {
+			the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
+		}
 	}
 
 	// If the method is never found, then error and exit out
 	if (!the_method) {
-		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", ((Object)v)->class->name, message);
+		if (object_is_class) {
+			fprintf(stderr, "Class %s does not respond to message \"%s\"\n", o->class->name, message);
+		} else {
+			fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", o->class->name, message);
+		}
+
 		exit(EXIT_FAILURE);
 	}
 
@@ -92,6 +108,14 @@ int method_name_equals(const void *methodp, va_list *args) {
 		return 1;
 	}
 	return 0;
+}
+
+void *cballoc(size_t size) {
+	void *v = calloc(1, size);
+	assert(v);
+	((Object)v)->retaincount = 1;
+
+	return v;
 }
 
 /**

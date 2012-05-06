@@ -5,13 +5,14 @@
 Class StringClass = NULL;
 
 typedef struct _CBString {
-	OBJECT_BASE
+	struct _CBObject base;
 	
 	string value;
 } *String;
 
-static void *initWithString(void *v, va_list *args);
+static void *newWithString(void *v, va_list *args);
 
+static void *initWithString(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
 static void *concatenate(void *v, va_list *args);
 static void *length(void *v, va_list *args);
@@ -19,10 +20,11 @@ static void *print(void *v, va_list *args);
 static void *toCString(void *v, va_list *args);
 
 void string_class_init() {
-	StringClass = msg(ClassClass, "init", "String", ObjectClass);
+	StringClass = msg(ClassClass, "new", "String", ObjectClass);
 
-	push_back(StringClass->methods, mmethod("initWithString", &initWithString));
+	push_back(StringClass->static_methods, mmethod("newWithString", &newWithString));
 
+	push_back(StringClass->instance_methods, mmethod("initWithString", &initWithString));
 	push_back(StringClass->instance_methods, mmethod("dealloc", &dealloc));
 	push_back(StringClass->instance_methods, mmethod("concatenate", &concatenate));
 	push_back(StringClass->instance_methods, mmethod("length", &length));
@@ -30,30 +32,23 @@ void string_class_init() {
 	push_back(StringClass->instance_methods, mmethod("toCString", &toCString));
 }
 
+void *newWithString(void *v, va_list *args) {
+	String o = cballoc(sizeof(struct _CBString));
+	initWithString(o, args);
+	o->base.root = StringClass;
+	return o;
+}
+
 void *initWithString(void *v, va_list *args) {
-	String o;
-
-	o = calloc(1, sizeof(struct _CBString));
-	assert(o);
-	
-	Object root = va_arg(*args, Object);
-	if (!root) {
-		root = (Object)o;
-	}
-
-	o->class = StringClass;
-	o->methods = StringClass->instance_methods;
-	o->parent = msg(ObjectClass, "init", root);
-	o->root = root;
-
+	String o = (String)v;
+	object_init(o, StringClass);
+	o->base.parent = StringClass;
 	o->value = mstring(va_arg(*args, string));
-
 	return o;
 }
 
 void *dealloc(void *v, va_list *args) {
 	String o = (String)v;
-	msg(o->parent, "dealloc");
 	free(o->value);
 	free(o);
 	return NULL;
@@ -74,19 +69,20 @@ void *concatenate(void *v, va_list *args) {
 
 	o->value = part_one;
 
-	return NULL;
+	return o;
 }
 
 void *length(void *v, va_list *args) {
-	String o = (String)v;
-	var length = msg(IntegerClass, "initWithInt", NULL, strlen(o->value));
-	return length;
+	// String o = (String)v;
+	// var length = msg(IntegerClass, "initWithInt", NULL, strlen(o->value));
+	// return length;
+	return NULL;
 }
 
 void *print(void *v, va_list *args) {
 	String o = (String)v;
 	printf("%s", o->value);
-	return NULL;
+	return o;
 }
 
 void *toCString(void *v, va_list *args) {

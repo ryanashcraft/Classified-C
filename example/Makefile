@@ -6,8 +6,10 @@
 # vpath %.h ../libcbang
 # vpath %.h .
 
-obj=Foo.o FooClass.o
-inc=Foo.h FooClass.h
+obj=Foo.o
+#FooClass.o
+inc=Foo.h
+#FooClass.h
 misc=Makefile
 target=Example.o
 cflags=-Wall -c -g -Werror -pedantic -std=c99

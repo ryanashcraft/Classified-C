@@ -3,15 +3,16 @@
 #define CB_CLASS_H
 
 struct _CBClass {
-	OBJECT_BASE
-
+	struct _CBObject base;
+	Class parent_class;
+	list *static_methods;
 	list *instance_methods;
 	string name;
-	Class parent_class;
 };
 
 extern Class ClassClass;
 
 void class_class_init();
+Class new_class(string name, Class parent_class);
 
 #endif

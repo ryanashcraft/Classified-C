@@ -4,41 +4,47 @@
 
 Class ObjectClass = NULL;
 
-static void *init(void *v, va_list *args);
+static void *new(void *v, va_list *args);
 
+static void *init(void *v, va_list *args);
 static void *release(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
 static void *retain(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 
 void object_class_init() {
-	ObjectClass = msg(ClassClass, "init", "Object", NULL);
+	ObjectClass = new_class("Object", NULL);
+	object_init(ObjectClass, ClassClass);
+	ObjectClass->base.root = ObjectClass;
 
-	push_back(ObjectClass->methods, mmethod("init", &init));
+	push_back(ObjectClass->static_methods, mmethod("new", &new));
 
+	push_back(ObjectClass->instance_methods, mmethod("init", &init));
 	push_back(ObjectClass->instance_methods, mmethod("release", &release));
 	push_back(ObjectClass->instance_methods, mmethod("dealloc", &dealloc));
 	push_back(ObjectClass->instance_methods, mmethod("retain", &retain));
 	push_back(ObjectClass->instance_methods, mmethod("print", &print));
 }
 
-void *init(void *v, va_list *args) {
-	Object o = calloc(1, sizeof(struct _CBObject));
-	assert(o);
-
-	Object root = va_arg(*args, Object);
-	if (!root) {
-		root = (Object)o;
-	}
+Object object_init(void *v, Class parent) {
+	Object o = (Object)v;
 
 	o->class = ObjectClass;
-	o->methods = ObjectClass->instance_methods;
-	o->parent = NULL;
-	o->root = root;
-
-	o->retaincount = 1;
+	o->root = ObjectClass;
+	o->parent = parent;
 
 	return o;
+}
+
+void *new(void *v, va_list *args) {
+	Object o = cballoc(sizeof(struct _CBObject));
+	object_init(o, NULL);
+	return o;
+}
+
+void *init(void *v, va_list *args) {
+	Class parent = va_arg(*args, Class);
+	return object_init(v, parent);
 }
 
 void *release(void *v, va_list *args) {
@@ -46,7 +52,7 @@ void *release(void *v, va_list *args) {
 	--o->retaincount;
 
 	if (o->retaincount == 0) {
-		return msg(o->root, "dealloc");
+		return msg(o, "dealloc");
 	}
 
 	return o->root;
@@ -65,6 +71,6 @@ void *retain(void *v, va_list *args) {
 
 void *print(void *v, va_list *args) {
 	fprintf(stderr, "Object");
-	return NULL;
+	return v;
 }
 

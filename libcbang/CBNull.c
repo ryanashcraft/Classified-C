@@ -5,43 +5,40 @@
 Class NullClass = NULL;
 
 typedef struct _CBNull {
-	OBJECT_BASE
+	struct _CBObject base;
 } *Null;
 
-static void *init(void *v, va_list *args);
+static void *new(void *v, va_list *args);
 
+static void *init(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
 
 void null_class_init() {
-	NullClass = msg(ClassClass, "init", "Null", ObjectClass);
+	NullClass = msg(ClassClass, "new", "Null", ObjectClass);
+	NullClass->base.root = NullClass;
+	NullClass->base.parent = ClassClass;
 
-	push_back(NullClass->methods, mmethod("init", &init));
+	push_back(NullClass->static_methods, mmethod("new", &new));
 	
+	push_back(NullClass->instance_methods, mmethod("init", &init));
 	push_back(NullClass->instance_methods, mmethod("dealloc", &dealloc));
 }
 
-void *init(void *v, va_list *args) {
-	Null o;
+void *new(void *v, va_list *args) {
+	Null o = cballoc(sizeof(struct _CBNull));
+	init(o, args);
+	return o;
+}
 
-	o = calloc(1, sizeof(struct _CBNull));
-	assert(o);
-
-	Object root = va_arg(*args, Object);
-	if (!root) {
-		root = (Object)o;
-	}
-
-	o->class = NullClass;
-	o->methods = NullClass->instance_methods;
-	o->parent = msg(ObjectClass, "init", root);
-	o->root = root;
-
+void *init (void *v, va_list *args) {
+	Null o = (Null)v;
+	object_init(o, NullClass);
+	o->base.parent = NullClass;
 	return o;
 }
 
 void *dealloc(void *v, va_list *args) {
 	Null o = (Null)v;
-	msg(o->parent, "dealloc");
 	free(o);
 	return NULL;
 }
