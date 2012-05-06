@@ -4,6 +4,10 @@
 
 extern Class NullClass;
 
+typedef struct _CBNull {
+	struct _CBObject base;
+} *Null;
+
 void null_class_init();
 
 #endif

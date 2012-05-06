@@ -4,12 +4,6 @@
 
 Class FooClass = NULL;
 
-typedef struct _Foo {
-	struct _CBString base;
-
-	int value;
-} *Foo;
-
 static void *new(void *v, va_list *args);
 
 static void *init(void *v, va_list *args);

@@ -4,10 +4,6 @@
 
 Class NullClass = NULL;
 
-typedef struct _CBNull {
-	struct _CBObject base;
-} *Null;
-
 static void *new(void *v, va_list *args);
 
 static void *init(void *v, va_list *args);
