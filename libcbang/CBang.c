@@ -9,7 +9,8 @@
 
 #include "CBang.h"
 
-int method_name_equals(const void *methodp, va_list *args);
+static int method_name_equals(const void *methodp, va_list *args);
+static void *cbmessage(Object o, Class c, string message, va_list *args);
 
 /**
   Initialize the class list and the standard classes
@@ -47,55 +48,33 @@ void cbang_init() {
   @return the object returned from the function call
  */
 void *msg(void *v, string message, ...) {
-	method the_method;
 	va_list argp;
 	Object o = (Object)v;
 	Class c = o->root;
-	boolean object_is_class = (o->parent == ClassClass) ? YES : NO;
-
-	// Try to get the method from the object's type
-	if (object_is_class) {
-		the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
-	} else {
-		the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
-	}
-
-	// While the method isn't found and there is a parent, then look in the
-	// parent's type
-	while (!the_method && c->parent_class != NULL) {
-		c = c->parent_class;
-
-		if (object_is_class) {
-			the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
-		} else {
-			the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
-		}
-	}
-
-	// If the method is never found, then error and exit out
-	if (!the_method) {
-		if (object_is_class) {
-			fprintf(stderr, "Class %s does not respond to message \"%s\"\n", o->class->name, message);
-		} else {
-			fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", o->class->name, message);
-		}
-
-		exit(EXIT_FAILURE);
-	}
 
 	// Instantiate the variable argument list for the method's parameters
 	va_start(argp, message);
 
 	// Call the method's function pointer with the object and a reference
 	// to the variable argument list
-	return the_method->function(o, &argp);
+	return cbmessage(o, c, message, &argp);
 }
 
 void *msg_super(void *v, string message, ...) {
-	method the_method;
 	va_list argp;
 	Object o = (Object)v;
 	Class c = o->parent;
+
+	// Instantiate the variable argument list for the method's parameters
+	va_start(argp, message);
+
+	// Call the method's function pointer with the object and a reference
+	// to the variable argument list
+	return cbmessage(o, c, message, &argp);
+}
+
+void *cbmessage(Object o, Class c, string message, va_list *argp) {
+	method the_method;
 	boolean object_is_class = (o->parent == ClassClass) ? YES : NO;
 
 	// Try to get the method from the object's type
@@ -128,12 +107,7 @@ void *msg_super(void *v, string message, ...) {
 		exit(EXIT_FAILURE);
 	}
 
-	// Instantiate the variable argument list for the method's parameters
-	va_start(argp, message);
-
-	// Call the method's function pointer with the object and a reference
-	// to the variable argument list
-	return the_method->function(o, &argp);
+	return the_method->function(o, argp);
 }
 
 /**

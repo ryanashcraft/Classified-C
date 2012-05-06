@@ -76,4 +76,3 @@ void *print(void *v, va_list *args) {
 	fprintf(stderr, "Object");
 	return v;
 }
-

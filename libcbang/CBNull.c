@@ -35,6 +35,5 @@ void *init (void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	Null o = (Null)v;
-	free(o);
-	return NULL;
+	return msg_super(o, "release");
 }

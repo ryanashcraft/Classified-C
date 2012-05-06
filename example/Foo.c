@@ -50,6 +50,7 @@ int main(int argc, char **argv) {
 	var mys = msg(FooClass, "new", 77, "Foo");
 	msg(mys, "concatenate", " Fighters");
 	msg(mys, "print");
+	msg(mys, "release");
 	printf("\n");
 
 	// i = msg(mys, "length");

@@ -32,14 +32,14 @@ void *init(void *v, va_list *args) {
 	int value = va_arg(*args, int);
 	object_init(o, FooClass);
 	msg(o, "initWithString", va_arg(*args, string));
+	((String)o)->parent = FooClass;
 	o->value = value;
 	return o;
 }
 
 void *dealloc(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	free(o);	
-	return o;
+	return msg_super(o, "dealloc");
 }
 
 void *print(void *v, va_list *args) {

@@ -29,14 +29,13 @@ void string_class_init() {
 void *newWithString(void *v, va_list *args) {
 	String o = cballoc(sizeof(struct _CBString));
 	initWithString(o, args);
-	o->base.root = StringClass;
+	((Object)o)->root = StringClass;
 	return o;
 }
 
 void *initWithString(void *v, va_list *args) {
 	String o = (String)v;
 	object_init(o, StringClass);
-	o->base.parent = StringClass;
 	o->value = mstring(va_arg(*args, string));
 	return o;
 }
@@ -44,8 +43,7 @@ void *initWithString(void *v, va_list *args) {
 void *dealloc(void *v, va_list *args) {
 	String o = (String)v;
 	free(o->value);
-	free(o);
-	return NULL;
+	return msg_super(o, "dealloc");
 }
 
 void *concatenate(void *v, va_list *args) {
