@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv) {
 	cbang_init();
-	// foo_class_init();
+	foo_class_init();
 
 	var o = msg(ObjectClass, "new");
 	msg(o, "print");
@@ -47,10 +47,10 @@ int main(int argc, char **argv) {
 	// printf("\n");
 	// ohhai = msg(ohhai, "release");
 
-	// var mys = msg(FooClass, "init", NULL, 77, "Foo");
-	// msg(mys, "concatenate", " Fighters");
-	// msg(mys, "print");
-	// printf("\n");
+	var mys = msg(FooClass, "new", 77, "Foo");
+	msg(mys, "concatenate", " Fighters");
+	msg(mys, "print");
+	printf("\n");
 
 	// i = msg(mys, "length");
 	// printf("Length of string: %ld\n", (long)msg(i, "toCInt"));

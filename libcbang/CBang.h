@@ -25,6 +25,7 @@ typedef struct _method {
 
 void cbang_init();
 void *msg(void *v, string message, ...);
+void *msg_super(void *v, string message, ...);
 
 void *cballoc(size_t size);
 

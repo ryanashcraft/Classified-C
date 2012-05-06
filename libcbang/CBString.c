@@ -4,12 +4,6 @@
 
 Class StringClass = NULL;
 
-typedef struct _CBString {
-	struct _CBObject base;
-	
-	string value;
-} *String;
-
 static void *newWithString(void *v, va_list *args);
 
 static void *initWithString(void *v, va_list *args);

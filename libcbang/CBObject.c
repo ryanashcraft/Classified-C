@@ -30,7 +30,10 @@ Object object_init(void *v, Class parent) {
 	Object o = (Object)v;
 
 	o->class = ObjectClass;
-	o->root = ObjectClass;
+	if (o->root == NULL && parent != NULL)
+		o->root = parent;
+	else
+		o->root = ObjectClass;
 	o->parent = parent;
 
 	return o;
