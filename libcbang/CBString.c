@@ -14,7 +14,7 @@ static void *print(void *v, va_list *args);
 static void *toCString(void *v, va_list *args);
 
 void string_class_init() {
-	StringClass = msg(ClassClass, "new", "String", ObjectClass);
+	StringClass = msg_class(ClassClass, "new", "String", ObjectClass);
 
 	push_back(StringClass->static_methods, mmethod("newWithString", &newWithString));
 
@@ -35,7 +35,7 @@ void *newWithString(void *v, va_list *args) {
 
 void *initWithString(void *v, va_list *args) {
 	String o = (String)v;
-	object_init(o, StringClass);
+	object_init(o);
 	o->value = mstring(va_arg(*args, string));
 	return o;
 }
@@ -43,7 +43,7 @@ void *initWithString(void *v, va_list *args) {
 void *dealloc(void *v, va_list *args) {
 	String o = (String)v;
 	free(o->value);
-	return msg_super(o, "dealloc");
+	return msg_cast(ObjectClass, o, "dealloc");
 }
 
 void *concatenate(void *v, va_list *args) {

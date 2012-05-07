@@ -6,17 +6,17 @@ int main(int argc, char **argv) {
 	cbang_init();
 	foo_class_init();
 
-	var o = msg(ObjectClass, "new");
+	var o = msg_class(ObjectClass, "new");
 	msg(o, "print");
 	o = msg(o, "release");
 	printf("\n");
 
-	var n = msg(NullClass, "new");
+	var n = msg_class(NullClass, "new");
 	msg(n, "print");
 	n = msg(n, "release");
 	printf("\n");
 
-	var st = msg(StringClass, "newWithString", "test");
+	var st = msg_class(StringClass, "newWithString", "test");
 	msg(st, "print");
 	st = msg(st, "release");
 	printf("\n");
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	// printf("\n");
 	// ohhai = msg(ohhai, "release");
 
-	var mys = msg(FooClass, "new", 77, "Foo");
+	var mys = msg_class(FooClass, "new", 77, "Foo");
 	msg(mys, "concatenate", " Fighters");
 	msg(mys, "print");
 	msg(mys, "release");

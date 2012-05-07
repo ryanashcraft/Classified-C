@@ -14,8 +14,6 @@ static void *print(void *v, va_list *args);
 
 void object_class_init() {
 	ObjectClass = new_class("Object", NULL);
-	object_init(ObjectClass, ClassClass);
-	ObjectClass->base.root = ObjectClass;
 
 	push_back(ObjectClass->static_methods, mmethod("new", &new));
 
@@ -26,28 +24,20 @@ void object_class_init() {
 	push_back(ObjectClass->instance_methods, mmethod("print", &print));
 }
 
-Object object_init(void *v, Class parent) {
+Object object_init(void *v) {
 	Object o = (Object)v;
-
-	o->class = ObjectClass;
-	if (o->root == NULL && parent != NULL)
-		o->root = parent;
-	else
-		o->root = ObjectClass;
-	o->parent = parent;
-
 	return o;
 }
 
 void *new(void *v, va_list *args) {
 	Object o = cballoc(sizeof(struct _CBObject));
-	object_init(o, NULL);
+	object_init(o);
+	o->root = ObjectClass;
 	return o;
 }
 
 void *init(void *v, va_list *args) {
-	Class parent = va_arg(*args, Class);
-	return object_init(v, parent);
+	return object_init(v);
 }
 
 void *release(void *v, va_list *args) {
@@ -58,7 +48,7 @@ void *release(void *v, va_list *args) {
 		return msg(o, "dealloc");
 	}
 
-	return o->root;
+	return o;
 }
 
 void *dealloc(void *v, va_list *args) {
@@ -69,7 +59,7 @@ void *dealloc(void *v, va_list *args) {
 void *retain(void *v, va_list *args) {
 	Object o = (Object)v;
 	o->retaincount++;
-	return o->root;
+	return o;
 }
 
 void *print(void *v, va_list *args) {

@@ -11,7 +11,7 @@ static void *dealloc(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 
 void foo_class_init() {
-	FooClass = msg(ClassClass, "new", "Foo", StringClass);
+	FooClass = msg_class(ClassClass, "new", "Foo", StringClass);
 
 	push_back(FooClass->static_methods, mmethod("new", &new));
 
@@ -30,21 +30,22 @@ void *new(void *v, va_list *args) {
 void *init(void *v, va_list *args) {
 	Foo o = (Foo)v;
 	int value = va_arg(*args, int);
-	object_init(o, FooClass);
-	msg(o, "initWithString", va_arg(*args, string));
-	((String)o)->parent = FooClass;
+	msg_cast(ObjectClass, o, "init");
+	msg_cast(StringClass, o, "initWithString", va_arg(*args, string));
+
 	o->value = value;
+
 	return o;
 }
 
 void *dealloc(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	return msg_super(o, "dealloc");
+	return msg_cast(StringClass, o, "dealloc");
 }
 
 void *print(void *v, va_list *args) {
 	Foo o = (Foo)v;
 	printf("%d ", o->value);
-	msg_super(o, "print");
+	msg_cast(StringClass, o, "print");
 	return NULL;
 }

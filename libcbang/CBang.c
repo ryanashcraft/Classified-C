@@ -8,9 +8,11 @@
  */
 
 #include "CBang.h"
+#include <execinfo.h>
 
 static int method_name_equals(const void *methodp, va_list *args);
 static void *cbmessage(Object o, Class c, string message, va_list *args);
+static void print_bt();
 
 /**
   Initialize the class list and the standard classes
@@ -60,10 +62,9 @@ void *msg(void *v, string message, ...) {
 	return cbmessage(o, c, message, &argp);
 }
 
-void *msg_super(void *v, string message, ...) {
+void *msg_cast(Class c, void *v, string message, ...) {
 	va_list argp;
 	Object o = (Object)v;
-	Class c = o->parent;
 
 	// Instantiate the variable argument list for the method's parameters
 	va_start(argp, message);
@@ -73,37 +74,52 @@ void *msg_super(void *v, string message, ...) {
 	return cbmessage(o, c, message, &argp);
 }
 
-void *cbmessage(Object o, Class c, string message, va_list *argp) {
+void *msg_class(Class c, string message, ...) {
+	va_list argp;
+	Class startC = c;
 	method the_method;
-	boolean object_is_class = (o->parent == ClassClass) ? YES : NO;
 
 	// Try to get the method from the object's type
-	if (object_is_class) {
-		the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
-	} else {
-		the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
-	}
+	the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
 
 	// While the method isn't found and there is a parent, then look in the
 	// parent's type
 	while (!the_method && c->parent_class != NULL) {
 		c = c->parent_class;
-
-		if (object_is_class) {
-			the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
-		} else {
-			the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
-		}
+		the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
 	}
 
 	// If the method is never found, then error and exit out
 	if (!the_method) {
-		if (object_is_class) {
-			fprintf(stderr, "Class %s does not respond to message \"%s\"\n", o->class->name, message);
-		} else {
-			fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", o->class->name, message);
-		}
+		fprintf(stderr, "Class %s does not respond to message \"%s\"\n", startC->name, message);
+		print_bt();
+		exit(EXIT_FAILURE);
+	}
 
+	// Instantiate the variable argument list for the method's parameters
+	va_start(argp, message);
+
+	return the_method->function((Object)c, &argp);
+}
+
+void *cbmessage(Object o, Class c, string message, va_list *argp) {
+	Class startC = c;
+	method the_method;
+
+	// Try to get the method from the object's type
+	the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
+
+	// While the method isn't found and there is a parent, then look in the
+	// parent's type
+	while (!the_method && c->parent_class != NULL) {
+		c = c->parent_class;
+		the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
+	}
+
+	// If the method is never found, then error and exit out
+	if (!the_method) {
+		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", startC->name, message);
+		print_bt();
 		exit(EXIT_FAILURE);
 	}
 

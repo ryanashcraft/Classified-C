@@ -12,26 +12,21 @@ void class_class_init() {
 	ClassClass = malloc(sizeof(struct _CBClass));
 	assert(ClassClass);
 
-	ClassClass->base.class = ClassClass;
-	ClassClass->base.root = ClassClass;
-	ClassClass->base.parent = ObjectClass;
-	ClassClass->base.retaincount = 1;
-
-	ClassClass->parent_class = ObjectClass;
+	((Object)ClassClass)->retaincount = 1;
 
 	ClassClass->static_methods = create_list();
+	m = mmethod("new", &new);
+	push_back(ClassClass->static_methods, m);
 
 	ClassClass->instance_methods = create_list();
-	m = mmethod("new", &new);
-	push_back(ClassClass->instance_methods, m);
 
 	ClassClass->name = mstring("Class");
 }
 
 Class new_class(string name, Class parent_class) {
 	Class c = cballoc(sizeof(struct _CBClass));
-	object_init(c, ClassClass);
-	c->base.root = c;
+	object_init(c);
+	((Object)c)->root = ClassClass;
 
 	c->parent_class = parent_class;
 	c->static_methods = create_list();
