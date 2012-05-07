@@ -23,7 +23,7 @@ typedef struct _method {
 	fpointer function;
 } *method;
 
-void cbang_init();
+void cbinit();
 void *msg(void *v, string message, ...);
 void *msg_cast(Class c, void *v, string message, ...);
 void *msg_class(Class c, string message, ...);

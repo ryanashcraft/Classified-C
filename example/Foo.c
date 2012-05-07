@@ -3,7 +3,7 @@
 #include "FooClass.h"
 
 int main(int argc, char **argv) {
-	cbang_init();
+	cbinit();
 	foo_class_init();
 
 	var o = msg_class(ObjectClass, "new");

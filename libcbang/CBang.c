@@ -10,14 +10,14 @@
 #include "CBang.h"
 #include <execinfo.h>
 
-static int method_name_equals(const void *methodp, va_list *args);
 static void *cbmessage(Object o, Class c, string message, va_list *args);
 static void print_bt();
+static int method_name_equals(const void *methodp, va_list *args);
 
 /**
   Initialize the class list and the standard classes
  */
-void cbang_init() {
+void cbinit() {
 	// Initialize and register standard classes to the class list
 	class_class_init();
 	object_class_init();
