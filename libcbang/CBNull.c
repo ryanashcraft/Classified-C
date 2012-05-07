@@ -33,5 +33,5 @@ void *init(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	Null o = (Null)v;
-	return msg_cast(ObjectClass, o, "release");
+	return msg_cast(ObjectClass, o, "dealloc");
 }
