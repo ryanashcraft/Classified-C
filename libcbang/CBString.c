@@ -14,6 +14,7 @@ static void *concatenate(void *v, va_list *args);
 static void *length(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 static void *toCString(void *v, va_list *args);
+static void *equals(void *v, va_list *args);
 
 void string_class_init() {
 	StringClass = msg_class(ClassClass, "new", "String", ObjectClass);
@@ -28,6 +29,7 @@ void string_class_init() {
 	push_back(StringClass->instance_methods, mmethod("length", &length));
 	push_back(StringClass->instance_methods, mmethod("print", &print));
 	push_back(StringClass->instance_methods, mmethod("toCString", &toCString));
+	push_back(StringClass->instance_methods, mmethod("equals", &equals));
 }
 
 void *newWithString(void *v, va_list *args) {
@@ -134,4 +136,14 @@ void *print(void *v, va_list *args) {
 void *toCString(void *v, va_list *args) {
 	String o = (String)v;
 	return o->value;
+}
+
+void *equals(void *v, va_list *args) {
+	String o = (String)v;
+	string other = va_arg(*args, string);
+	if (strncmp(o->value, other, strlen(o->value)) == 0) {
+		return YES;
+	}
+	
+	return NO;
 }
