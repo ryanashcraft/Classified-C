@@ -110,6 +110,23 @@ void *cbmessage(Object o, Class c, string message, va_list *argp) {
 	return the_method->function(o, argp);
 }
 
+void print_bt() {
+	void *array[10];
+	size_t size;
+	char **strings;
+	size_t i;
+     
+	size = backtrace(array, 10);
+	strings = backtrace_symbols(array, size);
+
+	printf("Obtained %zd stack frames.\n", size);
+
+	for (i = 0; i < size; i++)
+		printf ("%s\n", strings[i]);
+
+	free(strings);
+}
+
 /**
   Compare a method's name to a string.
 
