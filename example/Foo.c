@@ -9,19 +9,19 @@ int main(int argc, char **argv) {
 	var o = msg_class(ObjectClass, "new");
 	msg(o, "print");
 	o = msg(o, "release");
-	printf("\n");
+	msg(SystemOut, "println", "");
 
 	var n = msg_class(NullClass, "new");
 	msg(n, "print");
 	n = msg(n, "release");
-	printf("\n");
+	msg(SystemOut, "println", "");
 
 	var ohhai = msg_class(StringClass, "newWithString", "oh hai");
 
 	var st = msg_class(StringClass, "newWithFormat", "test %@ %d %f", ohhai, 5, 4.0);
 	msg(st, "print");
 	st = msg(st, "release");
-	printf("\n");
+	msg(SystemOut, "println", "");
 
 	ohhai = msg(ohhai, "release");
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 	msg(mys, "concatenate", " Fighters");
 	msg(mys, "print");
 	msg(mys, "release");
-	printf("\n");
+	msg(SystemOut, "println", "");
 
 	// i = msg(mys, "length");
 	// printf("Length of string: %ld\n", (long)msg(i, "toCInt"));
@@ -75,5 +75,5 @@ int main(int argc, char **argv) {
 	// }
 	// stack = msg(stack, "release");
 
-	printf("\n");
+	msg(SystemOut, "println", "");
 }

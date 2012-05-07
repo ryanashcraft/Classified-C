@@ -10,6 +10,8 @@
 #include "CBang.h"
 #include <execinfo.h>
 
+var SystemOut = NULL;
+
 static void *cbmessage(Object o, Class c, string message, va_list *args);
 static void print_bt();
 static int method_name_equals(const void *methodp, va_list *args);
@@ -27,6 +29,9 @@ void cbinit() {
 	// stack_class_init();
 	// file_class_init();
 	// scanner_class_init();
+	printer_class_init();
+
+	SystemOut = msg_class(PrinterClass, "new");
 }
 
 /**

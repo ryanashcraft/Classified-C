@@ -12,7 +12,6 @@
 
 typedef char *string;
 typedef void *(*fpointer) (void *v, va_list *args);
-typedef void *(*spointer) (void *v);
 typedef struct _CBClass *Class;
 typedef size_t *boolean;
 
@@ -22,6 +21,8 @@ typedef struct _method {
 	string name;
 	fpointer function;
 } *method;
+
+extern var SystemOut;
 
 void cbinit();
 void *msg(void *v, string message, ...);
@@ -43,6 +44,7 @@ string mstring(string s);
 // #include "CBStack.h"
 // #include "CBFile.h"
 // #include "CBScanner.h"
+#include "CBPrinter.h"
 
 #define YES ((size_t *)1)
 #define NO ((size_t *)0)

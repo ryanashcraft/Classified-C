@@ -3,9 +3,9 @@
 # Ryan Ashcraft
 
 #
-obj=CBang.o list.o CBObject.o CBClass.o CBNull.o CBString.o
+obj=CBang.o list.o CBObject.o CBClass.o CBNull.o CBString.o CBPrinter.o
 # CBInteger.o CBStack.o CBFile.o CBScanner.o
-inc=CBang.h list.h CBObject.h CBClass.h CBNull.h CBString.h
+inc=CBang.h list.h CBObject.h CBClass.h CBNull.h CBString.h CBPrinter.h
 # CBInteger.h CBStack.h CBFile.h CBScanner.h
 misc=Makefile
 libtarget=libcbang.a
