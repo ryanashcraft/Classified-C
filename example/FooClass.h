@@ -6,7 +6,6 @@ extern Class FooClass;
 
 typedef struct _Foo {
 	struct _CBString base;
-
 	int value;
 } *Foo;
 
