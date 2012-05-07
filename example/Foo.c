@@ -16,10 +16,14 @@ int main(int argc, char **argv) {
 	n = msg(n, "release");
 	printf("\n");
 
-	var st = msg_class(StringClass, "newWithString", "test");
+	var ohhai = msg_class(StringClass, "newWithString", "oh hai");
+
+	var st = msg_class(StringClass, "newWithFormat", "test %@ %d %f", ohhai, 5, 4.0);
 	msg(st, "print");
 	st = msg(st, "release");
 	printf("\n");
+
+	ohhai = msg(ohhai, "release");
 
 	// var f = msg(FileClass, "initWithFilename", NULL, "../README.md");
 	// var s = msg(ScannerClass, "initWithFile", NULL, f);
