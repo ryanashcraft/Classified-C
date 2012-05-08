@@ -6,6 +6,7 @@ extern Class PrinterClass;
 
 typedef struct _CBPrinter {
 	struct _CBObject base;
+	File output;
 } *Printer;
 
 void printer_class_init();

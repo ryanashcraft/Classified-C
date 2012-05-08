@@ -45,7 +45,7 @@ void *dealloc(void *v, va_list *args) {
 
 void *print(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	printf("%d ", o->value);
+	msg(SystemOut, "print", "%d ", o->value);
 	msg_cast(StringClass, o, "print");
 	return NULL;
 }

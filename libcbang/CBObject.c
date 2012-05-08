@@ -63,6 +63,6 @@ void *retain(void *v, va_list *args) {
 }
 
 void *print(void *v, va_list *args) {
-	fprintf(stderr, "Object");
+	msg(SystemOut, "print", "Object");
 	return v;
 }

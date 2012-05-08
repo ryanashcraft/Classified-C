@@ -27,11 +27,11 @@ void cbinit() {
 	string_class_init();
 	// integer_class_init();
 	// stack_class_init();
-	// file_class_init();
+	file_class_init();
 	// scanner_class_init();
 	printer_class_init();
 
-	SystemOut = msg_class(PrinterClass, "new");
+	SystemOut = msg_class(PrinterClass, "newWithFile", msg_class(FileClass, "newWithFile", stderr));
 }
 
 /**
