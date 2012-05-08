@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 	msg(description, "release");
 
 	Null n = msg_class(NullClass, "new");
-	description = msg(o, "description");
+	description = msg(n, "description");
 	msg(SystemOut, "println", "%@", description);
 	msg(description, "release");
 	msg(n, "release");
@@ -21,9 +21,7 @@ int main(int argc, char **argv) {
 	String ohhai = msg_class(StringClass, "newWithString", "oh hai");
 
 	String st = msg_class(StringClass, "newWithFormat", "test %@ %d %f", ohhai, 5, 4.0);
-	description = msg(st, "description");
-	msg(SystemOut, "println", "%@", description);
-	msg(description, "release");
+	msg(SystemOut, "println", "%@", st);
 	msg(st, "release");
 
 	msg(ohhai, "release");
