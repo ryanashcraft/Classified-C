@@ -6,19 +6,19 @@ int main(int argc, char **argv) {
 	cbinit();
 	foo_class_init();
 
-	var o = msg_class(ObjectClass, "new");
+	Object o = msg_class(ObjectClass, "new");
 	msg(o, "print");
 	o = msg(o, "release");
 	msg(SystemOut, "println", "");
 
-	var n = msg_class(NullClass, "new");
+	Null n = msg_class(NullClass, "new");
 	msg(n, "print");
 	n = msg(n, "release");
 	msg(SystemOut, "println", "");
 
-	var ohhai = msg_class(StringClass, "newWithString", "oh hai");
+	String ohhai = msg_class(StringClass, "newWithString", "oh hai");
 
-	var st = msg_class(StringClass, "newWithFormat", "test %@ %d %f", ohhai, 5, 4.0);
+	String st = msg_class(StringClass, "newWithFormat", "test %@ %d %f", ohhai, 5, 4.0);
 	msg(st, "print");
 	st = msg(st, "release");
 	msg(SystemOut, "println", "");
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 	// printf("\n");
 	// ohhai = msg(ohhai, "release");
 
-	var mys = msg_class(FooClass, "new", 77, "Foo");
+	Foo mys = msg_class(FooClass, "new", 77, "Foo");
 	msg(mys, "concatenate", " Fighters");
 	msg(mys, "print");
 	msg(mys, "release");

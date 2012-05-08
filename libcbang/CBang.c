@@ -10,9 +10,9 @@
 #include "CBang.h"
 #include <execinfo.h>
 
-var SystemOut = NULL;
+Object SystemOut = NULL;
 
-static void *cbmessage(Object o, Class c, string message, va_list *args);
+static Object cbmessage(Object o, Class c, string message, va_list *args);
 static void print_bt();
 static int method_name_equals(const void *methodp, va_list *args);
 
@@ -54,9 +54,8 @@ void cbinit() {
 
   @return the object returned from the function call
  */
-void *msg(void *v, string message, ...) {
+void *msg(Object o, string message, ...) {
 	va_list argp;
-	Object o = (Object)v;
 	Class c = o->root;
 
 	// Instantiate the variable argument list for the method's parameters
@@ -67,9 +66,8 @@ void *msg(void *v, string message, ...) {
 	return cbmessage(o, c, message, &argp);
 }
 
-void *msg_cast(Class c, void *v, string message, ...) {
+void *msg_cast(Class c, Object o, string message, ...) {
 	va_list argp;
-	Object o = (Object)v;
 
 	// Instantiate the variable argument list for the method's parameters
 	va_start(argp, message);
@@ -107,7 +105,7 @@ void *msg_class(Class c, string message, ...) {
 	return the_method->function((Object)c, &argp);
 }
 
-void *cbmessage(Object o, Class c, string message, va_list *argp) {
+Object cbmessage(Object o, Class c, string message, va_list *argp) {
 	Class startC = c;
 	method the_method;
 
