@@ -40,7 +40,7 @@ string mstring(string s);
 #include "CBNull.h"
 #include "CBString.h"
 #include "CBInteger.h"
-// #include "CBStack.h"
+#include "CBStack.h"
 #include "CBFile.h"
 #include "CBScanner.h"
 #include "CBPrinter.h"

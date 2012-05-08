@@ -33,23 +33,13 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "%s ", (string)msg(token, "toCString"));
 		msg(token, "release");
 
-		i = msg(i, "release");
+		msg(i, "release");
 		i = msg(s, "has_next");
 	}
-	i = msg(i, "release");
-	s = msg(s, "release");
-	f = msg(f, "release");
+	msg(i, "release");
+	msg(s, "release");
+	msg(f, "release");
 	msg(SystemOut, "println", "");
-
-	// var n = msg(NullClass, "init", NULL);
-	// msg(n, "print");
-	// printf("\n");
-	// n = msg(n, "release");
-
-	// var ohhai = msg(StringClass, "initWithString", NULL, "OH HAI!");
-	// msg(ohhai, "print");
-	// printf("\n");
-	// ohhai = msg(ohhai, "release");
 
 	Foo mys = msg_class(FooClass, "new", 77, "Foo");
 	msg(mys, "concatenate", " Fighters");
@@ -57,23 +47,15 @@ int main(int argc, char **argv) {
 	msg(mys, "release");
 	msg(SystemOut, "println", "");
 
-	// i = msg(mys, "length");
-	// printf("Length of string: %ld\n", (long)msg(i, "toCInt"));
-	// i = msg(i, "release");
-	// mys = msg(mys, "retain");
-	// mys = msg(mys, "release");
-	// i = msg(mys, "length");
-	// mys = msg(mys, "release");
-
-	// var stack = msg(StackClass, "init", NULL);
-	// msg(stack, "push", msg(StringClass, "initWithString", NULL, "Ryan"));
-	// msg(stack, "push", msg(StringClass, "initWithString", NULL, "Tanner"));
-	// msg(stack, "pop");
-	// var str = msg(stack, "peek");
-	// if (str) {
-	// 	printf("%s\n", (string)msg(str, "toCString"));
-	// }
-	// stack = msg(stack, "release");
+	Stack stack = msg_class(StackClass, "new");
+	msg(stack, "push", msg_class(StringClass, "newWithString", "Ryan"));
+	msg(stack, "push", msg_class(StringClass, "newWithString", "Tanner"));
+	msg(stack, "pop");
+	String str = msg(stack, "peek");
+	if (str) {
+		printf("%s\n", (string)msg(str, "toCString"));
+	}
+	stack = msg(stack, "release");
 
 	msg(SystemOut, "println", "");
 }

@@ -26,7 +26,7 @@ void cbinit() {
 	null_class_init();
 	string_class_init();
 	integer_class_init();
-	// stack_class_init();
+	stack_class_init();
 	file_class_init();
 	scanner_class_init();
 	printer_class_init();
