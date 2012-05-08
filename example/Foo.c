@@ -25,21 +25,21 @@ int main(int argc, char **argv) {
 
 	msg(ohhai, "release");
 
-	// var f = msg(FileClass, "initWithFilename", NULL, "../README.md");
-	// var s = msg(ScannerClass, "initWithFile", NULL, f);
-	// var i = msg(IntegerClass, "initWithInt", NULL, 1);
-	// while (!msg(i, "equals", 0)) {
-	// 	var token = msg(s, "next");
-	// 	fprintf(stderr, "%s ", (string)msg(token, "toCString"));
-	// 	msg(token, "release");
+	File f = msg_class(FileClass, "newWithFilename", "../README.md");
+	Scanner s = msg_class(ScannerClass, "newWithFile", f);
+	Integer i = msg_class(IntegerClass, "newWithInt", 1);
+	while (!msg(i, "equals", 0)) {
+		String token = msg(s, "next");
+		fprintf(stderr, "%s ", (string)msg(token, "toCString"));
+		msg(token, "release");
 
-	// 	i = msg(i, "release");
-	// 	i = msg(s, "has_next");
-	// }
-	// i = msg(i, "release");
-	// s = msg(s, "release");
-	// f = msg(f, "release");
-	// printf("\n");
+		i = msg(i, "release");
+		i = msg(s, "has_next");
+	}
+	i = msg(i, "release");
+	s = msg(s, "release");
+	f = msg(f, "release");
+	msg(SystemOut, "println", "");
 
 	// var n = msg(NullClass, "init", NULL);
 	// msg(n, "print");

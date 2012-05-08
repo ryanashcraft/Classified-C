@@ -25,10 +25,10 @@ void cbinit() {
 	object_class_init();
 	null_class_init();
 	string_class_init();
-	// integer_class_init();
+	integer_class_init();
 	// stack_class_init();
 	file_class_init();
-	// scanner_class_init();
+	scanner_class_init();
 	printer_class_init();
 
 	SystemOut = msg_class(PrinterClass, "newWithFile", msg_class(FileClass, "newWithFile", stderr));
@@ -54,8 +54,9 @@ void cbinit() {
 
   @return the object returned from the function call
  */
-void *msg(Object o, string message, ...) {
+void *msg(void *v, string message, ...) {
 	va_list argp;
+	Object o = (Object)v;
 	Class c = o->root;
 
 	// Instantiate the variable argument list for the method's parameters
@@ -66,8 +67,9 @@ void *msg(Object o, string message, ...) {
 	return cbmessage(o, c, message, &argp);
 }
 
-void *msg_cast(Class c, Object o, string message, ...) {
+void *msg_cast(Class c, void *v, string message, ...) {
 	va_list argp;
+	Object o = (Object)v;
 
 	// Instantiate the variable argument list for the method's parameters
 	va_start(argp, message);

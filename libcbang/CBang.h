@@ -24,8 +24,8 @@ typedef struct _method {
 extern Object SystemOut;
 
 void cbinit();
-void *msg(Object o, string message, ...);
-void *msg_cast(Class c, Object o, string message, ...);
+void *msg(void *v, string message, ...);
+void *msg_cast(Class c, void *v, string message, ...);
 void *msg_class(Class c, string message, ...);
 
 void *cballoc(size_t size);
@@ -39,10 +39,10 @@ string mstring(string s);
 #include "CBClass.h"
 #include "CBNull.h"
 #include "CBString.h"
-// #include "CBInteger.h"
+#include "CBInteger.h"
 // #include "CBStack.h"
 #include "CBFile.h"
-// #include "CBScanner.h"
+#include "CBScanner.h"
 #include "CBPrinter.h"
 
 #define YES ((size_t *)1)

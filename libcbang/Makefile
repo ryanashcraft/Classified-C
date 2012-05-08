@@ -3,10 +3,10 @@
 # Ryan Ashcraft
 
 #
-obj=CBang.o list.o CBObject.o CBClass.o CBNull.o CBString.o CBFile.o CBPrinter.o
-# CBInteger.o CBStack.o CBScanner.o
-inc=CBang.h list.h CBObject.h CBClass.h CBNull.h CBString.h CBFile.h CBPrinter.h
-# CBInteger.h CBStack.h CBScanner.h
+obj=CBang.o list.o CBObject.o CBClass.o CBNull.o CBString.o CBFile.o CBPrinter.o CBInteger.o CBScanner.o
+#  CBStack.o 
+inc=CBang.h list.h CBObject.h CBClass.h CBNull.h CBString.h CBFile.h CBPrinter.h CBInteger.h CBScanner.h
+#  CBStack.h 
 misc=Makefile
 libtarget=libcbang.a
 cflags=-fPIC -Wall -g -Werror -pedantic -std=c99
