@@ -8,22 +8,22 @@ int main(int argc, char **argv) {
 
 	Object o = msg_class(ObjectClass, "new");
 	msg(o, "print");
-	o = msg(o, "release");
+	msg(o, "release");
 	msg(SystemOut, "println", "");
 
 	Null n = msg_class(NullClass, "new");
 	msg(n, "print");
-	n = msg(n, "release");
+	msg(n, "release");
 	msg(SystemOut, "println", "");
 
 	String ohhai = msg_class(StringClass, "newWithString", "oh hai");
 
 	String st = msg_class(StringClass, "newWithFormat", "test %@ %d %f", ohhai, 5, 4.0);
 	msg(st, "print");
-	st = msg(st, "release");
+	msg(st, "release");
 	msg(SystemOut, "println", "");
 
-	ohhai = msg(ohhai, "release");
+	msg(ohhai, "release");
 
 	// var f = msg(FileClass, "initWithFilename", NULL, "../README.md");
 	// var s = msg(ScannerClass, "initWithFile", NULL, f);
