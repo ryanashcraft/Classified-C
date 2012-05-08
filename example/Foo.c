@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
 	Integer i = msg_class(IntegerClass, "newWithInt", 1);
 	while (!msg(i, "equals", 0)) {
 		String token = msg(s, "next");
-		fprintf(stderr, "%s ", (string)msg(token, "toCString"));
+		msg(SystemOut, "print", "%@ ", token);
 		msg(token, "release");
 
 		msg(i, "release");
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
 	msg(stack, "pop");
 	String str = msg(stack, "peek");
 	if (str) {
-		printf("%s\n", (string)msg(str, "toCString"));
+		msg(SystemOut, "println", "%@", str);
 	}
 	stack = msg(stack, "release");
 
