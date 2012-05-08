@@ -63,5 +63,5 @@ void *retain(void *v, va_list *args) {
 }
 
 void *description(void *v, va_list *args) {
-	return msg_class(StringClass, "newWithString", "Object");
+	return msg_class(StringClass, "newWithFormat", "(Object) %p", v);
 }
