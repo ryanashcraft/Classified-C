@@ -45,5 +45,5 @@ void *dealloc(void *v, va_list *args) {
 
 void *description(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	return msg_class(StringClass, "newWithFormat", "%d %@", o, o->value);
+	return msg_class(StringClass, "newWithFormat", "%d %@", o->value, o);
 }

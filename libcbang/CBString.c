@@ -82,41 +82,64 @@ void *initWithFormatAndArgList(void *v, va_list *args) {
 }
 
 string format(string format, va_list *format_args) {
-	size_t max_size = 64;
-	size_t size = 0;
-	string value = calloc(max_size, sizeof(char));
-	String arg_string = NULL;
-	string arg_string_value = NULL;
-	size_t arg_string_length = 0;
-	int i;
-	for (i = 0; i < strlen(format) + 1; i++) {
-		if (i < strlen(format) - 1 && format[i] == '%' && format[i + 1] == '@') {
-			arg_string = va_arg(*format_args, String);
-			arg_string_value = arg_string->value;
-			arg_string_length = strlen(arg_string_value);
+	size_t value_max_size = 256;
+	size_t value_size = 0;
+	string value = calloc(value_max_size, sizeof(char));
 
-			if (size + arg_string_length > max_size) {
-				max_size = (max_size * 2) + arg_string_length + 1;
-				value = realloc(value, max_size);
+	size_t buffer_max_size = 64;
+	size_t buffer_size = 0;
+	string buffer = calloc(buffer_max_size, sizeof(char));
+
+	size_t buffer2_max_size = 64;
+	size_t buffer2_size = 0;
+	string buffer2 = calloc(buffer2_max_size, sizeof(char));
+
+	string arg_string = NULL;
+	size_t arg_string_length = 0;
+
+	for (int i = 0; i < strlen(format) + 1; i++) {
+		if (format[i] == '%' && format[i + 1] == '@') {
+			vsprintf(value, buffer, *format_args);
+			value_size = strlen(value);
+
+			String arg_object = va_arg(*format_args, String);
+			arg_string = (arg_object)->value;
+			arg_string_length = strlen(arg_string);
+
+			if (value_size + arg_string_length > value_max_size) {
+				value_max_size = (value_max_size * 2) + arg_string_length;
+				value = realloc(value, value_max_size);
 			}
 
-			strncat(value, arg_string_value, arg_string_length);
-			size += arg_string_length;
-			i++;
+			strncat(value, arg_string, arg_string_length);
+			value_size += arg_string_length;
+
+			memset(buffer, 0, buffer_size);
+			buffer_size = 0;
+
+			i += 1;
 		} else {
-			value[size] = format[i];
-			size++;
+			buffer[buffer_size] = format[i];
+			buffer_size++;
+
+			if (i == strlen(format)) {
+				vsprintf(buffer2, buffer, *format_args);
+				buffer2_size = strlen(buffer2);
+
+				strncat(value, buffer2, buffer2_size);
+				value_size = strlen(value);
+
+				memset(buffer2, 0, buffer2_size);
+				buffer2_size = 0;
+			}
 		}
 	}
-	value[size] = 0;
+	value[value_size] = 0;
+	value = realloc(value, strlen(value) + 1);
+	free(buffer);
+	free(buffer2);
 
-	string fully_formatted = calloc(size * 2, sizeof(char));
-	vsprintf(fully_formatted, value, *format_args);
-	fully_formatted = realloc(fully_formatted, strlen(fully_formatted) + 1);
-	assert(fully_formatted);
-	free(value);
-
-	return fully_formatted;
+	return value;
 }
 
 void *dealloc(void *v, va_list *args) {
@@ -151,7 +174,7 @@ void *length(void *v, va_list *args) {
 
 void *description(void *v, va_list *args) {
 	String o = (String)v;
-	return o;
+	return msg_class(StringClass, "newWithString", o->value);
 }
 
 void *equals(void *v, va_list *args) {

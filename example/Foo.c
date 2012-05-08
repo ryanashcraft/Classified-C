@@ -7,17 +7,23 @@ int main(int argc, char **argv) {
 	foo_class_init();
 
 	Object o = msg_class(ObjectClass, "new");
-	msg(SystemOut, "println", "%@", msg(o, "description"));
+	String description = msg(o, "description");
+	msg(SystemOut, "println", "%@", description);
 	msg(o, "release");
+	msg(description, "release");
 
 	Null n = msg_class(NullClass, "new");
-	msg(SystemOut, "println", "%@", msg(n, "description"));
+	description = msg(o, "description");
+	msg(SystemOut, "println", "%@", description);
+	msg(description, "release");
 	msg(n, "release");
 
 	String ohhai = msg_class(StringClass, "newWithString", "oh hai");
 
 	String st = msg_class(StringClass, "newWithFormat", "test %@ %d %f", ohhai, 5, 4.0);
-	msg(SystemOut, "println", "%@", st);
+	description = msg(st, "description");
+	msg(SystemOut, "println", "%@", description);
+	msg(description, "release");
 	msg(st, "release");
 
 	msg(ohhai, "release");
@@ -36,10 +42,13 @@ int main(int argc, char **argv) {
 	msg(hasNext, "release");
 	msg(s, "release");
 	msg(f, "release");
+	msg(SystemOut, "println", "");
 
 	Foo mys = msg_class(FooClass, "new", 77, "Foo");
 	msg(mys, "concatenate", " Fighters");
-	msg(SystemOut, "println", "%@", mys);
+	description = msg(mys, "description");
+	msg(SystemOut, "println", "%@", description);
+	msg(description, "release");
 	msg(mys, "release");
 
 	Stack stack = msg_class(StackClass, "new");
