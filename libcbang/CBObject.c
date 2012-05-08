@@ -10,7 +10,7 @@ static void *init(void *v, va_list *args);
 static void *release(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
 static void *retain(void *v, va_list *args);
-static void *print(void *v, va_list *args);
+static void *description(void *v, va_list *args);
 
 void object_class_init() {
 	ObjectClass = new_class("Object", NULL);
@@ -21,7 +21,7 @@ void object_class_init() {
 	push_back(ObjectClass->instance_methods, mmethod("release", &release));
 	push_back(ObjectClass->instance_methods, mmethod("dealloc", &dealloc));
 	push_back(ObjectClass->instance_methods, mmethod("retain", &retain));
-	push_back(ObjectClass->instance_methods, mmethod("print", &print));
+	push_back(ObjectClass->instance_methods, mmethod("description", &description));
 }
 
 Object object_init(void *v) {
@@ -62,7 +62,6 @@ void *retain(void *v, va_list *args) {
 	return o;
 }
 
-void *print(void *v, va_list *args) {
-	msg(SystemOut, "print", "Object");
-	return v;
+void *description(void *v, va_list *args) {
+	return msg_class(StringClass, "newWithString", "Object");
 }

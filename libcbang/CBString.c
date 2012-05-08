@@ -14,8 +14,7 @@ static void *initWithFormatAndArgList(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
 static void *concatenate(void *v, va_list *args);
 static void *length(void *v, va_list *args);
-static void *print(void *v, va_list *args);
-static void *toCString(void *v, va_list *args);
+static void *description(void *v, va_list *args);
 static void *equals(void *v, va_list *args);
 
 static string format(string format, va_list *format_args);
@@ -33,8 +32,7 @@ void string_class_init() {
 	push_back(StringClass->instance_methods, mmethod("dealloc", &dealloc));
 	push_back(StringClass->instance_methods, mmethod("concatenate", &concatenate));
 	push_back(StringClass->instance_methods, mmethod("length", &length));
-	push_back(StringClass->instance_methods, mmethod("print", &print));
-	push_back(StringClass->instance_methods, mmethod("toCString", &toCString));
+	push_back(StringClass->instance_methods, mmethod("description", &description));
 	push_back(StringClass->instance_methods, mmethod("equals", &equals));
 }
 
@@ -115,6 +113,7 @@ string format(string format, va_list *format_args) {
 	string fully_formatted = calloc(size * 2, sizeof(char));
 	vsprintf(fully_formatted, value, *format_args);
 	fully_formatted = realloc(fully_formatted, strlen(fully_formatted) + 1);
+	assert(fully_formatted);
 	free(value);
 
 	return fully_formatted;
@@ -145,21 +144,14 @@ void *concatenate(void *v, va_list *args) {
 }
 
 void *length(void *v, va_list *args) {
-	// String o = (String)v;
-	// var length = msg(IntegerClass, "initWithInt", NULL, strlen(o->value));
-	// return length;
-	return NULL;
+	String o = (String)v;
+	Integer length = msg_class(IntegerClass, "newWithInt", strlen(o->value));
+	return length;
 }
 
-void *print(void *v, va_list *args) {
+void *description(void *v, va_list *args) {
 	String o = (String)v;
-	msg(SystemOut, "print", o->value);
 	return o;
-}
-
-void *toCString(void *v, va_list *args) {
-	String o = (String)v;
-	return o->value;
 }
 
 void *equals(void *v, va_list *args) {

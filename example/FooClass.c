@@ -8,7 +8,7 @@ static void *new(void *v, va_list *args);
 
 static void *init(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
-static void *print(void *v, va_list *args);
+static void *description(void *v, va_list *args);
 
 void foo_class_init() {
 	FooClass = msg_class(ClassClass, "new", "Foo", StringClass);
@@ -17,7 +17,7 @@ void foo_class_init() {
 
 	push_back(FooClass->instance_methods, mmethod("init", &init));
 	push_back(FooClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(FooClass->instance_methods, mmethod("print", &print));
+	push_back(FooClass->instance_methods, mmethod("description", &description));
 }
 
 void *new(void *v, va_list *args) {
@@ -43,9 +43,7 @@ void *dealloc(void *v, va_list *args) {
 	return msg_cast(StringClass, o, "dealloc");
 }
 
-void *print(void *v, va_list *args) {
+void *description(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	msg(SystemOut, "print", "%d ", o->value);
-	msg_cast(StringClass, o, "print");
-	return NULL;
+	return msg_class(StringClass, "newWithFormat", "%d %@", o, o->value);
 }
