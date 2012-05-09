@@ -26,7 +26,6 @@ extern Object SystemOut;
 void cbinit();
 void *msg(void *v, string message, ...);
 void *msg_cast(Class c, void *v, string message, ...);
-void *msg_class(Class c, string message, ...);
 
 void *cballoc(size_t size);
 

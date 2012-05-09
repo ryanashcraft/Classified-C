@@ -11,7 +11,7 @@ static void *dealloc(void *v, va_list *args);
 static void *equals(void *v, va_list *args);
 
 void integer_class_init() {
-	IntegerClass = msg_class(ClassClass, "new", "Integer", ObjectClass);
+	IntegerClass = msg(ClassClass, "new", "Integer", ObjectClass);
 
 	push_back(IntegerClass->static_methods, mmethod("newWithInt", &newWithInt));
 	

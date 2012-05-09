@@ -15,7 +15,7 @@ static void *peek(void *v, va_list *args);
 void message_release(void *v);
 
 void stack_class_init() {
-	StackClass = msg_class(ClassClass, "new", "Stack", ObjectClass);
+	StackClass = msg(ClassClass, "new", "Stack", ObjectClass);
 
 	push_back(StackClass->static_methods, mmethod("new", &new));
 

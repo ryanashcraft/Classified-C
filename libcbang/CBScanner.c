@@ -14,7 +14,7 @@ static void *next(void *v, va_list *args);
 static void *has_next(void *v, va_list *args);
 
 void scanner_class_init() {
-	ScannerClass = msg_class(ClassClass, "new", "Scanner", ObjectClass);
+	ScannerClass = msg(ClassClass, "new", "Scanner", ObjectClass);
 
 	push_back(ScannerClass->static_methods, mmethod("newWithFile", &newWithFile));
 
@@ -68,7 +68,7 @@ void *next(void *v, va_list *args) {
 		buffer[i] = c;
 	} while (++i);
 
-	String token = msg_class(StringClass, "newWithString", buffer);
+	String token = msg(StringClass, "newWithString", buffer);
 
 	free(buffer);
 
@@ -87,7 +87,7 @@ void *has_next(void *v, va_list *args) {
 	}
 	ungetc(c, f);
 
-	Integer retval = msg_class(IntegerClass, "newWithInt", has_next);
+	Integer retval = msg(IntegerClass, "newWithInt", has_next);
 
 	return retval;
 }

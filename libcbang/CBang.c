@@ -13,6 +13,7 @@
 Object SystemOut = NULL;
 
 static Object cbmessage(Object o, Class c, string message, va_list *args);
+static Object cbmessageclass(Class c, string message, va_list *args);
 static void print_bt();
 static int method_name_equals(const void *methodp, va_list *args);
 
@@ -31,7 +32,7 @@ void cbinit() {
 	scanner_class_init();
 	printer_class_init();
 
-	SystemOut = msg_class(PrinterClass, "newWithFile", msg_class(FileClass, "newWithFile", stderr));
+	SystemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
 }
 
 /**
@@ -57,10 +58,15 @@ void cbinit() {
 void *msg(void *v, string message, ...) {
 	va_list argp;
 	Object o = (Object)v;
+
 	Class c = o->root;
 
 	// Instantiate the variable argument list for the method's parameters
 	va_start(argp, message);
+
+	if (c == ClassClass) {
+		return cbmessageclass((Class)o, message, &argp);
+	}
 
 	// Call the method's function pointer with the object and a reference
 	// to the variable argument list
@@ -79,8 +85,7 @@ void *msg_cast(Class c, void *v, string message, ...) {
 	return cbmessage(o, c, message, &argp);
 }
 
-void *msg_class(Class c, string message, ...) {
-	va_list argp;
+Object cbmessageclass(Class c, string message, va_list *argp) {
 	Class startC = c;
 	method the_method;
 
@@ -96,15 +101,12 @@ void *msg_class(Class c, string message, ...) {
 
 	// If the method is never found, then error and exit out
 	if (!the_method) {
-		fprintf(stderr, "Class %s does not respond to message \"%s\"\n", startC->name, message);
+		fprintf(stderr, "Class of type %s does not respond to message \"%s\"\n", startC->name, message);
 		print_bt();
 		exit(EXIT_FAILURE);
 	}
 
-	// Instantiate the variable argument list for the method's parameters
-	va_start(argp, message);
-
-	return the_method->function((Object)c, &argp);
+	return the_method->function(c, argp);
 }
 
 Object cbmessage(Object o, Class c, string message, va_list *argp) {

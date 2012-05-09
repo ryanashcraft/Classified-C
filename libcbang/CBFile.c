@@ -13,7 +13,7 @@ static void *dealloc(void *v, va_list *args);
 static void *file(void *v, va_list *args);
 
 void file_class_init() {
-	FileClass = msg_class(ClassClass, "new", "File", ObjectClass);
+	FileClass = msg(ClassClass, "new", "File", ObjectClass);
 
 	push_back(FileClass->static_methods, mmethod("newWithFilename", &newWithFilename));
 	push_back(FileClass->static_methods, mmethod("newWithFile", &newWithFile));

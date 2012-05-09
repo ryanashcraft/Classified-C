@@ -10,7 +10,7 @@ static void *init(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
 
 void null_class_init() {
-	NullClass = msg_class(ClassClass, "new", "Null", ObjectClass);
+	NullClass = msg(ClassClass, "new", "Null", ObjectClass);
 
 	push_back(NullClass->static_methods, mmethod("new", &new));
 	

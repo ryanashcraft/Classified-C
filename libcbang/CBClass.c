@@ -12,6 +12,7 @@ void class_class_init() {
 	ClassClass = malloc(sizeof(struct _CBClass));
 	assert(ClassClass);
 
+	((Object)ClassClass)->root = ClassClass;
 	((Object)ClassClass)->retaincount = 1;
 
 	ClassClass->static_methods = create_list();

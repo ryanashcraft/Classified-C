@@ -11,7 +11,7 @@ static void *dealloc(void *v, va_list *args);
 static void *description(void *v, va_list *args);
 
 void foo_class_init() {
-	FooClass = msg_class(ClassClass, "new", "Foo", StringClass);
+	FooClass = msg(ClassClass, "new", "Foo", StringClass);
 
 	push_back(FooClass->static_methods, mmethod("new", &new));
 
@@ -45,5 +45,5 @@ void *dealloc(void *v, va_list *args) {
 
 void *description(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	return msg_class(StringClass, "newWithFormat", "%d %@", o->value, o);
+	return msg(StringClass, "newWithFormat", "%d %@", o->value, o);
 }

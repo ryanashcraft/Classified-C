@@ -12,7 +12,7 @@ static void *println(void *v, va_list *args);
 static void *flush(void *v, va_list *args);
 
 void printer_class_init() {
-	PrinterClass = msg_class(ClassClass, "new", "Printer", ObjectClass);
+	PrinterClass = msg(ClassClass, "new", "Printer", ObjectClass);
 
 	push_back(PrinterClass->static_methods, mmethod("newWithFile", &newWithFile));
 	
@@ -46,7 +46,7 @@ void *dealloc(void *v, va_list *args) {
 void *print(void *v, va_list *args) {
 	Printer o = (Printer)v;
 	string format = va_arg(*args, string);
-	String toPrint = msg_class(StringClass, "newWithFormatAndArgList", format, args);
+	String toPrint = msg(StringClass, "newWithFormatAndArgList", format, args);
 	fprintf(o->output->file, "%s", toPrint->value);
 	msg(toPrint, "release");
 	return NULL;
@@ -54,7 +54,7 @@ void *print(void *v, va_list *args) {
 
 void *println(void *v, va_list *args) {
 	Printer o = (Printer)v;
-	String toPrint = msg_class(StringClass, "newWithFormatAndArgList", va_arg(*args, string), args);
+	String toPrint = msg(StringClass, "newWithFormatAndArgList", va_arg(*args, string), args);
 	fprintf(o->output->file, "%s\n", toPrint->value);
 	msg(toPrint, "release");
 	return NULL;

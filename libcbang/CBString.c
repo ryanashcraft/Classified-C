@@ -20,7 +20,7 @@ static void *equals(void *v, va_list *args);
 static string format(string format, va_list *format_args);
 
 void string_class_init() {
-	StringClass = msg_class(ClassClass, "new", "String", ObjectClass);
+	StringClass = msg(ClassClass, "new", "String", ObjectClass);
 
 	push_back(StringClass->static_methods, mmethod("newWithString", &newWithString));
 	push_back(StringClass->static_methods, mmethod("newWithFormat", &newWithFormat));
@@ -168,13 +168,13 @@ void *concatenate(void *v, va_list *args) {
 
 void *length(void *v, va_list *args) {
 	String o = (String)v;
-	Integer length = msg_class(IntegerClass, "newWithInt", strlen(o->value));
+	Integer length = msg(IntegerClass, "newWithInt", strlen(o->value));
 	return length;
 }
 
 void *description(void *v, va_list *args) {
 	String o = (String)v;
-	return msg_class(StringClass, "newWithString", o->value);
+	return msg(StringClass, "newWithString", o->value);
 }
 
 void *equals(void *v, va_list *args) {
