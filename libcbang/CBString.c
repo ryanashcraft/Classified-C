@@ -82,25 +82,30 @@ void *initWithFormatAndArgList(void *v, va_list *args) {
 }
 
 string format(string format, va_list *format_args) {
-	size_t value_max_size = 256;
+	size_t value_max_size = 8;
 	size_t value_size = 0;
 	string value = calloc(value_max_size, sizeof(char));
 
-	size_t buffer_max_size = 64;
+	size_t buffer_max_size = 8;
 	size_t buffer_size = 0;
 	string buffer = calloc(buffer_max_size, sizeof(char));
 
-	size_t buffer2_max_size = 64;
+	size_t buffer2_max_size = 8;
 	size_t buffer2_size = 0;
 	string buffer2 = calloc(buffer2_max_size, sizeof(char));
 
 	string arg_string = NULL;
 	size_t arg_string_length = 0;
-
+	
 	for (int i = 0; i < strlen(format) + 1; i++) {
 		if (format[i] == '%' && format[i + 1] == '@') {
-			vsprintf(value, buffer, *format_args);
-			value_size = strlen(value);
+			value_size = vsnprintf(value, value_max_size, buffer, *format_args);
+			while (value_size > value_max_size) {
+				value_max_size = (value_max_size * 2) + value_size;
+				value = realloc(value, value_max_size);
+
+				value_size = vsnprintf(value, value_max_size, buffer, *format_args);
+			}
 
 			String arg_object = va_arg(*format_args, String);
 			arg_string = (arg_object)->value;
@@ -111,7 +116,7 @@ string format(string format, va_list *format_args) {
 				value = realloc(value, value_max_size);
 			}
 
-			strncat(value, arg_string, arg_string_length);
+			value = strncat(value, arg_string, arg_string_length);
 			value_size += arg_string_length;
 
 			memset(buffer, 0, buffer_size);
@@ -119,15 +124,32 @@ string format(string format, va_list *format_args) {
 
 			i += 1;
 		} else {
+			if (buffer_size + 1 > buffer_max_size) {
+				buffer_max_size = (buffer_max_size * 2);
+				buffer = realloc(buffer, buffer_max_size);
+			}
+
 			buffer[buffer_size] = format[i];
 			buffer_size++;
 
 			if (i == strlen(format)) {
-				vsprintf(buffer2, buffer, *format_args);
-				buffer2_size = strlen(buffer2);
+				buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
+				while (buffer2_size > buffer2_max_size) {
+					buffer2_max_size = (buffer2_max_size * 2) + buffer2_size;
+					buffer2 = realloc(buffer2, buffer2_max_size);
 
-				strncat(value, buffer2, buffer2_size);
-				value_size = strlen(value);
+					buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
+				}
+
+				if (value_size + buffer2_size > value_max_size) {
+					value_max_size = (value_max_size * 2) + buffer2_size;
+					value = realloc(value, value_max_size);
+				}
+
+				// fprintf(stderr, "before");
+				value = strncat(value, buffer2, buffer2_size);
+				// fprintf(stderr, "after");
+				value_size += buffer2_size;
 
 				memset(buffer2, 0, buffer2_size);
 				buffer2_size = 0;
