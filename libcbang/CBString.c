@@ -99,13 +99,26 @@ string format(string format, va_list *format_args) {
 	
 	for (int i = 0; i < strlen(format) + 1; i++) {
 		if (format[i] == '%' && format[i + 1] == '@') {
-			value_size = vsnprintf(value, value_max_size, buffer, *format_args);
-			while (value_size > value_max_size) {
-				value_max_size = (value_max_size * 2) + value_size;
-				value = realloc(value, value_max_size);
+			buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
+			while (buffer2_size > buffer2_max_size) {
+				buffer2_max_size = (buffer2_max_size * 2) + buffer2_size;
+				buffer2 = realloc(buffer2, buffer2_max_size);
 
-				value_size = vsnprintf(value, value_max_size, buffer, *format_args);
+				buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
 			}
+
+			if (value_size + buffer2_size > value_max_size) {
+				value_max_size = (value_max_size * 2) + buffer2_size;
+				value = realloc(value, value_max_size);
+			}
+
+			// fprintf(stderr, "before");
+			value = strncat(value, buffer2, buffer2_size);
+			// fprintf(stderr, "after");
+			value_size += buffer2_size;
+
+			memset(buffer2, 0, buffer2_size);
+			buffer2_size = 0;
 
 			String arg_object = va_arg(*format_args, String);
 			arg_string = (arg_object)->value;
