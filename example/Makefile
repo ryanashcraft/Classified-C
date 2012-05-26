@@ -10,8 +10,8 @@ obj=Foo.o FooClass.o
 inc=Foo.h FooClass.h
 misc=Makefile
 target=Example.o
-cflags=-Wall -c -g -Werror -pedantic -std=c99
-lflags=-Wall -g
+cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug
+lflags=-Wall -g -DDebug
 include=-I../libcbang/
 c=gcc
 lcbang= ../libcbang/libcbang.a
