@@ -82,6 +82,8 @@ void *initWithFormatAndArgList(void *v, va_list *args) {
 }
 
 string format(string format, va_list *format_args) {
+	va_list dup_list;
+
 	size_t value_max_size = 8;
 	size_t value_size = 0;
 	string value = calloc(value_max_size, sizeof(char));
@@ -99,12 +101,13 @@ string format(string format, va_list *format_args) {
 	
 	for (int i = 0; i < strlen(format) + 1; i++) {
 		if (format[i] == '%' && format[i + 1] == '@') {
+			va_copy(dup_list, *format_args);
 			buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
 			while (buffer2_size > buffer2_max_size) {
 				buffer2_max_size = (buffer2_max_size * 2) + buffer2_size;
 				buffer2 = realloc(buffer2, buffer2_max_size);
 
-				buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
+				buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, dup_list);
 			}
 
 			if (value_size + buffer2_size > value_max_size) {
@@ -146,12 +149,13 @@ string format(string format, va_list *format_args) {
 			buffer_size++;
 
 			if (i == strlen(format)) {
+				va_copy(dup_list, *format_args);
 				buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
 				while (buffer2_size > buffer2_max_size) {
 					buffer2_max_size = (buffer2_max_size * 2) + buffer2_size;
 					buffer2 = realloc(buffer2, buffer2_max_size);
 
-					buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
+					buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, dup_list);
 				}
 
 				if (value_size + buffer2_size > value_max_size) {
