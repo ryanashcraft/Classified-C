@@ -138,7 +138,8 @@ string format(string format, va_list *format_args) {
 			buffer_size++;
 
 			if (i == strlen(format)) {
-				buffer2_size = vsnprintf(buffer2, 0, buffer, *format_args);
+				va_copy(dup, *format_args);
+				buffer2_size = vsnprintf(buffer2, 0, buffer, dup);
 				buffer2 = calloc(buffer2_size, sizeof(char));
 				vsprintf(buffer2, buffer, *format_args);
 
