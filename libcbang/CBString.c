@@ -84,11 +84,11 @@ void *initWithFormatAndArgList(void *v, va_list *args) {
 string format(string format, va_list *format_args) {
 	size_t value_max_size = 8;
 	size_t value_size = 0;
-	string value = malloc(sizeof(char) * value_max_size);
+	string value = calloc(value_max_size, sizeof(char));
 	
 	size_t buffer_size = 0;
 	size_t buffer_max_size = 8;
-	string buffer = malloc(sizeof(char) * buffer_max_size);
+	string buffer = calloc(buffer_max_size, sizeof(char));
 	
 	size_t buffer2_size = 0;
 	string buffer2 = NULL;
