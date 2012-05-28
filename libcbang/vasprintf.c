@@ -108,9 +108,11 @@ int_vasprintf (result, format, args)
   global_total_width = total_width;
 #endif
   *result = malloc (total_width);
-  if (*result != NULL)
-    return vsprintf (*result, format, *args);
-  else
+  if (*result != NULL) {
+    int retval = vsprintf (*result, format, *args);
+	memcpy ( args, ap, sizeof (va_list));
+	return retval;
+  } else
     return 0;
 }
 
