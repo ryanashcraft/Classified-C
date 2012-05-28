@@ -18,6 +18,15 @@ lcbang= ../libcbang/libcbang.a
 
 all: $(target)
 
+clean-all:
+	cd ../libcbang; make clean; make; cd ../example; make clean; make;
+
+run-clean: clean-all
+	./$(target)
+
+gdb-clean: clean-all
+	gdb ./$(target)
+
 $(target) : $(obj) $(misc) $(lcbang)
 	$(c) $(lflags) $(obj) $(lcbang) -o $(target)
 
