@@ -82,46 +82,30 @@ void *initWithFormatAndArgList(void *v, va_list *args) {
 }
 
 string format(string format, va_list *format_args) {
-	va_list dup_list;
-
 	size_t value_max_size = 8;
 	size_t value_size = 0;
-	string value = calloc(value_max_size, sizeof(char));
-
-	size_t buffer_max_size = 8;
+	string value = malloc(sizeof(char) * value_max_size);
+	
 	size_t buffer_size = 0;
-	string buffer = calloc(buffer_max_size, sizeof(char));
-
-	size_t buffer2_max_size = 8;
+	size_t buffer_max_size = 8;
+	string buffer = malloc(sizeof(char) * buffer_max_size);
+	
 	size_t buffer2_size = 0;
-	string buffer2 = calloc(buffer2_max_size, sizeof(char));
+	string buffer2 = NULL;
 
 	string arg_string = NULL;
 	size_t arg_string_length = 0;
 	
 	for (int i = 0; i < strlen(format) + 1; i++) {
 		if (format[i] == '%' && format[i + 1] == '@') {
-			va_copy(dup_list, *format_args);
-			buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
-			while (buffer2_size > buffer2_max_size) {
-				buffer2_max_size = (buffer2_max_size * 2) + buffer2_size;
-				buffer2 = realloc(buffer2, buffer2_max_size);
+			buffer2_size = vasprintf(&buffer2, buffer, *format_args);
 
-				buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, dup_list);
-			}
-
-			if (value_size + buffer2_size > value_max_size) {
-				value_max_size = (value_max_size * 2) + buffer2_size;
-				value = realloc(value, value_max_size);
-			}
-
-			// fprintf(stderr, "before");
 			value = strncat(value, buffer2, buffer2_size);
-			// fprintf(stderr, "after");
 			value_size += buffer2_size;
 
-			memset(buffer2, 0, buffer2_size);
-			buffer2_size = 0;
+			// memset(buffer2, 0, buffer2_size);
+			// buffer2_size = 0;
+			free(buffer2);
 
 			String arg_object = va_arg(*format_args, String);
 			arg_string = (arg_object)->value;
@@ -129,7 +113,7 @@ string format(string format, va_list *format_args) {
 
 			if (value_size + arg_string_length > value_max_size) {
 				value_max_size = (value_max_size * 2) + arg_string_length;
-				value = realloc(value, value_max_size);
+				value = realloc(value, value_max_size + 1);
 			}
 
 			value = strncat(value, arg_string, arg_string_length);
@@ -149,34 +133,25 @@ string format(string format, va_list *format_args) {
 			buffer_size++;
 
 			if (i == strlen(format)) {
-				va_copy(dup_list, *format_args);
-				buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, *format_args);
-				while (buffer2_size > buffer2_max_size) {
-					buffer2_max_size = (buffer2_max_size * 2) + buffer2_size;
-					buffer2 = realloc(buffer2, buffer2_max_size);
-
-					buffer2_size = vsnprintf(buffer2, buffer2_max_size, buffer, dup_list);
-				}
+				buffer2_size = vasprintf(&buffer2, buffer, *format_args);
 
 				if (value_size + buffer2_size > value_max_size) {
 					value_max_size = (value_max_size * 2) + buffer2_size;
-					value = realloc(value, value_max_size);
+					value = realloc(value, value_max_size + 1);
 				}
 
-				// fprintf(stderr, "before");
 				value = strncat(value, buffer2, buffer2_size);
-				// fprintf(stderr, "after");
 				value_size += buffer2_size;
 
-				memset(buffer2, 0, buffer2_size);
-				buffer2_size = 0;
+				// memset(buffer2, 0, buffer2_size);
+				// buffer2_size = 0;
+				free(buffer2);
 			}
 		}
 	}
 	value[value_size] = 0;
 	value = realloc(value, strlen(value) + 1);
 	free(buffer);
-	free(buffer2);
 
 	return value;
 }
