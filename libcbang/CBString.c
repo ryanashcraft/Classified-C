@@ -1,6 +1,7 @@
 
 #include "CBang.h"
 #include "CBString.h"
+#include "vasprintf.h"
 
 Class StringClass = NULL;
 
@@ -82,8 +83,6 @@ void *initWithFormatAndArgList(void *v, va_list *args) {
 }
 
 string format(string format, va_list *format_args) {
-	va_list dup;
-
 	size_t value_max_size = 8;
 	size_t value_size = 0;
 	string value = calloc(value_max_size, sizeof(char));
@@ -100,10 +99,7 @@ string format(string format, va_list *format_args) {
 	
 	for (int i = 0; i < strlen(format) + 1; i++) {
 		if (format[i] == '%' && format[i + 1] == '@') {
-			va_copy(dup, *format_args);
-			buffer2_size = vsnprintf(buffer2, 0, buffer, dup);
-			buffer2 = calloc(buffer2_size, sizeof(char));
-			vsprintf(buffer2, buffer, *format_args);
+			buffer2_size = cc_vasprintf(&buffer2, buffer, format_args);
 
 			value = strncat(value, buffer2, buffer2_size);
 			value_size += buffer2_size;
@@ -138,10 +134,7 @@ string format(string format, va_list *format_args) {
 			buffer_size++;
 
 			if (i == strlen(format)) {
-				va_copy(dup, *format_args);
-				buffer2_size = vsnprintf(buffer2, 0, buffer, dup);
-				buffer2 = calloc(buffer2_size, sizeof(char));
-				vsprintf(buffer2, buffer, *format_args);
+				buffer2_size = cc_vasprintf(&buffer2, buffer, format_args);
 
 				if (value_size + buffer2_size > value_max_size) {
 					value_max_size = (value_max_size * 2) + buffer2_size;
