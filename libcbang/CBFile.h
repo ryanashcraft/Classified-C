@@ -6,7 +6,7 @@ extern Class FileClass;
 
 typedef struct _CBFile {
 	struct _CBObject base;
-	string filename;
+	cstring filename;
 	FILE *file;
 } *File;
 

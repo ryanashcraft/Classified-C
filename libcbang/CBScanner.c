@@ -47,7 +47,7 @@ void *next(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
 	FILE *f = msg(o->file, "file");
 
-	string buffer = calloc(1, TOKEN_BUFFER_SIZE);
+	cstring buffer = calloc(1, TOKEN_BUFFER_SIZE);
 	assert(buffer);
 	char c;
 	int i;
@@ -68,7 +68,7 @@ void *next(void *v, va_list *args) {
 		buffer[i] = c;
 	} while (++i);
 
-	String token = msg(StringClass, "newWithString", buffer);
+	String token = msg(StringClass, "newWithCString", buffer);
 
 	free(buffer);
 

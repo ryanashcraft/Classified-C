@@ -31,7 +31,7 @@ void *init(void *v, va_list *args) {
 	Foo o = (Foo)v;
 	int value = va_arg(*args, int);
 	msg_cast(ObjectClass, o, "init");
-	msg_cast(StringClass, o, "initWithString", va_arg(*args, string));
+	msg_cast(StringClass, o, "initWithCString", va_arg(*args, cstring));
 
 	o->value = value;
 
@@ -45,5 +45,5 @@ void *dealloc(void *v, va_list *args) {
 
 void *description(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	return msg(StringClass, "newWithFormat", "%d %@", o->value, o);
+	return msg(StringClass, "newWithFormatCString", "%d %@", o->value, o);
 }

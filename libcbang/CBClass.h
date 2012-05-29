@@ -7,12 +7,12 @@ struct _CBClass {
 	Class parent_class;
 	list *static_methods;
 	list *instance_methods;
-	string name;
+	cstring name;
 };
 
 extern Class ClassClass;
 
 void class_class_init();
-Class new_class(string name, Class parent_class);
+Class new_class(cstring name, Class parent_class);
 
 #endif

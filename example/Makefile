@@ -27,6 +27,9 @@ run-clean: clean-all
 gdb-clean: clean-all
 	gdb ./$(target)
 
+valgrind-clean: clean-all
+	valgrind ./$(target)
+
 $(target) : $(obj) $(misc) $(lcbang)
 	$(c) $(lflags) $(obj) $(lcbang) -o $(target)
 

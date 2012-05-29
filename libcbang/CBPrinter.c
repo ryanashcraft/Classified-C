@@ -45,8 +45,8 @@ void *dealloc(void *v, va_list *args) {
 
 void *print(void *v, va_list *args) {
 	Printer o = (Printer)v;
-	string format = va_arg(*args, string);
-	String toPrint = msg(StringClass, "newWithFormatAndArgList", format, args);
+	cstring format = va_arg(*args, cstring);
+	String toPrint = msg(StringClass, "newWithFormatCStringAndArgList", format, args);
 	fprintf(o->output->file, "%s", toPrint->value);
 	msg(toPrint, "release");
 	return NULL;
@@ -54,7 +54,7 @@ void *print(void *v, va_list *args) {
 
 void *println(void *v, va_list *args) {
 	Printer o = (Printer)v;
-	String toPrint = msg(StringClass, "newWithFormatAndArgList", va_arg(*args, string), args);
+	String toPrint = msg(StringClass, "newWithFormatCStringAndArgList", va_arg(*args, cstring), args);
 	fprintf(o->output->file, "%s\n", toPrint->value);
 	msg(toPrint, "release");
 	return NULL;

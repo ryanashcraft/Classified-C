@@ -24,7 +24,7 @@ void class_class_init() {
 	ClassClass->name = mstring("Class");
 }
 
-Class new_class(string name, Class parent_class) {
+Class new_class(cstring name, Class parent_class) {
 	Class c = cballoc(sizeof(struct _CBClass));
 	object_init(c);
 	((Object)c)->root = ClassClass;
@@ -38,7 +38,7 @@ Class new_class(string name, Class parent_class) {
 }
 
 void *new(void *v, va_list *args) {
-	string name = va_arg(*args, string);
+	cstring name = va_arg(*args, cstring);
 	Class parent_class = va_arg(*args, Class);
 
 	return new_class(name, parent_class);

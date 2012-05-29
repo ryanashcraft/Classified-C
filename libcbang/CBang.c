@@ -12,8 +12,8 @@
 
 Object SystemOut = NULL;
 
-static Object cbmessage(Object o, Class c, string message, va_list *args);
-static Object cbmessageclass(Class c, string message, va_list *args);
+static Object cbmessage(Object o, Class c, cstring message, va_list *args);
+static Object cbmessageclass(Class c, cstring message, va_list *args);
 static void print_bt();
 static int method_name_equals(const void *methodp, va_list *args);
 
@@ -26,6 +26,7 @@ void cbinit() {
 	object_class_init();
 	null_class_init();
 	string_class_init();
+	mutable_string_class_init();
 	integer_class_init();
 	stack_class_init();
 	file_class_init();
@@ -55,7 +56,7 @@ void cbinit() {
 
   @return the object returned from the function call
  */
-void *msg(void *v, string message, ...) {
+void *msg(void *v, cstring message, ...) {
 	va_list argp;
 	Object o = (Object)v;
 
@@ -73,7 +74,7 @@ void *msg(void *v, string message, ...) {
 	return cbmessage(o, c, message, &argp);
 }
 
-void *msg_cast(Class c, void *v, string message, ...) {
+void *msg_cast(Class c, void *v, cstring message, ...) {
 	va_list argp;
 	Object o = (Object)v;
 
@@ -85,7 +86,7 @@ void *msg_cast(Class c, void *v, string message, ...) {
 	return cbmessage(o, c, message, &argp);
 }
 
-Object cbmessageclass(Class c, string message, va_list *argp) {
+Object cbmessageclass(Class c, cstring message, va_list *argp) {
 	Class startC = c;
 	method the_method;
 
@@ -109,7 +110,7 @@ Object cbmessageclass(Class c, string message, va_list *argp) {
 	return the_method->function(c, argp);
 }
 
-Object cbmessage(Object o, Class c, string message, va_list *argp) {
+Object cbmessage(Object o, Class c, cstring message, va_list *argp) {
 	Class startC = c;
 	method the_method;
 
@@ -157,11 +158,11 @@ void print_bt() {
   @param args    variable argument list, which is expected to have a char
                  pointer at the argument's address
 
-  @return 1 if the method's name equals the string from the variable
+  @return 1 if the method's name equals the cstring from the variable
           arguments list, else return 0
  */
 int method_name_equals(const void *methodp, va_list *args) {
-	string name = va_arg(*args, string);
+	cstring name = va_arg(*args, cstring);
 	method the_method = (method)methodp;
 	if (strcmp(the_method->name, name) == 0) {
 		return 1;
@@ -185,7 +186,7 @@ void *cballoc(size_t size) {
 
   @return a malloc'ed method struct with its members defined
  */
-method mmethod(string name, fpointer function) {
+method mmethod(cstring name, fpointer function) {
 	method the_method = malloc(sizeof(struct _method));
 	assert(the_method);
 
@@ -198,13 +199,13 @@ method mmethod(string name, fpointer function) {
 /**
   Helper function creating a new malloc'ed string.
 
-  @param s the string to copy from
+  @param s the cstring to copy from
 
   @return a malloc'ed version of the string
  */
-string mstring(string s) {
-	string the_string = malloc(strlen(s) + 1);
+cstring mstring(cstring s) {
+	cstring the_string = malloc(strlen(s) + 1);
 	assert(the_string);
-	strncpy(the_string, s, strlen(s) + 1);
+	the_string = strncpy(the_string, s, strlen(s) + 1);
 	return the_string;
 }

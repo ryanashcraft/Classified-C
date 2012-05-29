@@ -41,7 +41,7 @@ void *newWithFile(void *v, va_list *args) {
 void *initWithFilename(void *v, va_list *args) {
 	File o = (File)v;
 	msg_cast(ObjectClass, o, "init");
-	o->filename = mstring(va_arg(*args, string));
+	o->filename = mstring(va_arg(*args, cstring));
 	o->file = fopen(o->filename, "r");
 	return o;
 }

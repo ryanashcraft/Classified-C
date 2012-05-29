@@ -18,9 +18,9 @@ int main(int argc, char **argv) {
 	msg(description, "release");
 	msg(n, "release");
 
-	String ohhai = msg(StringClass, "newWithString", "oh hai");
+	String ohhai = msg(StringClass, "newWithCString", "oh hai");
 
-	String st = msg(StringClass, "newWithFormat", "test %@ %d %f", ohhai, 5, 4.0);
+	String st = msg(StringClass, "newWithFormatCString", "test %@ %d %f", ohhai, 5, 4.0);
 	msg(SystemOut, "println", "%@", st);
 	msg(st, "release");
 
@@ -43,15 +43,14 @@ int main(int argc, char **argv) {
 	msg(SystemOut, "println", "");
 
 	Foo mys = msg(FooClass, "new", 77, "Foo");
-	msg(mys, "concatenate", " Fighters");
 	description = msg(mys, "description");
 	msg(SystemOut, "println", "%@", description);
 	msg(description, "release");
 	msg(mys, "release");
 
 	Stack stack = msg(StackClass, "new");
-	msg(stack, "push", msg(StringClass, "newWithString", "Ryan"));
-	msg(stack, "push", msg(StringClass, "newWithString", "Tanner"));
+	msg(stack, "push", msg(StringClass, "newWithCString", "Ryan"));
+	msg(stack, "push", msg(StringClass, "newWithCString", "Tanner"));
 	msg(stack, "pop");
 	String str = msg(stack, "peek");
 	if (str) {
