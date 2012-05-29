@@ -1,6 +1,5 @@
 
 #include "../libcbang/CBang.h"
-#include "vasprintf.h"
 
 Class MutableStringClass = NULL;
 
@@ -16,6 +15,7 @@ static void *appendCharacter(void *v, va_list *args);
 static void *vsprint(void *v, va_list *args);
 
 static cstring concatenate(MutableString s, cstring part_two);
+static void virtual_vsprintf(char *, va_list *args);
 
 void mutable_string_class_init() {
 	MutableStringClass = msg(ClassClass, "new", "MutableString", StringClass);
@@ -146,7 +146,7 @@ void *vsprint(void *v, va_list *args) {
 	vsprintf(o->base.value, dup, duplicate_format_args);
 	va_end(duplicate_format_args);
 
-	fake_vsprint(dup, format_args);
+	virtual_vsprintf(dup, format_args);
 
 	free(dup);
 
@@ -154,4 +154,56 @@ void *vsprint(void *v, va_list *args) {
 	o->base.value[string_length] = '\0';
 
 	return o;
+}
+
+void virtual_vsprintf(char *format, va_list *args) {
+	const char *p = format;
+
+	while (*p != '\0') {
+		if (*p++ == '%') {
+			while (strchr("-+ #0", *p)) {
+				++p;
+			}
+
+			if (*p == '*') {
+				++p;
+			}
+
+			if (*p == '.') {
+	      		++p;
+	      		if (*p == '*') {
+	      			++p;
+				}
+			}
+
+			while (strchr("hlL", *p)) {
+				++p;
+			}
+
+			switch (*p) {
+				case 'd':
+				case 'i':
+				case 'o':
+				case 'u':
+				case 'x':
+				case 'X':
+				case 'c':
+					va_arg(*args, int);
+					break;
+				case 'f':
+				case 'e':
+				case 'E':
+				case 'g':
+				case 'G':
+					va_arg(*args, double);
+					break;
+				case 's':
+					break;
+				case 'p':
+				case 'n':
+					va_arg(*args, char *);
+					break;
+			}
+		}
+	}
 }
