@@ -28,6 +28,74 @@ Boston, MA 02111-1307, USA.  */
 int global_total_width;
 #endif
 
+void fake_vsprint(char *format, va_list *args) {
+	const char *p = format;
+	int total_width = strlen (format) + 1;
+
+	while (*p != '\0')
+    {
+      if (*p++ == '%')
+	{
+	  while (strchr ("-+ #0", *p))
+	    ++p;
+	  if (*p == '*')
+	    {
+	      ++p;
+	      total_width += abs (va_arg (*args, int));
+	    }
+	  else
+	    total_width += strtoul (p, (char **) &p, 10);
+	  if (*p == '.')
+	    {
+	      ++p;
+	      if (*p == '*')
+		{
+		  ++p;
+		  total_width += abs (va_arg (*args, int));
+		}
+	      else
+	      total_width += strtoul (p, (char **) &p, 10);
+	    }
+	  while (strchr ("hlL", *p))
+	    ++p;
+	  /* Should be big enough for any format specifier except %s and floats.  */
+	  total_width += 30;
+	  switch (*p)
+	    {
+    	case '@':
+	      total_width += strlen (va_arg (*args, String)->value);
+	      break;
+	    case 'd':
+	    case 'i':
+	    case 'o':
+	    case 'u':
+	    case 'x':
+	    case 'X':
+	    case 'c':
+	      (void) va_arg (*args, int);
+	      break;
+	    case 'f':
+	    case 'e':
+	    case 'E':
+	    case 'g':
+	    case 'G':
+	      (void) va_arg (*args, double);
+	      /* Since an ieee double can have an exponent of 307, we'll
+		 make the buffer wide enough to cover the gross case. */
+	      total_width += 307;
+	      break;
+	    case 's':
+	      total_width += strlen (va_arg (*args, char *));
+	      break;
+	    case 'p':
+	    case 'n':
+	      (void) va_arg (*args, char *);
+	      break;
+	    }
+	}
+}
+}
+
 static int
 int_vasprintf (result, format, args)
      char **result;

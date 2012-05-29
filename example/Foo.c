@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 
 	String ohhai = msg(StringClass, "newWithCString", "oh hai");
 
-	String st = msg(StringClass, "newWithFormatCString", "test %@ %d %f", ohhai, 5, 4.0);
+	String st = msg(StringClass, "newWithFormatCString", "test %d %f %@", 5, 4.0, ohhai);
 	msg(SystemOut, "println", "%@", st);
 	msg(st, "release");
 

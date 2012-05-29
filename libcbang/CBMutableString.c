@@ -1,5 +1,6 @@
 
 #include "../libcbang/CBang.h"
+#include "vasprintf.h"
 
 Class MutableStringClass = NULL;
 
@@ -135,12 +136,17 @@ void *vsprint(void *v, va_list *args) {
 	va_list duplicate_format_args;
 	va_copy(duplicate_format_args, *format_args);
 	size_t required = vsnprintf(NULL, 0, dup, duplicate_format_args);
+	va_end(duplicate_format_args);
 	if (required >= o->capacity) {
 		o->capacity += required;
 		o->base.value = realloc(o->base.value, o->capacity);
 		assert(o->base.value);
 	}
-	vsprintf(o->base.value, dup, *format_args);
+	va_copy(duplicate_format_args, *format_args);
+	vsprintf(o->base.value, dup, duplicate_format_args);
+	va_end(duplicate_format_args);
+
+	fake_vsprint(dup, format_args);
 
 	free(dup);
 
