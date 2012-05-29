@@ -25,6 +25,7 @@ void cbinit() {
 	class_class_init();
 	object_class_init();
 	null_class_init();
+	array_class_init();
 	string_class_init();
 	mutable_string_class_init();
 	integer_class_init();

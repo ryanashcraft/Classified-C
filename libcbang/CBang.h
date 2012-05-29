@@ -37,6 +37,7 @@ cstring mstring(cstring s);
 #include "CBObject.h"
 #include "CBClass.h"
 #include "CBNull.h"
+#include "CBArray.h"
 #include "CBString.h"
 #include "CBMutableString.h"
 #include "CBInteger.h"
