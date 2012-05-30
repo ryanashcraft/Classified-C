@@ -10,6 +10,7 @@ static void *dealloc(void *v, va_list *args);
 static void *print(void *v, va_list *args);
 static void *println(void *v, va_list *args);
 static void *flush(void *v, va_list *args);
+static void *printEach(void *v, va_list *args);
 
 void printer_class_init() {
 	PrinterClass = msg(ClassClass, "new", "Printer", ObjectClass);
@@ -21,6 +22,7 @@ void printer_class_init() {
 	push_back(PrinterClass->instance_methods, mmethod("print", &print));
 	push_back(PrinterClass->instance_methods, mmethod("println", &println));
 	push_back(PrinterClass->instance_methods, mmethod("flush", &flush));
+	push_back(PrinterClass->instance_methods, mmethod("printEach", &printEach));
 }
 
 void *newWithFile(void *v, va_list *args) {
@@ -63,5 +65,25 @@ void *println(void *v, va_list *args) {
 void *flush(void *v, va_list *args) {
 	Printer o = (Printer)v;
 	fflush(o->output->file);
+	return o;
+}
+
+void *printEach(void *v, va_list *args) {
+	Printer o = (Printer)v;
+
+	cstring separator = va_arg(*args, cstring);
+	Array elements = va_arg(*args, Array);
+
+	Object element = NULL;
+	Iterator iterator = msg(IteratorClass, "newWithArray", elements);
+	while ( (element = msg(iterator, "next")) ) {
+		String description = msg(element, "description");
+		String toPrint = msg(StringClass, "newWithFormatCString", "%@%s", description, separator);
+		fprintf(o->output->file, "%s", toPrint->value);
+		msg(description, "release");
+		msg(toPrint, "release");
+	}
+	msg(iterator, "release");
+
 	return o;
 }

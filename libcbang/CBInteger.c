@@ -8,6 +8,7 @@ static void *newWithInt(void *v, va_list *args);
 static void *initWithInt(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
 static void *equals(void *v, va_list *args);
+static void *description(void *v, va_list *args);
 
 void integer_class_init() {
 	IntegerClass = msg(ClassClass, "new", "Integer", ObjectClass);
@@ -17,6 +18,7 @@ void integer_class_init() {
 	push_back(IntegerClass->instance_methods, mmethod("initWithInt", &initWithInt));
 	push_back(IntegerClass->instance_methods, mmethod("dealloc", &dealloc));
 	push_back(IntegerClass->instance_methods, mmethod("equals", &equals));
+	push_back(IntegerClass->instance_methods, mmethod("description", &description));
 }
 
 void *newWithInt(void *v, va_list *args) {
@@ -46,4 +48,9 @@ void *equals(void *v, va_list *args) {
 	}
 
 	return NO;
+}
+
+void *description(void *v, va_list *args) {
+	Integer o = (Integer)v;
+	return msg(StringClass, "newWithFormatCString", "%d", o->value);
 }

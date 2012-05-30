@@ -45,6 +45,7 @@ cstring mstring(cstring s);
 #include "CBFile.h"
 #include "CBScanner.h"
 #include "CBPrinter.h"
+#include "CBIterator.h"
 
 #define YES ((size_t *)1)
 #define NO ((size_t *)0)

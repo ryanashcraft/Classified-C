@@ -33,6 +33,7 @@ void cbinit() {
 	file_class_init();
 	scanner_class_init();
 	printer_class_init();
+	iterator_class_init();
 
 	SystemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
 }

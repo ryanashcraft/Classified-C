@@ -28,7 +28,7 @@ gdb-clean: clean-all
 	gdb ./$(target)
 
 valgrind-clean: clean-all
-	valgrind ./$(target)
+	valgrind --leak-check=full ./$(target)
 
 $(target) : $(obj) $(misc) $(lcbang)
 	$(c) $(lflags) $(obj) $(lcbang) -o $(target)

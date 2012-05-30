@@ -8,6 +8,7 @@ typedef struct _CBArray {
 	struct _CBObject base;
 	Object *value;
 	int capacity;
+	int length;
 } *Array;
 
 void array_class_init();
