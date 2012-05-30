@@ -7,6 +7,7 @@ static void *newWithObjects(void *v, va_list *args);
 
 static void *initWithObjects(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
+static void *performMethodOnEach(void *v, va_list *args);
 
 void array_class_init() {
 	ArrayClass = msg(ClassClass, "new", "Array", ObjectClass);
@@ -15,6 +16,7 @@ void array_class_init() {
 	
 	push_back(ArrayClass->instance_methods, mmethod("initWithObjects", &initWithObjects));
 	push_back(ArrayClass->instance_methods, mmethod("dealloc", &dealloc));
+	push_back(ArrayClass->instance_methods, mmethod("performMethodOnEach", &performMethodOnEach));
 }
 
 void *newWithObjects(void *v, va_list *args) {
@@ -60,4 +62,17 @@ void *dealloc(void *v, va_list *args) {
 	free(o->value);
 
 	return msg_cast(ObjectClass, o, "dealloc");
+}
+
+void *performMethodOnEach(void *v, va_list *args) {
+	Array o = (Array)v;
+
+	cstring method_name = va_arg(*args, cstring);
+	Object element = NULL;
+	int i;
+	for (i = 0; (element = o->value[i]) != NULL; i++) {
+		msg(element, method_name);
+	}
+
+	return o;
 }

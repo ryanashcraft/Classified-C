@@ -10,9 +10,7 @@ int main(int argc, char **argv) {
 	String s2 = msg(StringClass, "newWithCString", "2");
 	Integer i3 = msg(IntegerClass, "newWithInt", 3);
 	Array arr = msg(ArrayClass, "newWithObjects", s1, s2, i3, NULL);
-	msg(s1, "release");
-	msg(s2, "release");
-	msg(i3, "release");
+	msg(arr, "performMethodOnEach", "release");
 	msg(arr, "release");
 
 	Object o = msg(ObjectClass, "new");
