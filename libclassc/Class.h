@@ -1,9 +1,9 @@
 
-#ifndef CB_CLASS_H
-#define CB_CLASS_H
+#ifndef CLASS_H
+#define CLASS_H
 
-struct _CBClass {
-	struct _CBObject base;
+struct _Class {
+	struct _Object base;
 	Class parent_class;
 	list *static_methods;
 	list *instance_methods;

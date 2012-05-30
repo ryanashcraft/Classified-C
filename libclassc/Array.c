@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class ArrayClass = NULL;
 
@@ -24,7 +24,7 @@ void array_class_init() {
 }
 
 void *newWithObjects(void *v, va_list *args) {
-	Array o = cballoc(sizeof(struct _CBArray));
+	Array o = cc_alloc(sizeof(struct _Array));
 	initWithObjects(o, args);
 	((Object)o)->root = ArrayClass;
 	return o;

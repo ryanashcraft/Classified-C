@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class ClassClass = NULL;
 
@@ -8,7 +8,7 @@ static void *new(void *v, va_list *args);
 void class_class_init() {
 	method m;
 
-	ClassClass = malloc(sizeof(struct _CBClass));
+	ClassClass = malloc(sizeof(struct _Class));
 	assert(ClassClass);
 
 	((Object)ClassClass)->root = ClassClass;
@@ -24,7 +24,7 @@ void class_class_init() {
 }
 
 Class new_class(cstring name, Class parent_class) {
-	Class c = cballoc(sizeof(struct _CBClass));
+	Class c = cc_alloc(sizeof(struct _Class));
 	object_init(c);
 	((Object)c)->root = ClassClass;
 

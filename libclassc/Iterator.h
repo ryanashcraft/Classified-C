@@ -1,11 +1,11 @@
 
-#ifndef CB_ITERATOR_H
-#define CB_ITERATOR_H
+#ifndef ITERATOR_H
+#define ITERATOR_H
 
 extern Class IteratorClass;
 
-typedef struct _CBIterator {
-	struct _CBObject base;
+typedef struct _Iterator {
+	struct _Object base;
 	Array elements;
 	int nextPointer;
 } *Iterator;

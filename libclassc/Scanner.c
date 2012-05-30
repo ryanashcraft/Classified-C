@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 #define TOKEN_BUFFER_SIZE 256
 
@@ -24,7 +24,7 @@ void scanner_class_init() {
 }
 
 void *newWithFile(void *v, va_list *args) {
-	Scanner o = cballoc(sizeof(struct _CBScanner));
+	Scanner o = cc_alloc(sizeof(struct _Scanner));
 	initWithFile(o, args);
 	((Object)o)->root = ScannerClass;
 	return o;

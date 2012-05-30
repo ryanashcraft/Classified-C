@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class IntegerClass = NULL;
 
@@ -22,7 +22,7 @@ void integer_class_init() {
 }
 
 void *newWithInt(void *v, va_list *args) {
-	Integer o = cballoc(sizeof(struct _CBInteger));
+	Integer o = cc_alloc(sizeof(struct _Integer));
 	initWithInt(o, args);
 	((Object)o)->root = IntegerClass;
 	return o;

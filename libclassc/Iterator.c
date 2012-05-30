@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class IteratorClass = NULL;
 
@@ -20,7 +20,7 @@ void iterator_class_init() {
 }
 
 void *newWithArray(void *v, va_list *args) {
-	Iterator o = cballoc(sizeof(struct _CBIterator));
+	Iterator o = cc_alloc(sizeof(struct _Iterator));
 	initWithArray(o, args);
 	((Object)o)->root = IteratorClass;
 	return o;

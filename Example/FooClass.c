@@ -1,5 +1,5 @@
 
-#include "../libcbang/CBang.h"
+#include "../libclassc/Classified-C.h"
 #include "FooClass.h"
 
 Class FooClass = NULL;
@@ -21,7 +21,7 @@ void foo_class_init() {
 }
 
 void *new(void *v, va_list *args) {
-	Foo o = cballoc(sizeof(struct _Foo));
+	Foo o = cc_alloc(sizeof(struct _Foo));
 	init(o, args);
 	((Object)o)->root = FooClass;
 	return o;

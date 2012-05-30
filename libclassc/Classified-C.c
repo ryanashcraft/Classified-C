@@ -1,5 +1,5 @@
 /**
-  CBang.c
+  ClassifiedC.c
 
   This file contains functions and data structures used for managing
   the set of CBang classes and implementing message passing.
@@ -7,7 +7,7 @@
   @author Ryan Ashcraft
  */
 
-#include "CBang.h"
+#include "Classified-C.h"
 #include <execinfo.h>
 
 Object SystemOut = NULL;
@@ -20,7 +20,7 @@ static int method_name_equals(const void *methodp, va_list *args);
 /**
   Initialize the class list and the standard classes
  */
-void cbinit() {
+void cc_init() {
 	// Initialize and register standard classes to the class list
 	class_class_init();
 	object_class_init();
@@ -172,7 +172,7 @@ int method_name_equals(const void *methodp, va_list *args) {
 	return 0;
 }
 
-void *cballoc(size_t size) {
+void *cc_alloc(size_t size) {
 	void *v = calloc(1, size);
 	assert(v);
 	((Object)v)->retaincount = 1;

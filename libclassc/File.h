@@ -1,11 +1,11 @@
 
-#ifndef CB_FILE_H
-#define CB_FILE_H
+#ifndef FILE_H
+#define FILE_H
 
 extern Class FileClass;
 
-typedef struct _CBFile {
-	struct _CBObject base;
+typedef struct _File {
+	struct _Object base;
 	cstring filename;
 	FILE *file;
 } *File;

@@ -1,11 +1,11 @@
 
-#ifndef CB_STRING_H
-#define CB_STRING_H
+#ifndef STRING_H
+#define STRING_H
 
 extern Class StringClass;
 
-typedef struct _CBString {
-	struct _CBObject base;
+typedef struct _String {
+	struct _Object base;
 	cstring value;
 } *String;
 

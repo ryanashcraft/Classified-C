@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class FileClass = NULL;
 
@@ -24,14 +24,14 @@ void file_class_init() {
 }
 
 void *newWithFilename(void *v, va_list *args) {
-	String o = cballoc(sizeof(struct _CBFile));
+	String o = cc_alloc(sizeof(struct _File));
 	initWithFilename(o, args);
 	((Object)o)->root = FileClass;
 	return o;
 }
 
 void *newWithFile(void *v, va_list *args) {
-	String o = cballoc(sizeof(struct _CBFile));
+	String o = cc_alloc(sizeof(struct _File));
 	initWithFile(o, args);
 	((Object)o)->root = FileClass;
 	return o;

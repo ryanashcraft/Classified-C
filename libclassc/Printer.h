@@ -1,11 +1,11 @@
 
-#ifndef CB_LOG_H
-#define CB_LOG_H
+#ifndef LOG_H
+#define LOG_H
 
 extern Class PrinterClass;
 
-typedef struct _CBPrinter {
-	struct _CBObject base;
+typedef struct _Printer {
+	struct _Object base;
 	File output;
 } *Printer;
 

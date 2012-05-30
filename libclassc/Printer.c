@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class PrinterClass = NULL;
 
@@ -26,7 +26,7 @@ void printer_class_init() {
 }
 
 void *newWithFile(void *v, va_list *args) {
-	Printer o = cballoc(sizeof(struct _CBPrinter));
+	Printer o = cc_alloc(sizeof(struct _Printer));
 	initWithFile(o, args);
 	((Object)o)->root = PrinterClass;
 	return o;

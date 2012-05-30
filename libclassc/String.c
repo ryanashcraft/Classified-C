@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 #define START_FORMAT_BUFFER_SIZE 32
 
@@ -38,21 +38,21 @@ void string_class_init() {
 }
 
 void *newWithCString(void *v, va_list *args) {
-	String o = cballoc(sizeof(struct _CBString));
+	String o = cc_alloc(sizeof(struct _String));
 	initWithCString(o, args);
 	((Object)o)->root = StringClass;
 	return o;
 }
 
 void *newWithFormatCString(void *v, va_list *args) {
-	String o = cballoc(sizeof(struct _CBString));
+	String o = cc_alloc(sizeof(struct _String));
 	initWithFormatCString(o, args);
 	((Object)o)->root = StringClass;
 	return o;
 }
 
 void *newWithFormatCStringAndArgList(void *v, va_list *args) {
-	String o = cballoc(sizeof(struct _CBString));
+	String o = cc_alloc(sizeof(struct _String));
 	initWithFormatCStringAndArgList(o, args);
 	((Object)o)->root = StringClass;
 	return o;

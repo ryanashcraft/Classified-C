@@ -1,11 +1,11 @@
 
-#ifndef CB_ARRAY_H
-#define CB_ARRAY_H
+#ifndef ARRAY_H
+#define ARRAY_H
 
 extern Class ArrayClass;
 
-typedef struct _CBArray {
-	struct _CBObject base;
+typedef struct _Array {
+	struct _Object base;
 	Object *value;
 	int capacity;
 	int length;

@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class StackClass = NULL;
 
@@ -26,7 +26,7 @@ void stack_class_init() {
 }
 
 void *new(void *v, va_list *args) {
-	Stack o = cballoc(sizeof(struct _CBStack));
+	Stack o = cc_alloc(sizeof(struct _Stack));
 	init(o, args);
 	((Object)o)->root = StackClass;
 	return o;

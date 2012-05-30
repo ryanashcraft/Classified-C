@@ -1,5 +1,5 @@
 
-# C!
+# Classified-C
 # Ryan Ashcraft
 
 # vpath %.a ../libcbang
@@ -12,14 +12,15 @@ misc=Makefile
 target=Example.o
 cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug
 lflags=-Wall -g -DDebug
-include=-I../libcbang/
+libclassc=../libclassc/
+include=-I$(libclassc)
 c=gcc
-lcbang= ../libcbang/libcbang.a
+lcbang= $(libclassc)/libclassc.a
 
 all: $(target)
 
 clean-all:
-	cd ../libcbang; make clean; make; cd ../example; make clean; make;
+	cd $(libclassc); make clean; make; cd ../Example; make clean; make;
 
 run-clean: clean-all
 	./$(target)

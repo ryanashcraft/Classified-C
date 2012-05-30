@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class MutableStringClass = NULL;
 
@@ -33,7 +33,7 @@ void mutable_string_class_init() {
 }
 
 void *newWithCString(void *v, va_list *args) {
-	MutableString o = cballoc(sizeof(struct _CBMutableString));
+	MutableString o = cc_alloc(sizeof(struct _MutableString));
 	initWithCString(o, args);
 	((Object)o)->root = MutableStringClass;
 
@@ -41,7 +41,7 @@ void *newWithCString(void *v, va_list *args) {
 }
 
 void *newWithCStringAndCapacity(void *v, va_list *args) {
-	MutableString o = cballoc(sizeof(struct _CBMutableString));
+	MutableString o = cc_alloc(sizeof(struct _MutableString));
 	initWithCStringAndCapacity(o, args);
 	((Object)o)->root = MutableStringClass;
 

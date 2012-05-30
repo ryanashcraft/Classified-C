@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class NullClass = NULL;
 
@@ -18,7 +18,7 @@ void null_class_init() {
 }
 
 void *new(void *v, va_list *args) {
-	Null o = cballoc(sizeof(struct _CBNull));
+	Null o = cc_alloc(sizeof(struct _Null));
 	init(o, args);
 	((Object)o)->root = NullClass;
 	return o;

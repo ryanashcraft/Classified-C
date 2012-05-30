@@ -1,9 +1,9 @@
 
-#include "../libcbang/CBang.h"
+#include "../libclassc/Classified-C.h"
 #include "FooClass.h"
 
 int main(int argc, char **argv) {
-	cbinit();
+	cc_init();
 	foo_class_init();
 
 	String s1 = msg(StringClass, "newWithCString", "1");

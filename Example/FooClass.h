@@ -5,7 +5,7 @@
 extern Class FooClass;
 
 typedef struct _Foo {
-	struct _CBString base;
+	struct _String base;
 	int value;
 } *Foo;
 

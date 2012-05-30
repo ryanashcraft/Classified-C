@@ -1,5 +1,5 @@
 
-#include "CBang.h"
+#include "Classified-C.h"
 
 Class ObjectClass = NULL;
 
@@ -29,7 +29,7 @@ Object object_init(void *v) {
 }
 
 void *new(void *v, va_list *args) {
-	Object o = cballoc(sizeof(struct _CBObject));
+	Object o = cc_alloc(sizeof(struct _Object));
 	object_init(o);
 	o->root = ObjectClass;
 	return o;

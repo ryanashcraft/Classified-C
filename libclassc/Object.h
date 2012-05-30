@@ -1,10 +1,10 @@
 
-#ifndef CB_OBJECT_H
-#define CB_OBJECT_H
+#ifndef OBJECT_H
+#define OBJECT_H
 
 extern Class ObjectClass;
 
-struct _CBObject {
+struct _Object {
 	Class root;
 	int retaincount;
 };
