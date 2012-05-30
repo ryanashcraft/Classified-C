@@ -28,9 +28,21 @@ void *initWithObjects(void *v, va_list *args) {
 	Array o = (Array)v;
 	msg_cast(ObjectClass, o, "init");
 
+	o->capacity = 0;
 	Object element = NULL;
-	while((element = va_arg(*args, Object))) {
-		
+	va_list duplicate_arg_list;
+	va_copy(duplicate_arg_list, *args);
+	while ((element = va_arg(duplicate_arg_list, Object)) != NULL) {
+		o->capacity++;
+	}
+	o->capacity++; /* for NULL terminator */
+
+	o->value = calloc(o->capacity, sizeof(Object));
+	assert(o->value);
+	int i;
+	for (i = 0; (element = va_arg(*args, Object)) != NULL; i++) {
+		o->value[i] = element;
+		msg(element, "retain");
 	}
 
 	return o;
@@ -38,5 +50,14 @@ void *initWithObjects(void *v, va_list *args) {
 
 void *dealloc(void *v, va_list *args) {
 	Array o = (Array)v;
+
+	Object element = NULL;
+	int i;
+	for (i = 0; (element = o->value[i]) != NULL; i++) {
+		msg(element, "release");
+	}
+
+	free(o->value);
+
 	return msg_cast(ObjectClass, o, "dealloc");
 }

@@ -6,6 +6,15 @@ int main(int argc, char **argv) {
 	cbinit();
 	foo_class_init();
 
+	String s1 = msg(StringClass, "newWithCString", "1");
+	String s2 = msg(StringClass, "newWithCString", "2");
+	Integer i3 = msg(IntegerClass, "newWithInt", 3);
+	Array arr = msg(ArrayClass, "newWithObjects", s1, s2, i3, NULL);
+	msg(s1, "release");
+	msg(s2, "release");
+	msg(i3, "release");
+	msg(arr, "release");
+
 	Object o = msg(ObjectClass, "new");
 	String description = msg(o, "description");
 	msg(SystemOut, "println", "%@", description);
