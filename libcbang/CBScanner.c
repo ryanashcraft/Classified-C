@@ -1,6 +1,5 @@
 
 #include "CBang.h"
-#include "CBScanner.h"
 
 #define TOKEN_BUFFER_SIZE 256
 

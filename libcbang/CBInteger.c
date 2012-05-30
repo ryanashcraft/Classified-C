@@ -1,6 +1,5 @@
 
 #include "CBang.h"
-#include "CBInteger.h"
 
 Class IntegerClass = NULL;
 

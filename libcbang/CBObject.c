@@ -1,6 +1,5 @@
 
 #include "CBang.h"
-#include "CBObject.h"
 
 Class ObjectClass = NULL;
 

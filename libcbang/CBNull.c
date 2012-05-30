@@ -1,6 +1,5 @@
 
 #include "CBang.h"
-#include "CBNull.h"
 
 Class NullClass = NULL;
 

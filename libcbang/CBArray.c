@@ -1,6 +1,5 @@
 
 #include "CBang.h"
-#include "CBArray.h"
 
 Class ArrayClass = NULL;
 

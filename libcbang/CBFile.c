@@ -1,6 +1,5 @@
 
 #include "CBang.h"
-#include "CBFile.h"
 
 Class FileClass = NULL;
 

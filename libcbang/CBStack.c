@@ -1,6 +1,5 @@
 
 #include "CBang.h"
-#include "CBStack.h"
 
 Class StackClass = NULL;
 

@@ -1,6 +1,5 @@
 
 #include "CBang.h"
-#include "CBString.h"
 
 #define START_FORMAT_BUFFER_SIZE 32
 

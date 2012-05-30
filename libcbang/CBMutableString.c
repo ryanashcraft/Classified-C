@@ -1,5 +1,5 @@
 
-#include "../libcbang/CBang.h"
+#include "CBang.h"
 
 Class MutableStringClass = NULL;
 
