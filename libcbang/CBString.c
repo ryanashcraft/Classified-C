@@ -13,6 +13,7 @@ static void *initWithCString(void *v, va_list *args);
 static void *initWithFormatCString(void *v, va_list *args);
 static void *initWithFormatCStringAndArgList(void *v, va_list *args);
 static void *dealloc(void *v, va_list *args);
+static void *copy(void *v, va_list *args);
 static void *length(void *v, va_list *args);
 static void *description(void *v, va_list *args);
 static void *equals(void *v, va_list *args);
@@ -30,6 +31,7 @@ void string_class_init() {
 	push_back(StringClass->instance_methods, mmethod("initWithFormatCString", &initWithFormatCString));
 	push_back(StringClass->instance_methods, mmethod("initWithFormatCStringAndArgList", &initWithFormatCStringAndArgList));
 	push_back(StringClass->instance_methods, mmethod("dealloc", &dealloc));
+	push_back(StringClass->instance_methods, mmethod("copy", &copy));
 	push_back(StringClass->instance_methods, mmethod("length", &length));
 	push_back(StringClass->instance_methods, mmethod("description", &description));
 	push_back(StringClass->instance_methods, mmethod("equals", &equals));
@@ -117,6 +119,11 @@ void *dealloc(void *v, va_list *args) {
 	return msg_cast(ObjectClass, o, "dealloc");
 }
 
+void *copy(void *v, va_list *args) {
+	String o = (String)v;
+	return msg(StringClass, "newWithCString", o->value);
+}
+
 void *length(void *v, va_list *args) {
 	String o = (String)v;
 	Integer length = msg(IntegerClass, "newWithInt", strlen(o->value));
@@ -124,8 +131,7 @@ void *length(void *v, va_list *args) {
 }
 
 void *description(void *v, va_list *args) {
-	String o = (String)v;
-	return msg(StringClass, "newWithCString", o->value);
+	return copy(v, args);
 }
 
 void *equals(void *v, va_list *args) {
