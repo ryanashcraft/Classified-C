@@ -46,8 +46,8 @@ void *next(void *v, va_list *args) {
 	Scanner o = (Scanner)v;
 	FILE *f = msg(o->file, "file");
 
-	cstring buffer = calloc(1, TOKEN_BUFFER_SIZE);
-	assert(buffer);
+	MutableString buffer = msg(MutableStringClass, "newWithCStringAndCapacity", "", TOKEN_BUFFER_SIZE);
+
 	char c;
 	int i;
 
@@ -64,12 +64,11 @@ void *next(void *v, va_list *args) {
 			break;
 		}
 		
-		buffer[i] = c;
+		msg(buffer, "appendCharacter", c);
 	} while (++i);
 
-	String token = msg(StringClass, "newWithCString", buffer);
-
-	free(buffer);
+	String token = msg_cast(StringClass, buffer, "copy");
+	msg(buffer, "release");
 
 	return token;
 }
