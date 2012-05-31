@@ -45,5 +45,8 @@ void *dealloc(void *v, va_list *args) {
 
 void *description(void *v, va_list *args) {
 	Foo o = (Foo)v;
-	return msg(StringClass, "newWithFormatCString", "%d %@", o->value, o);
+	String superDescription = msg_cast(StringClass, o, "description");
+	String formattedDescription = msg(StringClass, "newWithFormatCString", "%d %@", o->value, superDescription);
+	msg(superDescription, "release");
+	return formattedDescription;
 }

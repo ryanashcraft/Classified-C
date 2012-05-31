@@ -91,8 +91,10 @@ static cstring format(cstring format, va_list *format_args) {
 	for (int i = 0; i < format_length; i++) {
 		if (i <= format_length && (format[i] == '%' && format[i + 1] == '@')) {
 			msg(buffer, "vsprint", format_args);
-			String stringArgument = (String)va_arg(*format_args, String);
-			msg(buffer, "concatenateWithCString", stringArgument->value);
+			Object objectArgument = (Object)va_arg(*format_args, Object);
+			String objectDescription = msg(objectArgument, "description");
+			msg(buffer, "concatenateWithCString", objectDescription->value);
+			msg(objectDescription, "release");
 			i++;
 			needsFinalVSprint = NO;
 		} else {

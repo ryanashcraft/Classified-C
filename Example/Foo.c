@@ -16,15 +16,11 @@ int main(int argc, char **argv) {
 	msg(SystemOut, "println", "");
 
 	Object o = msg(ObjectClass, "new");
-	String description = msg(o, "description");
-	msg(SystemOut, "println", "%@", description);
+	msg(SystemOut, "println", "%@", o);
 	msg(o, "release");
-	msg(description, "release");
 
 	Null n = msg(NullClass, "new");
-	description = msg(n, "description");
-	msg(SystemOut, "println", "%@", description);
-	msg(description, "release");
+	msg(SystemOut, "println", "%@", n);
 	msg(n, "release");
 
 	String ohhai = msg(StringClass, "newWithCString", "oh hai");
@@ -52,9 +48,7 @@ int main(int argc, char **argv) {
 	msg(SystemOut, "println", "");
 
 	Foo mys = msg(FooClass, "new", 77, "Foo");
-	description = msg(mys, "description");
-	msg(SystemOut, "println", "%@", description);
-	msg(description, "release");
+	msg(SystemOut, "println", "%@", mys);
 	msg(mys, "release");
 
 	Stack stack = msg(StackClass, "new");

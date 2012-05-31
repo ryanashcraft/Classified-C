@@ -77,10 +77,8 @@ void *printEach(void *v, va_list *args) {
 	Object element = NULL;
 	Iterator iterator = msg(IteratorClass, "newWithArray", elements);
 	while ( (element = msg(iterator, "next")) ) {
-		String description = msg(element, "description");
-		String toPrint = msg(StringClass, "newWithFormatCString", "%@%s", description, separator);
+		String toPrint = msg(StringClass, "newWithFormatCString", "%@%s", element, separator);
 		fprintf(o->output->file, "%s", toPrint->value);
-		msg(description, "release");
 		msg(toPrint, "release");
 	}
 	msg(iterator, "release");
