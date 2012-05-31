@@ -1,18 +1,17 @@
 
 #include "Classified-C.h"
 
-Class MutableStringClass = NULL;
+IMPLEMENTATION(MutableStringClass);
 
-static void *newWithCString(void *v, va_list *args);
-static void *newWithCStringAndCapacity(void *v, va_list *args);
-
-static void *initWithCString(void *v, va_list *args);
-static void *initWithCStringAndCapacity(void *v, va_list *args);
-static void *dealloc(void *v, va_list *args);
-static void *concatenateWithCString(void *v, va_list *args);
-static void *concatenateWithString(void *v, va_list *args);
-static void *appendCharacter(void *v, va_list *args);
-static void *vsprint(void *v, va_list *args);
+PROTOTYPE(newWithCString);
+PROTOTYPE(newWithCStringAndCapacity);
+PROTOTYPE(initWithCString);
+PROTOTYPE(initWithCStringAndCapacity);
+PROTOTYPE(dealloc);
+PROTOTYPE(concatenateWithCString);
+PROTOTYPE(concatenateWithString);
+PROTOTYPE(appendCharacter);
+PROTOTYPE(vsprint);
 
 static cstring concatenate(MutableString s, cstring part_two);
 static void virtual_vsprintf(char *, va_list *args);
@@ -20,140 +19,141 @@ static void virtual_vsprintf(char *, va_list *args);
 void mutable_string_class_init() {
 	MutableStringClass = msg(ClassClass, "new", "MutableString", StringClass);
 
-	push_back(MutableStringClass->static_methods, mmethod("newWithCString", &newWithCString));
-	push_back(MutableStringClass->static_methods, mmethod("newWithCStringAndCapacity", &newWithCStringAndCapacity));
+	REGISTER_CLASS_METHOD(MutableStringClass, "newWithCString", newWithCString);
+	REGISTER_CLASS_METHOD(MutableStringClass, "newWithCStringAndCapacity", newWithCStringAndCapacity);
 
-	push_back(MutableStringClass->instance_methods, mmethod("initWithCString", &initWithCString));
-	push_back(MutableStringClass->instance_methods, mmethod("initWithCStringAndCapacity", &initWithCStringAndCapacity));
-	push_back(MutableStringClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(MutableStringClass->instance_methods, mmethod("concatenateWithCString", &concatenateWithCString));
-	push_back(MutableStringClass->instance_methods, mmethod("concatenateWithString", &concatenateWithString));
-	push_back(MutableStringClass->instance_methods, mmethod("appendCharacter", &appendCharacter));
-	push_back(MutableStringClass->instance_methods, mmethod("vsprint", &vsprint));
+	REGISTER_METHOD(MutableStringClass, "initWithCString", initWithCString);
+	REGISTER_METHOD(MutableStringClass, "initWithCStringAndCapacity", initWithCStringAndCapacity);
+	REGISTER_METHOD(MutableStringClass, "dealloc", dealloc);
+	REGISTER_METHOD(MutableStringClass, "concatenateWithCString", concatenateWithCString);
+	REGISTER_METHOD(MutableStringClass, "concatenateWithString", concatenateWithString);
+	REGISTER_METHOD(MutableStringClass, "appendCharacter", appendCharacter);
+	REGISTER_METHOD(MutableStringClass, "vsprint", vsprint);
 }
 
-void *newWithCString(void *v, va_list *args) {
-	MutableString o = cc_alloc(sizeof(struct _MutableString));
-	initWithCString(o, args);
-	((Object)o)->root = MutableStringClass;
+DEFINE(newWithCString) {
+	NEW(MutableStringClass, struct _MutableString);
 
-	return o;
+	initWithCString(self, args);
+
+	return self;
 }
 
-void *newWithCStringAndCapacity(void *v, va_list *args) {
-	MutableString o = cc_alloc(sizeof(struct _MutableString));
-	initWithCStringAndCapacity(o, args);
-	((Object)o)->root = MutableStringClass;
+DEFINE(newWithCStringAndCapacity) {
+	NEW(MutableStringClass, struct _MutableString);
 
-	return o;
+	initWithCStringAndCapacity(self, args);
+
+	return self;
 }
 
-void *initWithCString(void *v, va_list *args) {
-	MutableString o = (MutableString)v;
-	msg_cast(ObjectClass, o, "init");
-	msg_cast(StringClass, o, "initWithCString", va_arg(*args, cstring));
+DEFINE(initWithCString) {
+	CONTEXT(MutableString);
 
-	o->capacity = strlen(o->base.value);
+	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
+	self->capacity = strlen(self->base.value);
 
-	return o;
+	return self;
 }
 
-void *initWithCStringAndCapacity(void *v, va_list *args) {
-	MutableString o = (MutableString)v;
-	msg_cast(ObjectClass, o, "init");
-	msg_cast(StringClass, o, "initWithCString", va_arg(*args, cstring));
+DEFINE(initWithCStringAndCapacity) {
+	CONTEXT(MutableString);
 
-	o->capacity = va_arg(*args, int);
-	int string_length = strlen(o->base.value);
-	o->base.value = realloc(o->base.value, o->capacity);
-	o->base.value[string_length] = '\0';
+	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
 
-	return o;
+	self->capacity = NEXT_ARG(int);
+	int string_length = strlen(self->base.value);
+	self->base.value = realloc(self->base.value, self->capacity);
+	self->base.value[string_length] = '\0';
+
+	return self;
 }
 
-void *dealloc(void *v, va_list *args) {
-	MutableString o = (MutableString)v;
-	return msg_cast(StringClass, o, "dealloc");
+DEFINE(dealloc) {
+	CONTEXT(MutableString);
+
+	return msg_cast(StringClass, self, "dealloc");
 }
 
-void *concatenateWithCString(void *v, va_list *args) {
-	MutableString o = (MutableString)v;
+DEFINE(concatenateWithCString) {
+	CONTEXT(MutableString);
 
-	cstring part_two = va_arg(*args, cstring);
-	o->base.value = concatenate(o, part_two);
+	cstring part_two = NEXT_ARG(cstring);
+	self->base.value = concatenate(self, part_two);
 
-	return o;
+	return self;
 }
 
-void *concatenateWithString(void *v, va_list *args) {
-	MutableString o = (MutableString)v;
+DEFINE(concatenateWithString) {
+	CONTEXT(MutableString);
 
-	String stringArgument = (String)va_arg(*args, String);
+	String stringArgument = NEXT_ARG(String);
 	cstring part_two = stringArgument->value;
-	o->base.value = concatenate(o, part_two);
+	self->base.value = concatenate(self, part_two);
 
-	return o;
+	return self;
 }
 
-cstring concatenate(MutableString o, cstring part_two) {
-	int part_one_length = strlen(o->base.value);
+cstring concatenate(MutableString self, cstring part_two) {
+	int part_one_length = strlen(self->base.value);
 	int part_two_length = strlen(part_two);
 
-	if (part_one_length + part_two_length + 1 > o->capacity) {
-		o->base.value = realloc(o->base.value, o->capacity * 2 + part_two_length + 1);
-		assert(o->base.value);
+	if (part_one_length + part_two_length + 1 > self->capacity) {
+		self->base.value = realloc(self->base.value, self->capacity * 2 + part_two_length + 1);
+		assert(self->base.value);
 	}
  	
-	strncat(o->base.value, part_two, part_two_length);
+	strncat(self->base.value, part_two, part_two_length);
 
-	return o->base.value;
+	return self->base.value;
 }
 
-void *appendCharacter(void *v, va_list *args) {
-	MutableString o = (MutableString)v;
-	char c = (char)va_arg(*args, int);
+DEFINE(appendCharacter) {
+	CONTEXT(MutableString);
 
-	int string_length = strlen(o->base.value);
+	char c = NEXT_ARG(int);
 
-	if (string_length + 2 >= o->capacity) {
-		o->capacity *= 2;
-		o->base.value = realloc(o->base.value, o->capacity);
-		assert(o->base.value);
+	int string_length = strlen(self->base.value);
+
+	if (string_length + 2 >= self->capacity) {
+		self->capacity *= 2;
+		self->base.value = realloc(self->base.value, self->capacity);
+		assert(self->base.value);
 	}
 
-	o->base.value[string_length] = c;
-	o->base.value[string_length + 1] = '\0';
+	self->base.value[string_length] = c;
+	self->base.value[string_length + 1] = '\0';
 
-	return o;
+	return self;
 }
 
-void *vsprint(void *v, va_list *args) {
-	MutableString o = (MutableString)v;
+DEFINE(vsprint) {
+	CONTEXT(MutableString);
 
-	cstring dup = mstring(o->base.value);
+	cstring dup = mstring(self->base.value);
 
-	va_list *format_args = va_arg(*args, va_list *);
+	va_list *format_args = NEXT_ARG(va_list *);
 	va_list duplicate_format_args;
 	va_copy(duplicate_format_args, *format_args);
 	size_t required = vsnprintf(NULL, 0, dup, duplicate_format_args);
 	va_end(duplicate_format_args);
-	if (required >= o->capacity) {
-		o->capacity += required;
-		o->base.value = realloc(o->base.value, o->capacity);
-		assert(o->base.value);
+	if (required >= self->capacity) {
+		self->capacity += required;
+		self->base.value = realloc(self->base.value, self->capacity);
+		assert(self->base.value);
 	}
 	va_copy(duplicate_format_args, *format_args);
-	vsprintf(o->base.value, dup, duplicate_format_args);
+	vsprintf(self->base.value, dup, duplicate_format_args);
 	va_end(duplicate_format_args);
 
 	virtual_vsprintf(dup, format_args);
 
 	free(dup);
 
-	int string_length = strlen(o->base.value);
-	o->base.value[string_length] = '\0';
+	int string_length = strlen(self->base.value);
+	self->base.value[string_length] = '\0';
 
-	return o;
+	return self;
 }
 
 void virtual_vsprintf(char *format, va_list *args) {
@@ -188,20 +188,20 @@ void virtual_vsprintf(char *format, va_list *args) {
 				case 'x':
 				case 'X':
 				case 'c':
-					va_arg(*args, int);
+					NEXT_ARG(int);
 					break;
 				case 'f':
 				case 'e':
 				case 'E':
 				case 'g':
 				case 'G':
-					va_arg(*args, double);
+					NEXT_ARG(double);
 					break;
 				case 's':
 					break;
 				case 'p':
 				case 'n':
-					va_arg(*args, char *);
+					NEXT_ARG(char *);
 					break;
 			}
 		}

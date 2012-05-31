@@ -10,6 +10,17 @@
 #ifndef CLASSIFIEDC_H
 #define CLASSIFIEDC_H
 
+#define IMPLEMENTATION(CLASS) Class CLASS = NULL
+#define PROTOTYPE(NAME) static void *NAME(METHOD_ARGS)
+#define METHOD_ARGS void *v, va_list *args
+#define DEFINE(NAME) void *NAME(METHOD_ARGS)
+#define NEW(CLASS_REF, STRUCT) STRUCT *self = cc_alloc(sizeof(STRUCT)); object_init(self); ((Object)self)->root = CLASS_REF;
+#define CONTEXT(CLASS) CLASS self = (CLASS)v; self = self;
+#define REGISTER_METHOD(CLASS, NAME, FUNCTION) push_back(CLASS->instance_methods, mmethod(NAME, &FUNCTION));
+#define REGISTER_CLASS_METHOD(CLASS, NAME, FUNCTION) push_back(CLASS->static_methods, mmethod(NAME, &FUNCTION));
+#define NEXT_ARG(TYPE) va_arg(*args, TYPE)
+#define ARGS args
+
 typedef char *cstring;
 typedef void *(*fpointer) (void *v, va_list *args);
 typedef struct _Object *Object;

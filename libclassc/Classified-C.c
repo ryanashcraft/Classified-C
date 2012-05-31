@@ -164,7 +164,7 @@ void print_bt() {
           arguments list, else return 0
  */
 int method_name_equals(const void *methodp, va_list *args) {
-	cstring name = va_arg(*args, cstring);
+	cstring name = NEXT_ARG(cstring);
 	method the_method = (method)methodp;
 	if (strcmp(the_method->name, name) == 0) {
 		return 1;

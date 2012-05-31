@@ -1,101 +1,102 @@
 
 #include "Classified-C.h"
 
-Class ArrayClass = NULL;
+IMPLEMENTATION(ArrayClass);
 
-static void *newWithObjects(void *v, va_list *args);
-
-static void *initWithObjects(void *v, va_list *args);
-static void *dealloc(void *v, va_list *args);
-static void *performMethodOnEach(void *v, va_list *args);
-static void *get(void *v, va_list *args);
-static void *length(void *v, va_list *args);
+PROTOTYPE(newWithObjects);
+PROTOTYPE(initWithObjects);
+PROTOTYPE(dealloc);
+PROTOTYPE(performMethodOnEach);
+PROTOTYPE(get);
+PROTOTYPE(length);
 
 void array_class_init() {
 	ArrayClass = msg(ClassClass, "new", "Array", ObjectClass);
 
-	push_back(ArrayClass->static_methods, mmethod("newWithObjects", &newWithObjects));
-	
-	push_back(ArrayClass->instance_methods, mmethod("initWithObjects", &initWithObjects));
-	push_back(ArrayClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(ArrayClass->instance_methods, mmethod("performMethodOnEach", &performMethodOnEach));
-	push_back(ArrayClass->instance_methods, mmethod("get", &get));
-	push_back(ArrayClass->instance_methods, mmethod("length", &length));
+	REGISTER_CLASS_METHOD(ArrayClass, "newWithObjects", newWithObjects);
+
+	REGISTER_METHOD(ArrayClass, "initWithObjects", initWithObjects);
+	REGISTER_METHOD(ArrayClass, "dealloc", dealloc);
+	REGISTER_METHOD(ArrayClass, "performMethodOnEach", performMethodOnEach);
+	REGISTER_METHOD(ArrayClass, "get", get);
+	REGISTER_METHOD(ArrayClass, "length", length);
 }
 
-void *newWithObjects(void *v, va_list *args) {
-	Array o = cc_alloc(sizeof(struct _Array));
-	initWithObjects(o, args);
-	((Object)o)->root = ArrayClass;
-	return o;
+DEFINE(newWithObjects) {
+	NEW(ArrayClass, struct _Array);
+
+	initWithObjects(self, args);
+	((Object)self)->root = ArrayClass;
+
+	return self;
 }
 
-void *initWithObjects(void *v, va_list *args) {
-	Array o = (Array)v;
-	msg_cast(ObjectClass, o, "init");
+DEFINE(initWithObjects) {
+	CONTEXT(Array);
 
-	o->capacity = 0;
-	o->length = 0;
+	msg_cast(ObjectClass, self, "init");
+
+	self->capacity = 0;
+	self->length = 0;
 
 	Object element = NULL;
 	va_list duplicate_arg_list;
-	va_copy(duplicate_arg_list, *args);
+	va_copy(duplicate_arg_list, *ARGS);
 	while ((element = va_arg(duplicate_arg_list, Object)) != NULL) {
-		o->capacity++;
+		self->capacity++;
 	}
-	o->capacity++; /* for NULL terminator */
+	self->capacity++; /* for NULL terminator */
 
-	o->value = calloc(o->capacity, sizeof(Object));
-	assert(o->value);
+	self->value = calloc(self->capacity, sizeof(Object));
+	assert(self->value);
 	int i;
-	for (i = 0; (element = va_arg(*args, Object)) != NULL; i++) {
-		o->value[i] = element;
+	for (i = 0; (element = NEXT_ARG(Object)) != NULL; i++) {
+		self->value[i] = element;
 		msg(element, "retain");
-		o->length++;
+		self->length++;
 	}
 
-	return o;
+	return self;
 }
 
-void *dealloc(void *v, va_list *args) {
-	Array o = (Array)v;
+DEFINE(dealloc) {
+	CONTEXT(Array);
 
 	Object element = NULL;
 	int i;
-	for (i = 0; (element = o->value[i]) != NULL; i++) {
+	for (i = 0; (element = self->value[i]) != NULL; i++) {
 		msg(element, "release");
 	}
 
-	free(o->value);
+	free(self->value);
 
-	return msg_cast(ObjectClass, o, "dealloc");
+	return msg_cast(ObjectClass, self, "dealloc");
 }
 
-void *performMethodOnEach(void *v, va_list *args) {
-	Array o = (Array)v;
+DEFINE(performMethodOnEach) {
+	CONTEXT(Array);
 
-	cstring method_name = va_arg(*args, cstring);
+	cstring method_name = NEXT_ARG(cstring);
 	Object element = NULL;
 	int i;
-	for (i = 0; (element = o->value[i]) != NULL; i++) {
+	for (i = 0; (element = self->value[i]) != NULL; i++) {
 		msg(element, method_name);
 	}
 
-	return o;
+	return self;
 }
 
-void *get(void *v, va_list *args) {
-	Array o = (Array)v;
+DEFINE(get) {
+	CONTEXT(Array);
 
-	int index = va_arg(*args, int);
-
-	Object obj = o->value[index];
+	int index = NEXT_ARG(int);
+	Object obj = self->value[index];
 
 	return obj;
 }
 
-void *length(void *v, va_list *args) {
-	Array o = (Array)v;
+DEFINE(length) {
+	CONTEXT(Array);
 
-	return msg(IntegerClass, "newWithInt", o->length);
+	return msg(IntegerClass, "newWithInt", self->length);
 }

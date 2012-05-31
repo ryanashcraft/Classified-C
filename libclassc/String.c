@@ -3,84 +3,89 @@
 
 #define START_FORMAT_BUFFER_SIZE 32
 
-Class StringClass = NULL;
+IMPLEMENTATION(StringClass);
 
-static void *newWithCString(void *v, va_list *args);
-static void *newWithFormatCString(void *v, va_list *args);
-static void *newWithFormatCStringAndArgList(void *v, va_list *args);
-
-static void *initWithCString(void *v, va_list *args);
-static void *initWithFormatCString(void *v, va_list *args);
-static void *initWithFormatCStringAndArgList(void *v, va_list *args);
-static void *dealloc(void *v, va_list *args);
-static void *copy(void *v, va_list *args);
-static void *length(void *v, va_list *args);
-static void *description(void *v, va_list *args);
-static void *equals(void *v, va_list *args);
+PROTOTYPE(newWithCString);
+PROTOTYPE(newWithFormatCString);
+PROTOTYPE(newWithFormatCStringAndArgList);
+PROTOTYPE(initWithCString);
+PROTOTYPE(initWithFormatCString);
+PROTOTYPE(initWithFormatCStringAndArgList);
+PROTOTYPE(dealloc);
+PROTOTYPE(copy);
+PROTOTYPE(length);
+PROTOTYPE(description);
+PROTOTYPE(equals);
 
 static cstring format(cstring format, va_list *format_args);
 
 void string_class_init() {
 	StringClass = msg(ClassClass, "new", "String", ObjectClass);
 
-	push_back(StringClass->static_methods, mmethod("newWithCString", &newWithCString));
-	push_back(StringClass->static_methods, mmethod("newWithFormatCString", &newWithFormatCString));
-	push_back(StringClass->static_methods, mmethod("newWithFormatCStringAndArgList", &newWithFormatCStringAndArgList));
+	REGISTER_CLASS_METHOD(StringClass, "newWithCString", newWithCString);
+	REGISTER_CLASS_METHOD(StringClass, "newWithFormatCString", newWithFormatCString);
+	REGISTER_CLASS_METHOD(StringClass, "newWithFormatCStringAndArgList", newWithFormatCStringAndArgList);
 
-	push_back(StringClass->instance_methods, mmethod("initWithCString", &initWithCString));
-	push_back(StringClass->instance_methods, mmethod("initWithFormatCString", &initWithFormatCString));
-	push_back(StringClass->instance_methods, mmethod("initWithFormatCStringAndArgList", &initWithFormatCStringAndArgList));
-	push_back(StringClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(StringClass->instance_methods, mmethod("copy", &copy));
-	push_back(StringClass->instance_methods, mmethod("length", &length));
-	push_back(StringClass->instance_methods, mmethod("description", &description));
-	push_back(StringClass->instance_methods, mmethod("equals", &equals));
+	REGISTER_METHOD(StringClass, "initWithCString", initWithCString);
+	REGISTER_METHOD(StringClass, "initWithFormatCString", initWithFormatCString);
+	REGISTER_METHOD(StringClass, "initWithFormatCStringAndArgList", initWithFormatCStringAndArgList);
+	REGISTER_METHOD(StringClass, "dealloc", dealloc);
+	REGISTER_METHOD(StringClass, "copy", copy);
+	REGISTER_METHOD(StringClass, "length", length);
+	REGISTER_METHOD(StringClass, "description", description);
+	REGISTER_METHOD(StringClass, "equals", equals);
 }
 
-void *newWithCString(void *v, va_list *args) {
-	String o = cc_alloc(sizeof(struct _String));
-	initWithCString(o, args);
-	((Object)o)->root = StringClass;
-	return o;
+DEFINE(newWithCString) {
+	NEW(StringClass, struct _String);
+
+	initWithCString(self, args);
+
+	return self;
 }
 
-void *newWithFormatCString(void *v, va_list *args) {
-	String o = cc_alloc(sizeof(struct _String));
-	initWithFormatCString(o, args);
-	((Object)o)->root = StringClass;
-	return o;
+DEFINE(newWithFormatCString) {
+	NEW(StringClass, struct _String);
+
+	initWithFormatCString(self, args);
+
+	return self;
 }
 
-void *newWithFormatCStringAndArgList(void *v, va_list *args) {
-	String o = cc_alloc(sizeof(struct _String));
-	initWithFormatCStringAndArgList(o, args);
-	((Object)o)->root = StringClass;
-	return o;
+DEFINE(newWithFormatCStringAndArgList) {
+	NEW(StringClass, struct _String);
+
+	initWithFormatCStringAndArgList(self, args);
+
+	return self;
 }
 
-void *initWithCString(void *v, va_list *args) {
-	String o = (String)v;
-	msg_cast(ObjectClass, o, "init");
-	cstring string_arg = va_arg(*args, cstring);
-	o->value = mstring(string_arg);
-	return o;
+DEFINE(initWithCString) {
+	CONTEXT(String);
+
+	cstring string_arg = NEXT_ARG(cstring);
+	self->value = mstring(string_arg);
+
+	return self;
 }
 
-void *initWithFormatCString(void *v, va_list *args) {
-	String o = (String)v;
-	msg_cast(ObjectClass, o, "init");
-	cstring formatString = va_arg(*args, cstring);
-	o->value = format(formatString, args);
-	return o;
+DEFINE(initWithFormatCString) {
+	CONTEXT(String);
+
+	cstring formatString = NEXT_ARG(cstring);
+	self->value = format(formatString, args);
+
+	return self;
 }
 
-void *initWithFormatCStringAndArgList(void *v, va_list *args) {
-	String o = (String)v;
-	msg_cast(ObjectClass, o, "init");
-	cstring formatString = va_arg(*args, cstring);
-	va_list *formatArgList = va_arg(*args, va_list *);
-	o->value = format(formatString, formatArgList);
-	return o;
+DEFINE(initWithFormatCStringAndArgList) {
+	CONTEXT(String);
+
+	cstring formatString = NEXT_ARG(cstring);
+	va_list *formatArgList = NEXT_ARG(va_list *);
+	self->value = format(formatString, formatArgList);
+
+	return self;
 }
 
 static cstring format(cstring format, va_list *format_args) {
@@ -91,7 +96,7 @@ static cstring format(cstring format, va_list *format_args) {
 	for (int i = 0; i < format_length; i++) {
 		if (i <= format_length && (format[i] == '%' && format[i + 1] == '@')) {
 			msg(buffer, "vsprint", format_args);
-			Object objectArgument = (Object)va_arg(*format_args, Object);
+			Object objectArgument = va_arg(*format_args, Object);
 			String objectDescription = msg(objectArgument, "description");
 			msg(buffer, "concatenateWithCString", objectDescription->value);
 			msg(objectDescription, "release");
@@ -112,34 +117,40 @@ static cstring format(cstring format, va_list *format_args) {
 
 	cstring formatted_string = mstring(buffer->base.value);
 	msg(buffer, "release");
+
 	return formatted_string;;
 }
 
-void *dealloc(void *v, va_list *args) {
-	String o = (String)v;
-	free(o->value);
-	return msg_cast(ObjectClass, o, "dealloc");
+DEFINE(dealloc) {
+	CONTEXT(String);
+
+	free(self->value);
+
+	return msg_cast(ObjectClass, self, "dealloc");
 }
 
-void *copy(void *v, va_list *args) {
-	String o = (String)v;
-	return msg(StringClass, "newWithCString", o->value);
+DEFINE(copy) {
+	CONTEXT(String);
+
+	return msg(StringClass, "newWithCString", self->value);
 }
 
-void *length(void *v, va_list *args) {
-	String o = (String)v;
-	Integer length = msg(IntegerClass, "newWithInt", strlen(o->value));
+DEFINE(length) {
+	CONTEXT(String);
+
+	Integer length = msg(IntegerClass, "newWithInt", strlen(self->value));
+
 	return length;
 }
 
-void *description(void *v, va_list *args) {
+DEFINE(description) {
 	return copy(v, args);
 }
 
-void *equals(void *v, va_list *args) {
-	String o = (String)v;
-	cstring other = va_arg(*args, cstring);
-	if (strncmp(o->value, other, strlen(o->value)) == 0) {
+DEFINE(equals) {
+	CONTEXT(String);
+	cstring other = NEXT_ARG(cstring);
+	if (strncmp(self->value, other, strlen(self->value)) == 0) {
 		return YES;
 	}
 	

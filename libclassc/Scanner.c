@@ -3,49 +3,51 @@
 
 #define TOKEN_BUFFER_SIZE 256
 
-Class ScannerClass = NULL;
+IMPLEMENTATION(ScannerClass);
 
-static void *newWithFile(void *v, va_list *args);
-
-static void *initWithFile(void *v, va_list *args);
-static void *dealloc(void *v, va_list *args);
-static void *next(void *v, va_list *args);
-static void *has_next(void *v, va_list *args);
+PROTOTYPE(newWithFile);
+PROTOTYPE(initWithFile);
+PROTOTYPE(dealloc);
+PROTOTYPE(next);
+PROTOTYPE(has_next);
 
 void scanner_class_init() {
 	ScannerClass = msg(ClassClass, "new", "Scanner", ObjectClass);
 
-	push_back(ScannerClass->static_methods, mmethod("newWithFile", &newWithFile));
+	REGISTER_CLASS_METHOD(ScannerClass, "newWithFile", newWithFile);
 
-	push_back(ScannerClass->instance_methods, mmethod("initWithFile", &initWithFile));
-	push_back(ScannerClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(ScannerClass->instance_methods, mmethod("next", &next));
-	push_back(ScannerClass->instance_methods, mmethod("has_next", &has_next));
+	REGISTER_METHOD(ScannerClass, "initWithFile", initWithFile);
+	REGISTER_METHOD(ScannerClass, "dealloc", dealloc);
+	REGISTER_METHOD(ScannerClass, "next", next);
+	REGISTER_METHOD(ScannerClass, "has_next", has_next);
 }
 
-void *newWithFile(void *v, va_list *args) {
-	Scanner o = cc_alloc(sizeof(struct _Scanner));
-	initWithFile(o, args);
-	((Object)o)->root = ScannerClass;
-	return o;
+DEFINE(newWithFile) {
+	NEW(ScannerClass, struct _Scanner);
+
+	initWithFile(self, args);
+
+	return self;
 }
 
-void *initWithFile(void *v, va_list *args) {
-	Scanner o = (Scanner)v;
-	msg_cast(ObjectClass, o, "init");
-	o->file = va_arg(*args, File);
-	return o;
+DEFINE(initWithFile) {
+	CONTEXT(Scanner);
+
+	self->file = NEXT_ARG(File);
+
+	return self;
 }
 
-void *dealloc(void *v, va_list *args) {
-	Scanner o = (Scanner)v;
-	return msg_cast(ObjectClass, o, "dealloc");
+DEFINE(dealloc) {
+	CONTEXT(Scanner);
+
+	return msg_cast(ObjectClass, self, "dealloc");
 }
 
-void *next(void *v, va_list *args) {
-	Scanner o = (Scanner)v;
-	FILE *f = msg(o->file, "file");
+DEFINE(next) {
+	CONTEXT(Scanner);
 
+	FILE *f = msg(self->file, "file");
 	MutableString buffer = msg(MutableStringClass, "newWithCStringAndCapacity", "", TOKEN_BUFFER_SIZE);
 
 	char c;
@@ -73,9 +75,10 @@ void *next(void *v, va_list *args) {
 	return token;
 }
 
-void *has_next(void *v, va_list *args) {
-	Scanner o = (Scanner)v;
-	FILE *f = msg(o->file, "file");
+DEFINE(has_next) {
+	CONTEXT(Scanner);
+
+	FILE *f = msg(self->file, "file");
 	int has_next = 1;
 	char c = 0;
 
@@ -85,7 +88,7 @@ void *has_next(void *v, va_list *args) {
 	}
 	ungetc(c, f);
 
-	Integer retval = msg(IntegerClass, "newWithInt", has_next);
+	Integer hasNext = msg(IntegerClass, "newWithInt", has_next);
 
-	return retval;
+	return hasNext;
 }

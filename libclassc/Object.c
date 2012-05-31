@@ -1,66 +1,75 @@
 
 #include "Classified-C.h"
 
-Class ObjectClass = NULL;
+IMPLEMENTATION(ObjectClass);
 
-static void *new(void *v, va_list *args);
-
-static void *init(void *v, va_list *args);
-static void *release(void *v, va_list *args);
-static void *dealloc(void *v, va_list *args);
-static void *retain(void *v, va_list *args);
-static void *description(void *v, va_list *args);
+PROTOTYPE(new);
+PROTOTYPE(init);
+PROTOTYPE(release);
+PROTOTYPE(dealloc);
+PROTOTYPE(retain);
+PROTOTYPE(description);
 
 void object_class_init() {
 	ObjectClass = new_class("Object", NULL);
 
-	push_back(ObjectClass->static_methods, mmethod("new", &new));
+	REGISTER_CLASS_METHOD(ObjectClass, "new", new);
 
-	push_back(ObjectClass->instance_methods, mmethod("init", &init));
-	push_back(ObjectClass->instance_methods, mmethod("release", &release));
-	push_back(ObjectClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(ObjectClass->instance_methods, mmethod("retain", &retain));
-	push_back(ObjectClass->instance_methods, mmethod("description", &description));
+	REGISTER_METHOD(ObjectClass, "init", init);
+	REGISTER_METHOD(ObjectClass, "release", release);
+	REGISTER_METHOD(ObjectClass, "dealloc", dealloc);
+	REGISTER_METHOD(ObjectClass, "retain", retain);
+	REGISTER_METHOD(ObjectClass, "description", description);
 }
 
 Object object_init(void *v) {
-	Object o = (Object)v;
-	return o;
+	Object self = (Object)v;
+
+	self->retaincount = 1;
+
+	return self;
 }
 
-void *new(void *v, va_list *args) {
-	Object o = cc_alloc(sizeof(struct _Object));
-	object_init(o);
-	o->root = ObjectClass;
-	return o;
+DEFINE(new) {
+	NEW(ObjectClass, struct _Object);
+
+	return self;
 }
 
-void *init(void *v, va_list *args) {
+DEFINE(init) {
+	CONTEXT(Object);
+
 	return object_init(v);
 }
 
-void *release(void *v, va_list *args) {
-	Object o = (Object)v;
-	--o->retaincount;
+DEFINE(release) {
+	CONTEXT(Object);
 
-	if (o->retaincount == 0) {
-		return msg(o, "dealloc");
+	--self->retaincount;
+
+	if (self->retaincount == 0) {
+		return msg(self, "dealloc");
 	}
 
-	return o;
+	return self;
 }
 
-void *dealloc(void *v, va_list *args) {
-	free(v);
+DEFINE(dealloc) {
+	CONTEXT(Object);
+	
+	free(self);
+
 	return NULL;
 }
 
-void *retain(void *v, va_list *args) {
-	Object o = (Object)v;
-	o->retaincount++;
-	return o;
+DEFINE(retain) {
+	CONTEXT(Object);
+
+	self->retaincount++;
+
+	return self;
 }
 
-void *description(void *v, va_list *args) {
+DEFINE(description) {
 	return msg(StringClass, "newWithFormatCString", "(Object) %p", v);
 }

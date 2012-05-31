@@ -1,78 +1,83 @@
 
 #include "Classified-C.h"
 
-Class StackClass = NULL;
+IMPLEMENTATION(StackClass);
 
-static void *new(void *v, va_list *args);
-
-static void *init(void *v, va_list *args);
-static void *dealloc(void *v, va_list *args);
-static void *push(void *v, va_list *args);
-static void *pop(void *v, va_list *args);
-static void *peek(void *v, va_list *args);
+PROTOTYPE(new);
+PROTOTYPE(init);
+PROTOTYPE(dealloc);
+PROTOTYPE(push);
+PROTOTYPE(pop);
+PROTOTYPE(peek);
 
 void message_release(void *v);
 
 void stack_class_init() {
 	StackClass = msg(ClassClass, "new", "Stack", ObjectClass);
 
-	push_back(StackClass->static_methods, mmethod("new", &new));
+	REGISTER_CLASS_METHOD(StackClass, "new", new);
 
-	push_back(StackClass->instance_methods, mmethod("init", &init));
-	push_back(StackClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(StackClass->instance_methods, mmethod("push", &push));
-	push_back(StackClass->instance_methods, mmethod("pop", &pop));
-	push_back(StackClass->instance_methods, mmethod("peek", &peek));
+	REGISTER_METHOD(StackClass, "init", init);
+	REGISTER_METHOD(StackClass, "dealloc", dealloc);
+	REGISTER_METHOD(StackClass, "push", push);
+	REGISTER_METHOD(StackClass, "pop", pop);
+	REGISTER_METHOD(StackClass, "peek", peek);
 }
 
-void *new(void *v, va_list *args) {
-	Stack o = cc_alloc(sizeof(struct _Stack));
-	init(o, args);
-	((Object)o)->root = StackClass;
-	return o;
+DEFINE(new) {
+	NEW(StackClass, struct _Stack);
+
+	init(self, args);
+
+	return self;
 }
 
-void *init(void *v, va_list *args) {
-	Stack o = (Stack)v;
-	msg_cast(ObjectClass, o, "init");
-	o->llist = create_list();
-	return o;
+DEFINE(init) {
+	Stack self = (Stack)v;
+
+	self->llist = create_list();
+
+	return self;
 }
 
-void *dealloc(void *v, va_list *args) {
-	Stack o = (Stack)v;
-	free_list(o->llist, &message_release);
-	return msg_cast(ObjectClass, o, "dealloc");
+DEFINE(dealloc) {
+	Stack self = (Stack)v;
+
+	free_list(self->llist, &message_release);
+
+	return msg_cast(ObjectClass, self, "dealloc");
 }
 
-void *push(void *v, va_list *args) {
-	Stack o = (Stack)v;
+DEFINE(push) {
+	Stack self = (Stack)v;
 
-	void *data = va_arg(*args, void *);
-	push_front(o->llist, data);
-	return o;
+	void *data = NEXT_ARG(void *);
+	push_front(self->llist, data);
+
+	return self;
 }
 
-void *pop(void *v, va_list *args) {
-	Stack o = (Stack)v;
+DEFINE(pop) {
+	Stack self = (Stack)v;
 
-	if (is_empty(o->llist)) {
+	if (is_empty(self->llist)) {
 		return NULL;
 	}
 
-	void *retval = peek(o, NULL);
-	remove_front(o->llist, &message_release);
+	void *retval = peek(self, NULL);
+	remove_front(self->llist, &message_release);
+
 	return retval;
 }
 
-void *peek(void *v, va_list *args) {
-	Stack o = (Stack)v;
+DEFINE(peek) {
+	Stack self = (Stack)v;
 
-	if (is_empty(o->llist)) {
+	if (is_empty(self->llist)) {
 		return NULL;
 	}
 
-	return front(o->llist);
+	return front(self->llist);
 }
 
 void message_release(void *v) {

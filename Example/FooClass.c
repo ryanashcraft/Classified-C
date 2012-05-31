@@ -2,51 +2,53 @@
 #include "../libclassc/Classified-C.h"
 #include "FooClass.h"
 
-Class FooClass = NULL;
+IMPLEMENTATION(FooClass);
 
-static void *new(void *v, va_list *args);
-
-static void *init(void *v, va_list *args);
-static void *dealloc(void *v, va_list *args);
-static void *description(void *v, va_list *args);
+PROTOTYPE(new);
+PROTOTYPE(init);
+PROTOTYPE(dealloc);
+PROTOTYPE(description);
 
 void foo_class_init() {
 	FooClass = msg(ClassClass, "new", "Foo", StringClass);
 
-	push_back(FooClass->static_methods, mmethod("new", &new));
+	REGISTER_CLASS_METHOD(FooClass, "new", new);
 
-	push_back(FooClass->instance_methods, mmethod("init", &init));
-	push_back(FooClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(FooClass->instance_methods, mmethod("description", &description));
+	REGISTER_METHOD(FooClass, "init", init);
+	REGISTER_METHOD(FooClass, "dealloc", dealloc);
+	REGISTER_METHOD(FooClass, "description", description);
 }
 
-void *new(void *v, va_list *args) {
-	Foo o = cc_alloc(sizeof(struct _Foo));
-	init(o, args);
-	((Object)o)->root = FooClass;
-	return o;
+DEFINE(new) {
+	NEW(FooClass, struct _Foo);
+
+	init(self, args);
+
+	return self;
 }
 
-void *init(void *v, va_list *args) {
-	Foo o = (Foo)v;
-	int value = va_arg(*args, int);
-	msg_cast(ObjectClass, o, "init");
-	msg_cast(StringClass, o, "initWithCString", va_arg(*args, cstring));
+DEFINE(init) {
+	CONTEXT(Foo);
 
-	o->value = value;
+	int value = NEXT_ARG(int);
+	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
+	self->value = value;
 
-	return o;
+	return self;
 }
 
-void *dealloc(void *v, va_list *args) {
-	Foo o = (Foo)v;
-	return msg_cast(StringClass, o, "dealloc");
+DEFINE(dealloc) {
+	CONTEXT(Foo);
+
+	return msg_cast(StringClass, self, "dealloc");
 }
 
-void *description(void *v, va_list *args) {
-	Foo o = (Foo)v;
-	String superDescription = msg_cast(StringClass, o, "description");
-	String formattedDescription = msg(StringClass, "newWithFormatCString", "%d %@", o->value, superDescription);
+DEFINE(description) {
+	CONTEXT(Foo);
+
+	String superDescription = msg_cast(StringClass, self, "description");
+	String formattedDescription = msg(StringClass, "newWithFormatCString", "%d %@", self->value, superDescription);
 	msg(superDescription, "release");
+
 	return formattedDescription;
 }

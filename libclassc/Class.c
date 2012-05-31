@@ -1,13 +1,11 @@
 
 #include "Classified-C.h"
 
-Class ClassClass = NULL;
+IMPLEMENTATION(ClassClass);
 
-static void *new(void *v, va_list *args);
+PROTOTYPE(new);
 
 void class_class_init() {
-	method m;
-
 	ClassClass = malloc(sizeof(struct _Class));
 	assert(ClassClass);
 
@@ -15,8 +13,7 @@ void class_class_init() {
 	((Object)ClassClass)->retaincount = 1;
 
 	ClassClass->static_methods = create_list();
-	m = mmethod("new", &new);
-	push_back(ClassClass->static_methods, m);
+	REGISTER_CLASS_METHOD(ClassClass, "new", new);
 
 	ClassClass->instance_methods = create_list();
 
@@ -24,21 +21,21 @@ void class_class_init() {
 }
 
 Class new_class(cstring name, Class parent_class) {
-	Class c = cc_alloc(sizeof(struct _Class));
-	object_init(c);
-	((Object)c)->root = ClassClass;
+	NEW(ClassClass, struct _Class);
 
-	c->parent_class = parent_class;
-	c->static_methods = create_list();
-	c->instance_methods = create_list();
-	c->name = mstring(name);
+	self->parent_class = parent_class;
+	self->static_methods = create_list();
+	self->instance_methods = create_list();
+	self->name = mstring(name);
 
-	return c;
+	return self;
 }
 
-void *new(void *v, va_list *args) {
-	cstring name = va_arg(*args, cstring);
-	Class parent_class = va_arg(*args, Class);
+DEFINE(new) {
+	CONTEXT(Class);
+
+	cstring name = NEXT_ARG(cstring);
+	Class parent_class = NEXT_ARG(Class);
 
 	return new_class(name, parent_class);
 }

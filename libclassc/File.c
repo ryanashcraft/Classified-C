@@ -1,68 +1,74 @@
 
 #include "Classified-C.h"
 
-Class FileClass = NULL;
+IMPLEMENTATION(FileClass);
 
-static void *newWithFilename(void *v, va_list *args);
-static void *newWithFile(void *v, va_list *args);
-
-static void *initWithFilename(void *v, va_list *args);
-static void *initWithFile(void *v, va_list *args);
-static void *dealloc(void *v, va_list *args);
-static void *file(void *v, va_list *args);
+PROTOTYPE(newWithFilename);
+PROTOTYPE(newWithFile);
+PROTOTYPE(initWithFilename);
+PROTOTYPE(initWithFile);
+PROTOTYPE(dealloc);
+PROTOTYPE(file);
 
 void file_class_init() {
 	FileClass = msg(ClassClass, "new", "File", ObjectClass);
 
-	push_back(FileClass->static_methods, mmethod("newWithFilename", &newWithFilename));
-	push_back(FileClass->static_methods, mmethod("newWithFile", &newWithFile));
+	REGISTER_CLASS_METHOD(FileClass, "newWithFilename", newWithFilename);
+	REGISTER_CLASS_METHOD(FileClass, "newWithFile", newWithFile);
 	
-	push_back(FileClass->instance_methods, mmethod("initWithFilename", &initWithFilename));
-	push_back(FileClass->instance_methods, mmethod("initWithFile", &initWithFilename));
-	push_back(FileClass->instance_methods, mmethod("dealloc", &dealloc));
-	push_back(FileClass->instance_methods, mmethod("file", &file));
+	REGISTER_METHOD(FileClass, "initWithFilename", initWithFilename);
+	REGISTER_METHOD(FileClass, "initWithFile", initWithFilename);
+	REGISTER_METHOD(FileClass, "dealloc", dealloc);
+	REGISTER_METHOD(FileClass, "file", file);
 }
 
-void *newWithFilename(void *v, va_list *args) {
-	String o = cc_alloc(sizeof(struct _File));
-	initWithFilename(o, args);
-	((Object)o)->root = FileClass;
-	return o;
+DEFINE(newWithFilename) {
+	NEW(FileClass, struct _File);
+
+	initWithFilename(self, args);
+
+	return self;
 }
 
-void *newWithFile(void *v, va_list *args) {
-	String o = cc_alloc(sizeof(struct _File));
-	initWithFile(o, args);
-	((Object)o)->root = FileClass;
-	return o;
+DEFINE(newWithFile) {
+	NEW(FileClass, struct _File);
+
+	initWithFile(self, args);
+
+	return self;
 }
 
-void *initWithFilename(void *v, va_list *args) {
-	File o = (File)v;
-	msg_cast(ObjectClass, o, "init");
-	o->filename = mstring(va_arg(*args, cstring));
-	o->file = fopen(o->filename, "r");
-	return o;
+DEFINE(initWithFilename) {
+	CONTEXT(File);
+
+	self->filename = mstring(NEXT_ARG(cstring));
+	self->file = fopen(self->filename, "r");
+
+	return self;
 }
 
-void *initWithFile(void *v, va_list *args) {
-	File o = (File)v;
-	msg_cast(ObjectClass, o, "init");
-	o->filename = NULL;
-	o->file = va_arg(*args, FILE *);
-	return o;
+DEFINE(initWithFile) {
+	CONTEXT(File);
+	
+	self->filename = NULL;
+	self->file = NEXT_ARG(FILE *);
+
+	return self;
 }
 
-void *dealloc(void *v, va_list *args) {
-	File o = (File)v;
-	fclose(o->file);
-	if (o->filename) {
-		free(o->filename);
+DEFINE(dealloc) {
+	CONTEXT(File);
+
+	fclose(self->file);
+	if (self->filename) {
+		free(self->filename);
 	}
-	return msg_cast(ObjectClass, o, "dealloc");
+
+	return msg_cast(ObjectClass, self, "dealloc");
 }
 
-static void *file(void *v, va_list *args) {
-	File o = (File)v;
-	return o->file;
+DEFINE(file) {
+	CONTEXT(File);
+
+	return self->file;
 }
