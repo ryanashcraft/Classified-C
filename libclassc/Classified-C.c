@@ -1,5 +1,5 @@
 /**
-  ClassifiedC.c
+  Classified-C.c
 
   This file contains functions and data structures used for managing
   the set of CBang classes and implementing message passing.
