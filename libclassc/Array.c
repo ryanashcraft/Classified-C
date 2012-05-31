@@ -26,7 +26,6 @@ DEFINE(newWithObjects) {
 	NEW(ArrayClass, struct _Array);
 
 	initWithObjects(self, args);
-	((Object)self)->root = ArrayClass;
 
 	return self;
 }
