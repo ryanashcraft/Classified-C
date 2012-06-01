@@ -445,7 +445,7 @@ void *ll_front(list* llist) {
   return NULL;
 }
 
-/** get_index
+/** ll_get_index
   *
   * Gets the data at the indexth node of the linked list
   * If the list is empty or if the index is invalid return NULL.
@@ -453,7 +453,7 @@ void *ll_front(list* llist) {
   * @param llist a pointer to the list
   * @return The data at the indexth node in the linked list or NULL.
   */
-void *get_index(list* llist, int index) {
+void *ll_get_index(list* llist, int index) {
   node *n;
   int i;
 

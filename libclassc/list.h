@@ -68,7 +68,7 @@ int remove_if(list* llist, list_pred pred_func, list_op free_func);
 /* Querying List */
 void* ll_front(list* llist);
 void* ll_back(list* llist);
-void* get_index(list* llist, int index);
+void* ll_get_index(list* llist, int index);
 void* get_first_occurrence(list* llist, list_pred_args test_func, ...);
 int is_empty(list* llist);
 int size(list* llist);
