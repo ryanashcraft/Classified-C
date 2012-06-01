@@ -32,9 +32,7 @@ DEFINE(newWithObjects) {
 
 DEFINE(initWithObjects) {
 	CONTEXT(Array);
-
-	msg_cast(ObjectClass, self, "init");
-
+	
 	self->capacity = 0;
 	self->length = 0;
 
