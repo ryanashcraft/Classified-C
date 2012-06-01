@@ -84,6 +84,7 @@ DEFINE(run) {
 	msg(iterator, "release");
 
 	msg(SystemOut, "println", "%@ successes / %@ total", successCount, totalTestCases);
+	msg(successCount, "release");
 	msg(totalTestCases, "release");
 
 	return self;
