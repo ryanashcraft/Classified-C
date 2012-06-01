@@ -8,6 +8,7 @@ PROTOTYPE(initWithInt);
 PROTOTYPE(dealloc);
 PROTOTYPE(equals);
 PROTOTYPE(description);
+PROTOTYPE(increment);
 
 void integer_class_init() {
 	IntegerClass = msg(ClassClass, "new", "Integer", ObjectClass);
@@ -18,6 +19,7 @@ void integer_class_init() {
 	REGISTER_METHOD(IntegerClass, "dealloc", dealloc);
 	REGISTER_METHOD(IntegerClass, "equals", equals);
 	REGISTER_METHOD(IntegerClass, "description", description);
+	REGISTER_METHOD(IntegerClass, "increment", increment);
 }
 
 DEFINE(newWithInt) {
@@ -58,4 +60,12 @@ DEFINE(description) {
 	CONTEXT(Integer);
 
 	return msg(StringClass, "newWithFormatCString", "%d", self->value);
+}
+
+DEFINE(increment) {
+	CONTEXT(Integer);
+	
+	self->value++;
+
+	return self;
 }
