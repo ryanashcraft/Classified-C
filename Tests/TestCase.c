@@ -49,20 +49,20 @@ DEFINE(dealloc) {
 DEFINE(description) {
 	CONTEXT(TestCase);
 
-	return msg(StringClass, "newWithFormatCString", "Test Case - %s", self->name);
+	return msg(StringClass, "newWithFormatCString", "%s", self->name);
 }
 
 DEFINE(run) {
 	CONTEXT(TestCase);
 
-	msg(SystemOut, "print", "%@: ", self);
+	msg(SystemOut, "print", "\t%@: ", self);
 
 	int result = self->function();
 	if (result == TestCaseResultSuccess) {
-		msg(SystemOut, "println", "%s", "Success");
-	} else {
-		msg(SystemOut, "println", "%s", "Failure");
+		msg(SystemOut, "println", "%s", "success");
+		return YES;
 	}
 
-	return self;
+	msg(SystemOut, "println", "%s", "failure");
+	return NO;
 }
