@@ -4,7 +4,9 @@
 IMPLEMENTATION(IteratorClass);
 
 PROTOTYPE(newWithArray);
+PROTOTYPE(newWithLinkedList);
 PROTOTYPE(initWithArray);
+PROTOTYPE(initWithLinkedList);
 PROTOTYPE(dealloc);
 PROTOTYPE(next);
 
@@ -12,8 +14,10 @@ void iterator_class_init() {
 	IteratorClass = msg(ClassClass, "new", "Iterator", ObjectClass);
 
 	REGISTER_CLASS_METHOD(IteratorClass, "newWithArray", newWithArray);
+	REGISTER_CLASS_METHOD(IteratorClass, "newWithLinkedList", newWithLinkedList);
 	
 	REGISTER_METHOD(IteratorClass, "initWithObjects", initWithArray);
+	REGISTER_METHOD(IteratorClass, "initWithLinkedList", initWithLinkedList);
 	REGISTER_METHOD(IteratorClass, "dealloc", dealloc);
 	REGISTER_METHOD(IteratorClass, "next", next);
 }
@@ -26,10 +30,28 @@ DEFINE(newWithArray) {
 	return self;
 }
 
+DEFINE(newWithLinkedList) {
+	NEW(IteratorClass, struct _Iterator);
+
+	initWithLinkedList(self, args);
+
+	return self;
+}
+
 DEFINE(initWithArray) {
 	CONTEXT(Iterator);
 
-	self->elements = NEXT_ARG(Array);
+	self->elements = NEXT_ARG(Object);
+	msg(self->elements, "retain");
+	self->nextPointer = 0;
+
+	return self;
+}
+
+DEFINE(initWithLinkedList) {
+	CONTEXT(Iterator);
+
+	self->elements = NEXT_ARG(Object);
 	msg(self->elements, "retain");
 	self->nextPointer = 0;
 

@@ -6,7 +6,7 @@ extern Class IteratorClass;
 
 typedef struct _Iterator {
 	struct _Object base;
-	Array elements;
+	Object elements;
 	int nextPointer;
 } *Iterator;
 
