@@ -8,12 +8,14 @@ PROTOTYPE(new);
 PROTOTYPE(init);
 PROTOTYPE(dealloc);
 PROTOTYPE(description);
+PROTOTYPE(length);
 PROTOTYPE(pushFront);
 PROTOTYPE(pushBack);
 PROTOTYPE(removeFront);
 PROTOTYPE(removeBack);
 PROTOTYPE(getFront);
 PROTOTYPE(getBack);
+PROTOTYPE(get);
 PROTOTYPE(performOnEach);
 
 void call_method(void *v, va_list *args);
@@ -26,12 +28,14 @@ void linked_list_class_init() {
 	REGISTER_METHOD(LinkedListClass, "init", init);
 	REGISTER_METHOD(LinkedListClass, "dealloc", dealloc);
 	REGISTER_METHOD(LinkedListClass, "description", description);
+	REGISTER_METHOD(LinkedListClass, "length", length);
 	REGISTER_METHOD(LinkedListClass, "pushFront", pushFront);
 	REGISTER_METHOD(LinkedListClass, "pushBack", pushBack);
 	REGISTER_METHOD(LinkedListClass, "removeFront", removeFront);
 	REGISTER_METHOD(LinkedListClass, "removeBack", removeBack);
 	REGISTER_METHOD(LinkedListClass, "getFront", getFront);
 	REGISTER_METHOD(LinkedListClass, "getBack", getBack);
+	REGISTER_METHOD(LinkedListClass, "get", get);
 	REGISTER_METHOD(LinkedListClass, "performOnEach", performOnEach);
 }
 
@@ -63,6 +67,12 @@ DEFINE(description) {
 	CONTEXT(LinkedList);
 
 	return msg(StringClass, "newWithFormatCString", "%s", "[LinkedList]");
+}
+
+DEFINE(length) {
+	CONTEXT(LinkedList);
+
+	return msg(IntegerClass, "newWithInt", self->value->size);
 }
 
 DEFINE(pushFront) {
@@ -111,6 +121,12 @@ DEFINE(getBack) {
 	CONTEXT(LinkedList);
 
 	return ll_back(self->value);
+}
+
+DEFINE(get) {
+	CONTEXT(LinkedList);
+
+	return ll_get_index(self->value, NEXT_ARG(int));
 }
 
 DEFINE(performOnEach) {
