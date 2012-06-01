@@ -34,6 +34,7 @@ void cc_init() {
 	scanner_class_init();
 	printer_class_init();
 	iterator_class_init();
+	linked_list_class_init();
 
 	SystemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
 }
@@ -178,6 +179,10 @@ void *cc_alloc(size_t size) {
 	((Object)v)->retaincount = 1;
 
 	return v;
+}
+
+void msg_release(void *v) {
+	msg(v, "release");	
 }
 
 /**

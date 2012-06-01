@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 	Integer i3 = msg(IntegerClass, "newWithInt", 3);
 	Array arr = msg(ArrayClass, "newWithObjects", s1, s2, i3, NULL);
 	msg(SystemOut, "printEach", " ", arr);
-	msg(arr, "performMethodOnEach", "release");
+	msg(arr, "performOnEach", "release");
 	msg(arr, "release");
 	msg(SystemOut, "println", "");
 
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 		msg(token, "release");
 
 		msg(hasNext, "release");
-		hasNext = msg(s, "has_next");
+		hasNext = msg(s, "hasNext");
 	}
 	msg(hasNext, "release");
 	msg(s, "release");

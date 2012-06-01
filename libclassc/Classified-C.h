@@ -39,6 +39,7 @@ void *msg(void *v, cstring message, ...);
 void *msg_cast(Class c, void *v, cstring message, ...);
 
 void *cc_alloc(size_t size);
+void msg_release(void *v);
 
 method mmethod(cstring name, fpointer function);
 cstring mstring(cstring s);
@@ -57,6 +58,7 @@ cstring mstring(cstring s);
 #include "Scanner.h"
 #include "Printer.h"
 #include "Iterator.h"
+#include "LinkedList.h"
 
 #define YES ((size_t *)1)
 #define NO ((size_t *)0)

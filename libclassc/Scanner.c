@@ -9,7 +9,7 @@ PROTOTYPE(newWithFile);
 PROTOTYPE(initWithFile);
 PROTOTYPE(dealloc);
 PROTOTYPE(next);
-PROTOTYPE(has_next);
+PROTOTYPE(hasNext);
 
 void scanner_class_init() {
 	ScannerClass = msg(ClassClass, "new", "Scanner", ObjectClass);
@@ -19,7 +19,7 @@ void scanner_class_init() {
 	REGISTER_METHOD(ScannerClass, "initWithFile", initWithFile);
 	REGISTER_METHOD(ScannerClass, "dealloc", dealloc);
 	REGISTER_METHOD(ScannerClass, "next", next);
-	REGISTER_METHOD(ScannerClass, "has_next", has_next);
+	REGISTER_METHOD(ScannerClass, "hasNext", hasNext);
 }
 
 DEFINE(newWithFile) {
@@ -75,7 +75,7 @@ DEFINE(next) {
 	return token;
 }
 
-DEFINE(has_next) {
+DEFINE(hasNext) {
 	CONTEXT(Scanner);
 
 	FILE *f = msg(self->file, "file");

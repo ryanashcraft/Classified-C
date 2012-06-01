@@ -43,7 +43,7 @@ DEFINE(init) {
 DEFINE(dealloc) {
 	Stack self = (Stack)v;
 
-	free_list(self->llist, &message_release);
+	free_list(self->llist, &msg_release);
 
 	return msg_cast(ObjectClass, self, "dealloc");
 }
@@ -65,7 +65,7 @@ DEFINE(pop) {
 	}
 
 	void *retval = peek(self, NULL);
-	remove_front(self->llist, &message_release);
+	remove_front(self->llist, &msg_release);
 
 	return retval;
 }
@@ -77,9 +77,5 @@ DEFINE(peek) {
 		return NULL;
 	}
 
-	return front(self->llist);
-}
-
-void message_release(void *v) {
-	msg(v, "release");	
+	return ll_front(self->llist);
 }

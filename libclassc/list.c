@@ -429,7 +429,7 @@ int remove_if(list* llist, list_pred pred_func, list_op free_func) {
     return count;
 }
 
-/** front
+/** ll_front
   *
   * Gets the data at the front of the linked list
   * If the list is empty return NULL.
@@ -437,7 +437,7 @@ int remove_if(list* llist, list_pred pred_func, list_op free_func) {
   * @param llist a pointer to the list
   * @return The data at the first node in the linked list or NULL.
   */
-void *front(list* llist) {
+void *ll_front(list* llist) {
   if (llist->head != NULL) {
       return llist->head->data;
   }
@@ -491,43 +491,43 @@ void *get_index(list* llist, int index) {
 void* get_first_occurrence(list* llist, list_pred_args test_func, ...) {
   node *n;
 
-  va_list argp;
-  va_start(argp, test_func);
+  va_list args;
+  va_start(args, test_func);
 
   n = llist->head;
   
   if (!n) {
-      va_end(argp);
+      va_end(args);
       return NULL;
   }
   
   if (llist->head->next == llist->head) {
-      if (test_func(llist->head->data, &argp)) {
-          va_end(argp);
+      if (test_func(llist->head->data, &args)) {
+          va_end(args);
           return llist->head->data;
       } else {
-          va_end(argp);
+          va_end(args);
           return NULL;
       }
   }
   
   do {
-      if (test_func(n->data, &argp)) {
-          va_end(argp);
+      if (test_func(n->data, &args)) {
+          va_end(args);
           return n->data;
       }
       
       n = n->next;
 
       /* you have to call va_start again to reset arguments */
-      va_start(argp, test_func);
+      va_start(args, test_func);
   } while (n != llist->head);
   
-  va_end(argp);
+  va_end(args);
   return NULL;
 }
 
-/** back
+/** ll_back
   *
   * Gets the data at the "end" of the linked list
   * If the list is empty return NULL.
@@ -535,7 +535,7 @@ void* get_first_occurrence(list* llist, list_pred_args test_func, ...) {
   * @param llist a pointer to the list
   * @return The data at the last node in the linked list or NULL.
   */
-void *back(list* llist) {    
+void *ll_back(list* llist) {    
   if (llist->head != NULL) {
       return llist->head->prev->data;
   }
@@ -661,5 +661,32 @@ void traverse(list* llist, list_op do_func) {
           do_func(n->data);
       }
       n = n->next;
+  } while (n != llist->head);
+}
+
+void traverse_with_args(list* llist, list_op_args do_func, ...) {
+  node *n = llist->head;
+
+  if (!n) {
+      return;
+  }
+
+  va_list args;
+  va_start(args, do_func);
+  
+  if (llist->head->next == llist->head) {
+      do_func(n->data, &args);
+      
+      va_end(args);
+      return;
+  }
+  
+  do {
+      if (do_func != NULL) {
+          do_func(n->data, &args);
+      }
+      n = n->next;
+
+      va_start(args, do_func);
   } while (n != llist->head);
 }

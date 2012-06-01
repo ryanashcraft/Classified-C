@@ -6,7 +6,7 @@ IMPLEMENTATION(ArrayClass);
 PROTOTYPE(newWithObjects);
 PROTOTYPE(initWithObjects);
 PROTOTYPE(dealloc);
-PROTOTYPE(performMethodOnEach);
+PROTOTYPE(performOnEach);
 PROTOTYPE(get);
 PROTOTYPE(length);
 
@@ -17,7 +17,7 @@ void array_class_init() {
 
 	REGISTER_METHOD(ArrayClass, "initWithObjects", initWithObjects);
 	REGISTER_METHOD(ArrayClass, "dealloc", dealloc);
-	REGISTER_METHOD(ArrayClass, "performMethodOnEach", performMethodOnEach);
+	REGISTER_METHOD(ArrayClass, "performOnEach", performOnEach);
 	REGISTER_METHOD(ArrayClass, "get", get);
 	REGISTER_METHOD(ArrayClass, "length", length);
 }
@@ -70,7 +70,7 @@ DEFINE(dealloc) {
 	return msg_cast(ObjectClass, self, "dealloc");
 }
 
-DEFINE(performMethodOnEach) {
+DEFINE(performOnEach) {
 	CONTEXT(Array);
 
 	cstring method_name = NEXT_ARG(cstring);
