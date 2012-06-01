@@ -2,8 +2,8 @@
 # Classified-C
 # Ryan Ashcraft
 
-obj=TestMain.o Test.o TestCase.o
-inc=Test.h TestCase.h
+obj=TestMain.o Test.o TestCase.o StringTest.o
+inc=Test.h TestCase.h StringTest.h
 misc=Makefile
 target=UnitTests.o
 cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug
@@ -25,7 +25,7 @@ gdb-clean: clean-all
 	gdb ./$(target)
 
 valgrind-clean: clean-all
-	valgrind --leak-check=full ./$(target)
+	valgrind --leak-check=full --dsymutil=yes ./$(target)
 
 $(target) : $(obj) $(misc) $(lcbang)
 	$(c) $(lflags) $(obj) $(lcbang) -o $(target)
