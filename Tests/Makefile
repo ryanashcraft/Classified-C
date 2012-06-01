@@ -5,7 +5,7 @@
 obj=TestMain.o Test.o TestCase.o StringTest.o
 inc=Test.h TestCase.h StringTest.h
 misc=Makefile
-target=UnitTests.o
+target=Tests.o
 cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug
 lflags=-Wall -g -DDebug
 libclassc=../libclassc/
@@ -16,7 +16,7 @@ lcbang= $(libclassc)/libclassc.a
 all: $(target)
 
 clean-all:
-	cd $(libclassc); make clean; make; cd ../Test; make clean; make;
+	cd $(libclassc); make clean; make; cd ../Tests; make clean; make;
 
 run-clean: clean-all
 	./$(target)
