@@ -8,6 +8,7 @@ IMPLEMENTATION(TestClass);
 PROTOTYPE(new);
 PROTOTYPE(init);
 PROTOTYPE(dealloc);
+PROTOTYPE(description);
 PROTOTYPE(addTestCase);
 PROTOTYPE(run);
 
@@ -20,6 +21,7 @@ void test_class_init() {
 
 	REGISTER_METHOD(TestClass, "init", init);
 	REGISTER_METHOD(TestClass, "dealloc", dealloc);
+	REGISTER_METHOD(TestClass, "description", description);
 	REGISTER_METHOD(TestClass, "addTestCase", addTestCase);
 	REGISTER_METHOD(TestClass, "run", run);
 }
@@ -48,6 +50,12 @@ DEFINE(dealloc) {
 	return msg_cast(ObjectClass, self, "dealloc");
 }
 
+DEFINE(description) {
+	CONTEXT(Test);
+
+	return msg(StringClass, "newWithCString", ((Object)self)->root->name);
+}
+
 DEFINE(addTestCase) {
 	CONTEXT(Test);
 
@@ -60,7 +68,23 @@ DEFINE(addTestCase) {
 DEFINE(run) {
 	CONTEXT(Test);
 
-	msg(self->testCases, "performOnEach", "run");
+	Integer totalTestCases = msg(self->testCases, "length");
+	Integer successCount = msg(IntegerClass, "newWithInt", 0);
+
+	msg(SystemOut, "println", "%@:", self, totalTestCases);
+
+	TestCase testCase = NULL;
+	Iterator iterator = msg(IteratorClass, "newWithLinkedList", self->testCases);
+	while ( (testCase = msg(iterator, "next")) ) {
+		boolean successful = msg(testCase, "run");
+		if (successful == YES) {
+			msg(successCount, "increment");
+		}
+	}
+	msg(iterator, "release");
+
+	msg(SystemOut, "println", "%@ successes / %@ total", successCount, totalTestCases);
+	msg(totalTestCases, "release");
 
 	return self;
 }
