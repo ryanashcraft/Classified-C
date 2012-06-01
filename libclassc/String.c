@@ -150,6 +150,13 @@ DEFINE(description) {
 DEFINE(equals) {
 	CONTEXT(String);
 	cstring other = NEXT_ARG(cstring);
+
+	int length = strlen(self->value);
+	int other_length = strlen(other);
+	if (length != other_length) {
+		return NO;
+	}
+
 	if (strncmp(self->value, other, strlen(self->value)) == 0) {
 		return YES;
 	}
