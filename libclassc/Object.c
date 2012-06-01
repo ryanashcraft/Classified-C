@@ -71,5 +71,7 @@ DEFINE(retain) {
 }
 
 DEFINE(description) {
-	return msg(StringClass, "newWithFormatCString", "(Object) %p", v);
+	CONTEXT(Object);
+
+	return msg(StringClass, "newWithFormatCString", "%s (%p)", self->root->name, v);
 }
