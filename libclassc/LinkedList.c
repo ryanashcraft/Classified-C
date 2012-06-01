@@ -8,6 +8,13 @@ PROTOTYPE(new);
 PROTOTYPE(init);
 PROTOTYPE(dealloc);
 PROTOTYPE(description);
+PROTOTYPE(pushFront);
+PROTOTYPE(pushBack);
+PROTOTYPE(removeFront);
+PROTOTYPE(removeBack);
+PROTOTYPE(getFront);
+PROTOTYPE(getBack);
+PROTOTYPE(performOnEach);
 
 void call_method(void *v, va_list *args);
 
@@ -19,6 +26,13 @@ void linked_list_class_init() {
 	REGISTER_METHOD(LinkedListClass, "init", init);
 	REGISTER_METHOD(LinkedListClass, "dealloc", dealloc);
 	REGISTER_METHOD(LinkedListClass, "description", description);
+	REGISTER_METHOD(LinkedListClass, "pushFront", pushFront);
+	REGISTER_METHOD(LinkedListClass, "pushBack", pushBack);
+	REGISTER_METHOD(LinkedListClass, "removeFront", removeFront);
+	REGISTER_METHOD(LinkedListClass, "removeBack", removeBack);
+	REGISTER_METHOD(LinkedListClass, "getFront", getFront);
+	REGISTER_METHOD(LinkedListClass, "getBack", getBack);
+	REGISTER_METHOD(LinkedListClass, "performOnEach", performOnEach);
 }
 
 DEFINE(new) {
@@ -54,7 +68,9 @@ DEFINE(description) {
 DEFINE(pushFront) {
 	CONTEXT(LinkedList);
 
-	push_front(self->value, NEXT_ARG(void *));
+	Object o = NEXT_ARG(Object);
+	push_front(self->value, o);
+	msg(o, "retain");
 
 	return self;
 }
@@ -62,7 +78,9 @@ DEFINE(pushFront) {
 DEFINE(pushBack) {
 	CONTEXT(LinkedList);
 
-	push_back(self->value, NEXT_ARG(void *));
+	Object o = NEXT_ARG(Object);
+	push_back(self->value, o);
+	msg(o, "retain");
 
 	return self;
 }
@@ -83,13 +101,13 @@ DEFINE(removeBack) {
 	return self;
 }
 
-DEFINE(front) {
+DEFINE(getFront) {
 	CONTEXT(LinkedList);
 
 	return ll_front(self->value);
 }
 
-DEFINE(back) {
+DEFINE(getBack) {
 	CONTEXT(LinkedList);
 
 	return ll_back(self->value);
