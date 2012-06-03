@@ -1,12 +1,13 @@
 
 #include "../libclassc/Classified-C.h"
 #include "Test.h"
-#include "TestCase.h"
 #include "StringTest.h"
 
 IMPLEMENTATION(StringTestClass);
 
 PROTOTYPE(new);
+PROTOTYPE(testNewWithCString);
+PROTOTYPE(testNewWithFormatCString);
 
 int test_new_with_cstring();
 int test_new_with_format_cstring();
@@ -15,6 +16,9 @@ void string_test_class_init() {
 	StringTestClass = msg(ClassClass, "new", "StringTest", TestClass);
 
 	REGISTER_CLASS_METHOD(StringTestClass, "new", new);
+
+	REGISTER_METHOD(StringTestClass, "testNewWithCString", testNewWithCString);
+	REGISTER_METHOD(StringTestClass, "testNewWithFormatCString", testNewWithFormatCString);
 }
 
 DEFINE(new) {
@@ -22,29 +26,33 @@ DEFINE(new) {
 
 	msg_cast(TestClass, self, "init");
 
-	TestCase testCase = msg(TestCaseClass, "newWithNameAndFunction", "newWithCString", test_new_with_cstring);
+	String testCase = msg(StringClass, "newWithCString", "testNewWithCString");
 	msg(self, "addTestCase", testCase);
 	msg(testCase, "release");
 
-	testCase = msg(TestCaseClass, "newWithNameAndFunction", "newWithFormatCString", test_new_with_format_cstring);
+	testCase = msg(StringClass, "newWithCString", "testNewWithFormatCString");
 	msg(self, "addTestCase", testCase);
 	msg(testCase, "release");
 
 	return self;
 }
 
-int test_new_with_cstring() {
+DEFINE(testNewWithCString) {
+	CONTEXT(StringTest);
+
 	String foo = msg(StringClass, "newWithCString", "foo");
-	boolean isEqual = msg(foo, "equals", "foo");
+	Boolean isEqual = msg(foo, "equals", "foo");
 	msg(foo, "release");
 
-	return isEqual ? TestCaseResultSuccess : TestCaseResultFailure;
+	return msg_cast(TestClass, self, "assertEquals", isEqual, msg(BooleanClass, "yes"));
 }
 
-int test_new_with_format_cstring() {
+DEFINE(testNewWithFormatCString) {
+	CONTEXT(StringTest);
+
 	String foo = msg(StringClass, "newWithFormatCString", "%s %d", "foo", 5);
-	boolean isEqual = msg(foo, "equals", "foo 5");
+	Boolean isEqual = msg(foo, "equals", "foo 5");
 	msg(foo, "release");
 
-	return isEqual ? TestCaseResultSuccess : TestCaseResultFailure;
+	return msg_cast(TestClass, self, "assertEquals", isEqual, msg(BooleanClass, "yes"));
 }

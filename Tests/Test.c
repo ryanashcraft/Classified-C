@@ -1,7 +1,6 @@
 
 #include "../libclassc/Classified-C.h"
 #include "Test.h"
-#include "TestCase.h"
 
 IMPLEMENTATION(TestClass);
 
@@ -11,10 +10,9 @@ PROTOTYPE(dealloc);
 PROTOTYPE(description);
 PROTOTYPE(addTestCase);
 PROTOTYPE(run);
+PROTOTYPE(assertEquals);
 
 void test_class_init() {
-	test_case_class_init();
-
 	TestClass = msg(ClassClass, "new", "Test", ObjectClass);
 
 	REGISTER_CLASS_METHOD(TestClass, "new", new);
@@ -24,6 +22,7 @@ void test_class_init() {
 	REGISTER_METHOD(TestClass, "description", description);
 	REGISTER_METHOD(TestClass, "addTestCase", addTestCase);
 	REGISTER_METHOD(TestClass, "run", run);
+	REGISTER_METHOD(TestClass, "assertEquals", assertEquals);
 }
 
 DEFINE(new) {
@@ -59,7 +58,7 @@ DEFINE(description) {
 DEFINE(addTestCase) {
 	CONTEXT(Test);
 
-	TestCase testCase = NEXT_ARG(TestCase);
+	String testCase = NEXT_ARG(String);
 	msg(self->testCases, "pushBack", testCase);
 
 	return self;
@@ -71,14 +70,20 @@ DEFINE(run) {
 	Integer totalTestCases = msg(self->testCases, "length");
 	Integer successCount = msg(IntegerClass, "newWithInt", 0);
 
-	msg(SystemOut, "println", "%@:", self, totalTestCases);
+	msg(SystemOut, "println", "%@:", self);
 
-	TestCase testCase = NULL;
+	String testCase = NULL;
 	Iterator iterator = msg(IteratorClass, "newWithLinkedList", self->testCases);
 	while ( (testCase = msg(iterator, "next")) ) {
-		boolean successful = msg(testCase, "run");
-		if (successful == YES) {
+		msg(SystemOut, "print", "\t%@: ", testCase);
+
+		TestCaseResult result = (TestCaseResult)msg(self, msg(testCase, "cString"));
+
+		if (result == TestCaseResultSuccess) {
+			msg(SystemOut, "println", "%s", "success");
 			msg(successCount, "increment");
+		} else {
+			msg(SystemOut, "println", "%s", "failure");
 		}
 	}
 	msg(iterator, "release");
@@ -88,4 +93,12 @@ DEFINE(run) {
 	msg(totalTestCases, "release");
 
 	return self;
+}
+
+DEFINE(assertEquals) {
+	if (msg(NEXT_ARG(Object), "equals", NEXT_ARG(Object))) {
+		return TestCaseResultSuccess;
+	}
+
+	return (void *)TestCaseResultFailure;
 }

@@ -2,8 +2,8 @@
 # Classified-C
 # Ryan Ashcraft
 
-obj=TestMain.o Test.o TestCase.o StringTest.o
-inc=Test.h TestCase.h StringTest.h
+obj=TestMain.o Test.o StringTest.o
+inc=Test.h StringTest.h
 misc=Makefile
 target=Tests.o
 cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug
