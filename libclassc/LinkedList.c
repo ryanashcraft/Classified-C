@@ -64,8 +64,6 @@ DEFINE(dealloc) {
 }
 
 DEFINE(description) {
-	CONTEXT(LinkedList);
-
 	return msg(StringClass, "newWithFormatCString", "%s", "[LinkedList]");
 }
 

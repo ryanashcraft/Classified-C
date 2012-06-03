@@ -37,8 +37,6 @@ DEFINE(new) {
 }
 
 DEFINE(init) {
-	CONTEXT(Object);
-
 	return object_init(v);
 }
 

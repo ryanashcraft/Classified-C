@@ -32,8 +32,6 @@ Class new_class(cstring name, Class parent_class) {
 }
 
 DEFINE(new) {
-	CONTEXT(Class);
-
 	cstring name = NEXT_ARG(cstring);
 	Class parent_class = NEXT_ARG(Class);
 

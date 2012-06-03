@@ -5,7 +5,6 @@ IMPLEMENTATION(IntegerClass);
 
 PROTOTYPE(newWithInt);
 PROTOTYPE(initWithInt);
-PROTOTYPE(dealloc);
 PROTOTYPE(equals);
 PROTOTYPE(description);
 PROTOTYPE(increment);
@@ -16,7 +15,6 @@ void integer_class_init() {
 	REGISTER_CLASS_METHOD(IntegerClass, "newWithInt", newWithInt);
 	
 	REGISTER_METHOD(IntegerClass, "initWithInt", initWithInt);
-	REGISTER_METHOD(IntegerClass, "dealloc", dealloc);
 	REGISTER_METHOD(IntegerClass, "equals", equals);
 	REGISTER_METHOD(IntegerClass, "description", description);
 	REGISTER_METHOD(IntegerClass, "increment", increment);
@@ -36,12 +34,6 @@ DEFINE(initWithInt) {
 	self->value = NEXT_ARG(size_t);
 
 	return self;
-}
-
-DEFINE(dealloc) {
-	CONTEXT(Integer);
-
-	return msg_cast(ObjectClass, self, "dealloc");
 }
 
 DEFINE(equals) {

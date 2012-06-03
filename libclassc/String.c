@@ -16,6 +16,7 @@ PROTOTYPE(copy);
 PROTOTYPE(length);
 PROTOTYPE(description);
 PROTOTYPE(equals);
+PROTOTYPE(cString);
 
 static cstring format(cstring format, va_list *format_args);
 
@@ -34,6 +35,7 @@ void string_class_init() {
 	REGISTER_METHOD(StringClass, "length", length);
 	REGISTER_METHOD(StringClass, "description", description);
 	REGISTER_METHOD(StringClass, "equals", equals);
+	REGISTER_METHOD(StringClass, "cString", cString)
 }
 
 DEFINE(newWithCString) {
@@ -92,7 +94,7 @@ static cstring format(cstring format, va_list *format_args) {
 	int format_length = strlen(format);
 	MutableString buffer = msg(MutableStringClass, "newWithCStringAndCapacity", "", START_FORMAT_BUFFER_SIZE);
 
-	boolean needsFinalVSprint = NO;
+	Boolean needsFinalVSprint = NO;
 	for (int i = 0; i < format_length; i++) {
 		if (i <= format_length && (format[i] == '%' && format[i + 1] == '@')) {
 			msg(buffer, "vsprint", format_args);
@@ -162,4 +164,9 @@ DEFINE(equals) {
 	}
 	
 	return NO;
+}
+
+DEFINE(cString) {
+	CONTEXT(String)
+	return self->value;
 }

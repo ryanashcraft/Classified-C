@@ -29,6 +29,7 @@ void cc_init() {
 	string_class_init();
 	mutable_string_class_init();
 	integer_class_init();
+	boolean_class_init();
 	stack_class_init();
 	file_class_init();
 	scanner_class_init();
