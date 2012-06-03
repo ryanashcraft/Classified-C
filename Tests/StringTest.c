@@ -9,9 +9,6 @@ PROTOTYPE(new);
 PROTOTYPE(testNewWithCString);
 PROTOTYPE(testNewWithFormatCString);
 
-int test_new_with_cstring();
-int test_new_with_format_cstring();
-
 void string_test_class_init() {
 	StringTestClass = msg(ClassClass, "new", "StringTest", TestClass);
 
@@ -44,7 +41,7 @@ DEFINE(testNewWithCString) {
 	Boolean isEqual = msg(foo, "equals", "foo");
 	msg(foo, "release");
 
-	return msg_cast(TestClass, self, "assertEquals", isEqual, msg(BooleanClass, "yes"));
+	return msg_cast(TestClass, self, "assertEquals", isEqual, YES);
 }
 
 DEFINE(testNewWithFormatCString) {
@@ -54,5 +51,5 @@ DEFINE(testNewWithFormatCString) {
 	Boolean isEqual = msg(foo, "equals", "foo 5");
 	msg(foo, "release");
 
-	return msg_cast(TestClass, self, "assertEquals", isEqual, msg(BooleanClass, "yes"));
+	return msg_cast(TestClass, self, "assertEquals", isEqual, YES);
 }
