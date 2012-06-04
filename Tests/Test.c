@@ -11,6 +11,7 @@ PROTOTYPE(description);
 PROTOTYPE(addTestCase);
 PROTOTYPE(run);
 PROTOTYPE(assertEquals);
+PROTOTYPE(assertTrue);
 
 void test_class_init() {
 	TestClass = msg(ClassClass, "new", "Test", ObjectClass);
@@ -23,6 +24,7 @@ void test_class_init() {
 	REGISTER_METHOD(TestClass, "addTestCase", addTestCase);
 	REGISTER_METHOD(TestClass, "run", run);
 	REGISTER_METHOD(TestClass, "assertEquals", assertEquals);
+	REGISTER_METHOD(TestClass, "assertTrue", assertTrue);
 }
 
 DEFINE(new) {
@@ -97,6 +99,14 @@ DEFINE(run) {
 
 DEFINE(assertEquals) {
 	if (msg(NEXT_ARG(Object), "equals", NEXT_ARG(Object))) {
+		return TestCaseResultSuccess;
+	}
+
+	return (void *)TestCaseResultFailure;
+}
+
+DEFINE(assertTrue) {
+	if (msg(BooleanClass, "isYes", NEXT_ARG(size_t))) {
 		return TestCaseResultSuccess;
 	}
 

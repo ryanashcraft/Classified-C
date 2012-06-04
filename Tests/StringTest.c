@@ -41,7 +41,7 @@ DEFINE(testNewWithCString) {
 	Boolean isEqual = msg(foo, "equals", "foo");
 	msg(foo, "release");
 
-	return msg_cast(TestClass, self, "assertEquals", isEqual, YES);
+	return msg_cast(TestClass, self, "assertTrue", isEqual);
 }
 
 DEFINE(testNewWithFormatCString) {
@@ -51,5 +51,5 @@ DEFINE(testNewWithFormatCString) {
 	Boolean isEqual = msg(foo, "equals", "foo 5");
 	msg(foo, "release");
 
-	return msg_cast(TestClass, self, "assertEquals", isEqual, YES);
+	return msg_cast(TestClass, self, "assertTrue", isEqual);
 }

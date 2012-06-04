@@ -21,8 +21,8 @@
 #define NEXT_ARG(TYPE) va_arg(*args, TYPE)
 #define ARGS args
 
-#define YES msg(BooleanClass, "yes")
-#define NO msg(BooleanClass, "no")
+#define YES (void *)1
+#define NO (void *)0
 
 typedef char *cstring;
 typedef void *(*fpointer) (void *v, va_list *args);

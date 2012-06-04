@@ -9,6 +9,7 @@ IMPLEMENTATION(BooleanClass);
 PROTOTYPE(newWithInt);
 PROTOTYPE(yes);
 PROTOTYPE(no);
+PROTOTYPE(isYes);
 
 void boolean_class_init() {
 	BooleanClass = msg(ClassClass, "new", "Integer", IntegerClass);
@@ -16,9 +17,10 @@ void boolean_class_init() {
 	REGISTER_CLASS_METHOD(BooleanClass, "newWithInt", newWithInt);
 	REGISTER_CLASS_METHOD(BooleanClass, "yes", yes);
 	REGISTER_CLASS_METHOD(BooleanClass, "no", no);
+	REGISTER_CLASS_METHOD(BooleanClass, "isYes", isYes);
 
-	yesInstance = msg(BooleanClass, "newWithInt", 1);
-	noInstance = msg(BooleanClass, "newWithInt", 0);
+	yesInstance = msg(BooleanClass, "newWithInt", YES);
+	noInstance = msg(BooleanClass, "newWithInt", NO);
 }
 
 DEFINE(newWithInt) {
@@ -35,4 +37,12 @@ DEFINE(yes) {
 
 DEFINE(no) {
 	return noInstance;
+}
+
+DEFINE(isYes) {
+	if (NEXT_ARG(size_t) == (size_t)NO) {
+		return NO;
+	}
+
+	return YES;
 }

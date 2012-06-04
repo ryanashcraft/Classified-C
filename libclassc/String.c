@@ -151,6 +151,7 @@ DEFINE(description) {
 
 DEFINE(equals) {
 	CONTEXT(String);
+	
 	cstring other = NEXT_ARG(cstring);
 
 	int length = strlen(self->value);
