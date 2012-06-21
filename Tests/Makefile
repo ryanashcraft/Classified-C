@@ -18,12 +18,6 @@ all: $(target)
 clean-all:
 	cd $(libclassc); make clean; make; cd ../Tests; make clean; make;
 
-run-clean: clean-all
-	./$(target)
-
-gdb-clean: clean-all
-	gdb ./$(target)
-
 valgrind-clean: clean-all
 	valgrind --leak-check=full --dsymutil=yes ./$(target)
 
@@ -35,3 +29,16 @@ $(target) : $(obj) $(misc) $(lcbang)
 
 clean:
 	rm -f $(obj) $(target)
+
+time:
+	for i in {1..10} ; do \
+	time ./$(target); \
+	done
+
+run-clean: clean-all
+	./$(target)
+
+gdb-clean: clean-all
+	gdb ./$(target)
+
+time-clean: clean-all time
