@@ -8,7 +8,11 @@ int main(int argc, char **argv) {
 	test_class_init();
 	string_test_class_init();
 	
-	Test stringTest = msg(StringTestClass, "new");
-	msg(stringTest, "run");
-	msg(stringTest, "release");
+	int i = 100000;
+	msg(SystemOut, "disable");
+	while (--i > 0) {
+		Test stringTest = msg(StringTestClass, "new");
+		msg(stringTest, "run");
+		msg(stringTest, "release");
+	}
 }
