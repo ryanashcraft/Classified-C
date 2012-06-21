@@ -10,6 +10,7 @@ PROTOTYPE(print);
 PROTOTYPE(println);
 PROTOTYPE(flush);
 PROTOTYPE(printEach);
+PROTOTYPE(disable);
 
 void printer_class_init() {
 	PrinterClass = msg(ClassClass, "new", "Printer", ObjectClass);
@@ -22,6 +23,7 @@ void printer_class_init() {
 	REGISTER_METHOD(PrinterClass, "println", println);
 	REGISTER_METHOD(PrinterClass, "flush", flush);
 	REGISTER_METHOD(PrinterClass, "printEach", printEach);
+	REGISTER_METHOD(PrinterClass, "disable", disable);
 }
 
 DEFINE(newWithFile) {
@@ -51,6 +53,10 @@ DEFINE(dealloc) {
 DEFINE(print) {
 	CONTEXT(Printer);
 
+	if (self->disabled) {
+		return self;
+	}
+
 	cstring format = NEXT_ARG(cstring);
 	String toPrint = msg(StringClass, "newWithFormatCStringAndArgList", format, args);
 	fprintf(self->output->file, "%s", toPrint->value);
@@ -62,6 +68,10 @@ DEFINE(print) {
 DEFINE(println) {
 	CONTEXT(Printer);
 
+	if (self->disabled) {
+		return self;
+	}
+
 	String toPrint = msg(StringClass, "newWithFormatCStringAndArgList", NEXT_ARG(cstring), args);
 	fprintf(self->output->file, "%s\n", toPrint->value);
 	msg(toPrint, "release");
@@ -72,6 +82,10 @@ DEFINE(println) {
 DEFINE(flush) {
 	CONTEXT(Printer);
 
+	if (self->disabled) {
+		return self;
+	}
+
 	fflush(self->output->file);
 
 	return self;
@@ -79,6 +93,10 @@ DEFINE(flush) {
 
 DEFINE(printEach) {
 	CONTEXT(Printer);
+
+	if (self->disabled) {
+		return self;
+	}
 
 	cstring separator = NEXT_ARG(cstring);
 	Array elements = NEXT_ARG(Array);
@@ -91,6 +109,14 @@ DEFINE(printEach) {
 		msg(toPrint, "release");
 	}
 	msg(iterator, "release");
+
+	return self;
+}
+
+DEFINE(disable) {
+	CONTEXT(Printer);
+
+	self->disabled = YES;
 
 	return self;
 }
