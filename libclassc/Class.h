@@ -5,8 +5,8 @@
 struct _Class {
 	struct _Object base;
 	Class parent_class;
-	list *static_methods;
-	list *instance_methods;
+	hashtable *static_methods;
+	hashtable *instance_methods;
 	cstring name;
 };
 

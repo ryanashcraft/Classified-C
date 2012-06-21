@@ -1,4 +1,4 @@
-
+ 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,6 +6,7 @@
 #include <assert.h>
 
 #include "list.h"
+#include "hashtable/hashtable.h"
 
 #ifndef CLASSIFIEDC_H
 #define CLASSIFIEDC_H
@@ -16,8 +17,8 @@
 #define DEFINE(NAME) void *NAME(METHOD_ARGS)
 #define NEW(CLASS_REF, STRUCT) STRUCT *self = cc_alloc(sizeof(STRUCT)); object_init(self); ((Object)self)->root = CLASS_REF;
 #define CONTEXT(CLASS) CLASS self = (CLASS)v;
-#define REGISTER_METHOD(CLASS, NAME, FUNCTION) push_back(CLASS->instance_methods, mmethod(NAME, &FUNCTION));
-#define REGISTER_CLASS_METHOD(CLASS, NAME, FUNCTION) push_back(CLASS->static_methods, mmethod(NAME, &FUNCTION));
+#define REGISTER_METHOD(CLASS, NAME, FUNCTION) ht_insert(&CLASS->instance_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
+#define REGISTER_CLASS_METHOD(CLASS, NAME, FUNCTION) ht_insert(&CLASS->static_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
 #define NEXT_ARG(TYPE) va_arg(*args, TYPE)
 #define ARGS args
 

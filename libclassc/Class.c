@@ -12,10 +12,10 @@ void class_class_init() {
 	((Object)ClassClass)->root = ClassClass;
 	((Object)ClassClass)->retaincount = 1;
 
-	ClassClass->static_methods = create_list();
+	ClassClass->static_methods = ht_create(8, 2);
 	REGISTER_CLASS_METHOD(ClassClass, "new", new);
 
-	ClassClass->instance_methods = create_list();
+	ClassClass->instance_methods = ht_create(8, 2);
 
 	ClassClass->name = mstring("Class");
 }
@@ -24,8 +24,8 @@ Class new_class(cstring name, Class parent_class) {
 	NEW(ClassClass, struct _Class);
 
 	self->parent_class = parent_class;
-	self->static_methods = create_list();
-	self->instance_methods = create_list();
+	self->static_methods = ht_create(8, 2);
+	self->instance_methods = ht_create(8, 2);
 	self->name = mstring(name);
 
 	return self;

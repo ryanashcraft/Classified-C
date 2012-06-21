@@ -15,7 +15,6 @@ Object SystemOut = NULL;
 static Object cbmessage(Object o, Class c, cstring message, va_list *args);
 static Object cbmessageclass(Class c, cstring message, va_list *args);
 static void print_bt();
-static int method_name_equals(const void *methodp, va_list *args);
 
 /**
   Initialize the class list and the standard classes
@@ -94,14 +93,16 @@ Object cbmessageclass(Class c, cstring message, va_list *argp) {
 	Class startC = c;
 	method the_method;
 
+	int message_length = strlen(message);
+
 	// Try to get the method from the object's type
-	the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
+	the_method = ht_get(c->static_methods, message, message_length);
 
 	// While the method isn't found and there is a parent, then look in the
 	// parent's type
 	while (!the_method && c->parent_class != NULL) {
 		c = c->parent_class;
-		the_method = get_first_occurrence(c->static_methods, method_name_equals, message);
+		the_method = ht_get(c->static_methods, message, message_length);
 	}
 
 	// If the method is never found, then error and exit out
@@ -118,14 +119,16 @@ Object cbmessage(Object o, Class c, cstring message, va_list *argp) {
 	Class startC = c;
 	method the_method;
 
+	int message_length = strlen(message);
+
 	// Try to get the method from the object's type
-	the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
+	the_method = ht_get(c->instance_methods, message, message_length);
 
 	// While the method isn't found and there is a parent, then look in the
 	// parent's type
 	while (!the_method && c->parent_class != NULL) {
 		c = c->parent_class;
-		the_method = get_first_occurrence(c->instance_methods, method_name_equals, message);
+		the_method = ht_get(c->instance_methods, message, message_length);
 	}
 
 	// If the method is never found, then error and exit out
@@ -153,25 +156,6 @@ void print_bt() {
 		printf ("%s\n", strings[i]);
 
 	free(strings);
-}
-
-/**
-  Compare a method's name to a string.
-
-  @param methodp the pointer to a method
-  @param args    variable argument list, which is expected to have a char
-                 pointer at the argument's address
-
-  @return 1 if the method's name equals the cstring from the variable
-          arguments list, else return 0
- */
-int method_name_equals(const void *methodp, va_list *args) {
-	cstring name = NEXT_ARG(cstring);
-	method the_method = (method)methodp;
-	if (strcmp(the_method->name, name) == 0) {
-		return 1;
-	}
-	return 0;
 }
 
 void *cc_alloc(size_t size) {
