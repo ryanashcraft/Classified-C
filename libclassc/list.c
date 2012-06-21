@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-
 #include "list.h"
 #include "assert.h"
 
@@ -20,7 +19,6 @@ typedef struct lnode {
   struct lnode* next;
   void *data;
 } node;
-
 
 static node* create_node(struct llist *list, void *data);
 
