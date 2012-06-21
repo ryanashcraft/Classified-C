@@ -17,8 +17,10 @@
 #define DEFINE(NAME) void *NAME(METHOD_ARGS)
 #define NEW(CLASS_REF, STRUCT) STRUCT *self = cc_alloc(sizeof(STRUCT)); object_init(self); ((Object)self)->root = CLASS_REF;
 #define CONTEXT(CLASS) CLASS self = (CLASS)v;
-#define REGISTER_METHOD(CLASS, NAME, FUNCTION) ht_insert(&CLASS->instance_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
-#define REGISTER_CLASS_METHOD(CLASS, NAME, FUNCTION) ht_insert(&CLASS->static_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
+
+#define REGISTER_METHOD(CLASS, NAME, FUNCTION) ht_insert_method(&CLASS->instance_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
+#define REGISTER_CLASS_METHOD(CLASS, NAME, FUNCTION) ht_insert_method(&CLASS->static_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
+
 #define NEXT_ARG(TYPE) va_arg(*args, TYPE)
 #define ARGS args
 
@@ -34,7 +36,7 @@ typedef size_t *boolean;
 typedef struct _method {
 	cstring name;
 	fpointer function;
-} *method;
+} method;
 
 extern Object SystemOut;
 
@@ -45,8 +47,11 @@ void *msg_cast(Class c, void *v, cstring message, ...);
 void *cc_alloc(size_t size);
 void msg_release(void *v);
 
-method mmethod(cstring name, fpointer function);
+method *mmethod(cstring name, fpointer function);
+void dmethod(method *m);
 cstring mstring(cstring s);
+
+void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value, size_t value_size);
 
 #endif
 

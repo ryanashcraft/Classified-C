@@ -91,54 +91,54 @@ void *msg_cast(Class c, void *v, cstring message, ...) {
 
 Object cbmessageclass(Class c, cstring message, va_list *argp) {
 	Class startC = c;
-	method the_method;
+	method *m;
 
 	int message_length = strlen(message);
 
 	// Try to get the method from the object's type
-	the_method = ht_get(c->static_methods, message, message_length);
+	m = ht_get(c->static_methods, message, message_length);
 
 	// While the method isn't found and there is a parent, then look in the
 	// parent's type
-	while (!the_method && c->parent_class != NULL) {
+	while (!m && c->parent_class != NULL) {
 		c = c->parent_class;
-		the_method = ht_get(c->static_methods, message, message_length);
+		m = ht_get(c->static_methods, message, message_length);
 	}
 
 	// If the method is never found, then error and exit out
-	if (!the_method) {
+	if (!m) {
 		fprintf(stderr, "Class of type %s does not respond to message \"%s\"\n", startC->name, message);
 		print_bt();
 		exit(EXIT_FAILURE);
 	}
 
-	return the_method->function(c, argp);
+	return m->function(c, argp);
 }
 
 Object cbmessage(Object o, Class c, cstring message, va_list *argp) {
 	Class startC = c;
-	method the_method;
+	method *m;
 
 	int message_length = strlen(message);
 
 	// Try to get the method from the object's type
-	the_method = ht_get(c->instance_methods, message, message_length);
+	m = ht_get(c->instance_methods, message, message_length);
 
 	// While the method isn't found and there is a parent, then look in the
 	// parent's type
-	while (!the_method && c->parent_class != NULL) {
+	while (!m && c->parent_class != NULL) {
 		c = c->parent_class;
-		the_method = ht_get(c->instance_methods, message, message_length);
+		m = ht_get(c->instance_methods, message, message_length);
 	}
 
 	// If the method is never found, then error and exit out
-	if (!the_method) {
+	if (!m) {
 		fprintf(stderr, "Object of type %s does not respond to message \"%s\"\n", startC->name, message);
 		print_bt();
 		exit(EXIT_FAILURE);
 	}
 
-	return the_method->function(o, argp);
+	return m->function(o, argp);
 }
 
 void print_bt() {
@@ -178,14 +178,24 @@ void msg_release(void *v) {
 
   @return a malloc'ed method struct with its members defined
  */
-method mmethod(cstring name, fpointer function) {
-	method the_method = malloc(sizeof(struct _method));
-	assert(the_method);
+method *mmethod(cstring name, fpointer function) {
+	method *m = malloc(sizeof(struct _method));
+	assert(m);
 
-	the_method->name = mstring(name);
-	the_method->function = function;
+	m->name = mstring(name);
+	m->function = function;
 
-	return the_method;
+	return m;
+}
+
+void dmethod(method *m) {
+	free(m->name);
+	free(m);
+}
+
+void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value, size_t value_size) {
+	ht_insert(table, key, key_size, value, value_size);
+	dmethod(value);
 }
 
 /**
