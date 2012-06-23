@@ -8,6 +8,6 @@ typedef struct _StringTest {
 	struct _Test base;
 } *StringTest;
 
-void string_test_class_init();
+void StringTestInit();
 
 #endif

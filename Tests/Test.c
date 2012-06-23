@@ -1,74 +1,61 @@
 
+#define TYPE Test
+#define SUPER Object
+
 #include "../libclassc/Classified-C.h"
 #include "Test.h"
 
-IMPLEMENTATION(TestClass);
+proto(new);
+proto(init);
+proto(dealloc);
+proto(description);
+proto(addTestCase);
+proto(run);
+proto(assertEquals);
+proto(assertTrue);
 
-PROTOTYPE(new);
-PROTOTYPE(init);
-PROTOTYPE(dealloc);
-PROTOTYPE(description);
-PROTOTYPE(addTestCase);
-PROTOTYPE(run);
-PROTOTYPE(assertEquals);
-PROTOTYPE(assertTrue);
+defclass
+	static(new);
 
-void test_class_init() {
-	TestClass = msg(ClassClass, "new", "Test", ObjectClass);
-
-	REGISTER_CLASS_METHOD(TestClass, "new", new);
-
-	REGISTER_METHOD(TestClass, "init", init);
-	REGISTER_METHOD(TestClass, "dealloc", dealloc);
-	REGISTER_METHOD(TestClass, "description", description);
-	REGISTER_METHOD(TestClass, "addTestCase", addTestCase);
-	REGISTER_METHOD(TestClass, "run", run);
-	REGISTER_METHOD(TestClass, "assertEquals", assertEquals);
-	REGISTER_METHOD(TestClass, "assertTrue", assertTrue);
+	instance(init);
+	instance(dealloc);
+	instance(description);
+	instance(addTestCase);
+	instance(run);
+	instance(assertEquals);
+	instance(assertTrue);
 }
 
-DEFINE(new) {
-	NEW(TestClass, struct _Test);
-
+def(new)
 	init(self, args);
 
 	return self;
-}
+end
 
-DEFINE(init) {
-	CONTEXT(Test);
-
+def(init)
 	self->testCases = msg(LinkedListClass, "new");
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(Test);
-
+def(dealloc)
 	msg(self->testCases, "release");
 
 	return msg_cast(ObjectClass, self, "dealloc");
-}
+end
 
-DEFINE(description) {
-	CONTEXT(Test);
-
+def(description)
 	return msg(StringClass, "newWithCString", ((Object)self)->root->name);
-}
+end
 
-DEFINE(addTestCase) {
-	CONTEXT(Test);
-
+def(addTestCase)
 	String testCase = NEXT_ARG(String);
 	msg(self->testCases, "pushBack", testCase);
 
 	return self;
-}
+end
 
-DEFINE(run) {
-	CONTEXT(Test);
-
+def(run)
 	Integer totalTestCases = msg(self->testCases, "length");
 	Integer successCount = msg(IntegerClass, "newWithInt", 0);
 
@@ -95,20 +82,20 @@ DEFINE(run) {
 	msg(totalTestCases, "release");
 
 	return self;
-}
+end
 
-DEFINE(assertEquals) {
+def(assertEquals)
 	if (msg(NEXT_ARG(Object), "equals", NEXT_ARG(Object))) {
 		return TestCaseResultSuccess;
 	}
 
 	return (void *)TestCaseResultFailure;
-}
+end
 
-DEFINE(assertTrue) {
+def(assertTrue)
 	if (msg(BooleanClass, "isYes", NEXT_ARG(size_t))) {
 		return TestCaseResultSuccess;
 	}
 
 	return (void *)TestCaseResultFailure;
-}
+end
