@@ -9,6 +9,6 @@ typedef struct _Integer {
 	size_t value;
 } *Integer;
 
-void integer_class_init();
+void IntegerInit();
 
 #endif

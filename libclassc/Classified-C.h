@@ -1,4 +1,4 @@
- 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,18 +8,64 @@
 #include "list.h"
 #include "hashtable/hashtable.h"
 
+#define CAT_CLASS(A) A ## Class
+#define EXP_CLASS(A) CAT_CLASS(A)
+#define CLASS EXP_CLASS(TYPE)
+
+#define NAME EXP_STR(TYPE)
+
+#define CAT_STRUCT(A) struct _ ## A
+#define EXP_STRUCT(A) CAT_STRUCT(A)
+#define STRUCT EXP_STRUCT(TYPE)
+
+#define CAT_INIT(A) A ## Init
+#define EXP_INIT(A) CAT_INIT(A)
+#define CLASS_INIT EXP_INIT(TYPE)
+
 #ifndef CLASSIFIEDC_H
 #define CLASSIFIEDC_H
 
-#define IMPLEMENTATION(CLASS) Class CLASS = NULL
-#define PROTOTYPE(NAME) static void *NAME(METHOD_ARGS)
-#define METHOD_ARGS void *v, va_list *args
-#define DEFINE(NAME) void *NAME(METHOD_ARGS)
-#define NEW(CLASS_REF, STRUCT) STRUCT *self = cc_alloc(sizeof(STRUCT)); object_init(self); ((Object)self)->root = CLASS_REF;
-#define CONTEXT(CLASS) CLASS self = (CLASS)v;
+#define STR(A) #A
 
-#define REGISTER_METHOD(CLASS, NAME, FUNCTION) ht_insert_method(&CLASS->instance_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
-#define REGISTER_CLASS_METHOD(CLASS, NAME, FUNCTION) ht_insert_method(&CLASS->static_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
+#define EXP_STR(A) STR(A)
+
+// #define NAME STR(TYPE)
+
+#define implementation(CLASS) \
+	Class CLASS = NULL;
+
+#define proto(NAME) \
+	static void *NAME(METHOD_ARGS);
+
+#define METHOD_ARGS \
+	void *v, va_list *args
+
+#define defclassinit \
+	void CLASS_INIT() { \
+		CLASS = msg(ClassClass, "new", NAME, SUPER);
+
+#define defclass \
+	Class CLASS = NULL; \
+	void CLASS_INIT() { \
+		CLASS = msg(ClassClass, "new", NAME, SUPER);
+
+#define defcon(METHOD) \
+	void *METHOD(METHOD_ARGS) { \
+		STRUCT *self = cc_alloc(sizeof(STRUCT)); \
+		object_init(self); \
+		((Object)self)->root = CLASS;
+
+#define def(METHOD) \
+	void *METHOD(METHOD_ARGS) { \
+		TYPE self = (TYPE)v; \
+		(void)self;
+
+#define end }
+
+#define register(METHOD, FUNCTION) \
+		ht_insert_method(&CLASS->instance_methods, METHOD, strlen(METHOD), mmethod(METHOD, &FUNCTION), sizeof(struct _method));
+#define registerStatic(METHOD, FUNCTION) \
+		ht_insert_method(&CLASS->static_methods, METHOD, strlen(METHOD), mmethod(METHOD, &FUNCTION), sizeof(struct _method));
 
 #define NEXT_ARG(TYPE) va_arg(*args, TYPE)
 #define ARGS args

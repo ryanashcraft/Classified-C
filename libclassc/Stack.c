@@ -1,65 +1,51 @@
 
+#define TYPE Stack
+#define SUPER ObjectClass
 #include "Classified-C.h"
 
-IMPLEMENTATION(StackClass);
+proto(new)
+proto(init)
+proto(dealloc)
+proto(push)
+proto(pop)
+proto(peek)
 
-PROTOTYPE(new);
-PROTOTYPE(init);
-PROTOTYPE(dealloc);
-PROTOTYPE(push);
-PROTOTYPE(pop);
-PROTOTYPE(peek);
+defclass
+	registerStatic("new", new);
 
-void message_release(void *v);
+	register("init", init);
+	register("dealloc", dealloc);
+	register("push", push);
+	register("pop", pop);
+	register("peek", peek);
+end
 
-void stack_class_init() {
-	StackClass = msg(ClassClass, "new", "Stack", ObjectClass);
-
-	REGISTER_CLASS_METHOD(StackClass, "new", new);
-
-	REGISTER_METHOD(StackClass, "init", init);
-	REGISTER_METHOD(StackClass, "dealloc", dealloc);
-	REGISTER_METHOD(StackClass, "push", push);
-	REGISTER_METHOD(StackClass, "pop", pop);
-	REGISTER_METHOD(StackClass, "peek", peek);
-}
-
-DEFINE(new) {
-	NEW(StackClass, struct _Stack);
-
+defcon(new)
 	init(self, args);
 
 	return self;
-}
+end
 
-DEFINE(init) {
-	Stack self = (Stack)v;
-
+def(init)
 	self->llist = create_list();
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	Stack self = (Stack)v;
-
+def(dealloc)
 	free_list(self->llist, &msg_release);
 
 	return msg_cast(ObjectClass, self, "dealloc");
-}
+end
 
-DEFINE(push) {
-	Stack self = (Stack)v;
-
+def(push)
 	void *data = NEXT_ARG(void *);
 	push_front(self->llist, data);
 
 	return self;
-}
+end
 
-DEFINE(pop) {
-	Stack self = (Stack)v;
-
+def(pop)
 	if (is_empty(self->llist)) {
 		return NULL;
 	}
@@ -68,14 +54,12 @@ DEFINE(pop) {
 	remove_front(self->llist, &msg_release);
 
 	return retval;
-}
+end
 
-DEFINE(peek) {
-	Stack self = (Stack)v;
-
+def(peek)
 	if (is_empty(self->llist)) {
 		return NULL;
 	}
 
 	return ll_front(self->llist);
-}
+end

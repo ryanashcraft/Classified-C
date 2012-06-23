@@ -8,6 +8,6 @@ typedef struct _Null {
 	struct _Object base;
 } *Null;
 
-void null_class_init();
+void NullInit();
 
 #endif

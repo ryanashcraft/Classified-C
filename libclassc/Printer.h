@@ -10,6 +10,6 @@ typedef struct _Printer {
 	boolean disabled;
 } *Printer;
 
-void printer_class_init();
+void PrinterInit();
 
 #endif

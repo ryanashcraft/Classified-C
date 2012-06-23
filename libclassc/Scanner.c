@@ -1,52 +1,37 @@
 
 #include "Classified-C.h"
 
+#define TYPE Scanner
+#define SUPER ObjectClass
+
 #define TOKEN_BUFFER_SIZE 256
 
-IMPLEMENTATION(ScannerClass);
+proto(newWithFile)
+proto(initWithFile)
+proto(next)
+proto(hasNext)
 
-PROTOTYPE(newWithFile);
-PROTOTYPE(initWithFile);
-PROTOTYPE(dealloc);
-PROTOTYPE(next);
-PROTOTYPE(hasNext);
+defclass
+	registerStatic("newWithFile", newWithFile);
 
-void scanner_class_init() {
-	ScannerClass = msg(ClassClass, "new", "Scanner", ObjectClass);
+	register("initWithFile", initWithFile);
+	register("next", next);
+	register("hasNext", hasNext);
+end
 
-	REGISTER_CLASS_METHOD(ScannerClass, "newWithFile", newWithFile);
-
-	REGISTER_METHOD(ScannerClass, "initWithFile", initWithFile);
-	REGISTER_METHOD(ScannerClass, "dealloc", dealloc);
-	REGISTER_METHOD(ScannerClass, "next", next);
-	REGISTER_METHOD(ScannerClass, "hasNext", hasNext);
-}
-
-DEFINE(newWithFile) {
-	NEW(ScannerClass, struct _Scanner);
-
+defcon(newWithFile)
 	initWithFile(self, args);
 
 	return self;
-}
+end
 
-DEFINE(initWithFile) {
-	CONTEXT(Scanner);
-
+def(initWithFile)
 	self->file = NEXT_ARG(File);
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(Scanner);
-
-	return msg_cast(ObjectClass, self, "dealloc");
-}
-
-DEFINE(next) {
-	CONTEXT(Scanner);
-
+def(next)
 	FILE *f = msg(self->file, "file");
 	MutableString buffer = msg(MutableStringClass, "newWithCStringAndCapacity", "", TOKEN_BUFFER_SIZE);
 
@@ -73,11 +58,9 @@ DEFINE(next) {
 	msg(buffer, "release");
 
 	return token;
-}
+end
 
-DEFINE(hasNext) {
-	CONTEXT(Scanner);
-
+def(hasNext)
 	FILE *f = msg(self->file, "file");
 	int has_next = 1;
 	char c = 0;
@@ -91,4 +74,4 @@ DEFINE(hasNext) {
 	Integer hasNext = msg(IntegerClass, "newWithInt", has_next);
 
 	return hasNext;
-}
+end

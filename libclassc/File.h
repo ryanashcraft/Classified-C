@@ -10,6 +10,6 @@ typedef struct _File {
 	FILE *file;
 } *File;
 
-void file_class_init();
+void FileInit();
 
 #endif

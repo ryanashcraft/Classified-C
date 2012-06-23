@@ -9,7 +9,7 @@ struct _Object {
 	int retaincount;
 };
 
-void object_class_init();
+void ObjectInit();
 Object object_init(void *v);
 
 #endif

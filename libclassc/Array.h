@@ -11,6 +11,6 @@ typedef struct _Array {
 	int length;
 } *Array;
 
-void array_class_init();
+void ArrayInit();
 
 #endif

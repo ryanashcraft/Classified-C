@@ -98,7 +98,7 @@ void push_front(list* llist, void *data) {
 
 /** push_back
   *
-  * Adds the data to the back/end of the linked list
+  * Adds the data to the back/END of the linked list
   *
   * @param llist a pointer to the list.
   * @param data pointer to data the user wants to store in the list.
@@ -527,7 +527,7 @@ void* get_first_occurrence(list* llist, list_pred_args test_func, ...) {
 
 /** ll_back
   *
-  * Gets the data at the "end" of the linked list
+  * Gets the data at the "END" of the linked list
   * If the list is empty return NULL.
   *
   * @param llist a pointer to the list

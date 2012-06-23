@@ -1,94 +1,81 @@
 
 #include "Classified-C.h"
 
+#define TYPE String
+#define SUPER ObjectClass
+
 #define START_FORMAT_BUFFER_SIZE 32
 
-IMPLEMENTATION(StringClass);
-
-PROTOTYPE(newWithCString);
-PROTOTYPE(newWithFormatCString);
-PROTOTYPE(newWithFormatCStringAndArgList);
-PROTOTYPE(initWithCString);
-PROTOTYPE(initWithFormatCString);
-PROTOTYPE(initWithFormatCStringAndArgList);
-PROTOTYPE(dealloc);
-PROTOTYPE(copy);
-PROTOTYPE(length);
-PROTOTYPE(description);
-PROTOTYPE(equals);
-PROTOTYPE(cString);
+proto(newWithCString)
+proto(newWithFormatCString)
+proto(newWithFormatCStringAndArgList)
+proto(initWithCString)
+proto(initWithFormatCString)
+proto(initWithFormatCStringAndArgList)
+proto(dealloc)
+proto(copy)
+proto(length)
+proto(description)
+proto(equals)
+proto(cString)
 
 static cstring format(cstring format, va_list *format_args);
 
-void string_class_init() {
-	StringClass = msg(ClassClass, "new", "String", ObjectClass);
+defclass
+	registerStatic("newWithCString", newWithCString);
+	registerStatic("newWithFormatCString", newWithFormatCString);
+	registerStatic("newWithFormatCStringAndArgList", newWithFormatCStringAndArgList);
 
-	REGISTER_CLASS_METHOD(StringClass, "newWithCString", newWithCString);
-	REGISTER_CLASS_METHOD(StringClass, "newWithFormatCString", newWithFormatCString);
-	REGISTER_CLASS_METHOD(StringClass, "newWithFormatCStringAndArgList", newWithFormatCStringAndArgList);
+	register("initWithCString", initWithCString);
+	register("initWithFormatCString", initWithFormatCString);
+	register("initWithFormatCStringAndArgList", initWithFormatCStringAndArgList);
+	register("dealloc", dealloc);
+	register("copy", copy);
+	register("length", length);
+	register("description", description);
+	register("equals", equals);
+	register("cString", cString)
+end
 
-	REGISTER_METHOD(StringClass, "initWithCString", initWithCString);
-	REGISTER_METHOD(StringClass, "initWithFormatCString", initWithFormatCString);
-	REGISTER_METHOD(StringClass, "initWithFormatCStringAndArgList", initWithFormatCStringAndArgList);
-	REGISTER_METHOD(StringClass, "dealloc", dealloc);
-	REGISTER_METHOD(StringClass, "copy", copy);
-	REGISTER_METHOD(StringClass, "length", length);
-	REGISTER_METHOD(StringClass, "description", description);
-	REGISTER_METHOD(StringClass, "equals", equals);
-	REGISTER_METHOD(StringClass, "cString", cString)
-}
-
-DEFINE(newWithCString) {
-	NEW(StringClass, struct _String);
-
+defcon(newWithCString)
 	initWithCString(self, args);
 
 	return self;
-}
+end
 
-DEFINE(newWithFormatCString) {
-	NEW(StringClass, struct _String);
-
+defcon(newWithFormatCString)
 	initWithFormatCString(self, args);
 
 	return self;
-}
+end
 
-DEFINE(newWithFormatCStringAndArgList) {
-	NEW(StringClass, struct _String);
-
+defcon(newWithFormatCStringAndArgList)
 	initWithFormatCStringAndArgList(self, args);
 
 	return self;
-}
+end
 
-DEFINE(initWithCString) {
-	CONTEXT(String);
-
+def(initWithCString)
 	cstring string_arg = NEXT_ARG(cstring);
 	self->value = mstring(string_arg);
 
 	return self;
-}
+end
 
-DEFINE(initWithFormatCString) {
-	CONTEXT(String);
-
+def(initWithFormatCString)
 	cstring formatString = NEXT_ARG(cstring);
 	self->value = format(formatString, args);
 
 	return self;
-}
+end
 
-DEFINE(initWithFormatCStringAndArgList) {
-	CONTEXT(String);
-
+def(initWithFormatCStringAndArgList)
 	cstring formatString = NEXT_ARG(cstring);
 	va_list *formatArgList = NEXT_ARG(va_list *);
 	self->value = format(formatString, formatArgList);
 
 	return self;
-}
+end
 
 static cstring format(cstring format, va_list *format_args) {
 	int format_length = strlen(format);
@@ -123,35 +110,27 @@ static cstring format(cstring format, va_list *format_args) {
 	return formatted_string;;
 }
 
-DEFINE(dealloc) {
-	CONTEXT(String);
-
+def(dealloc)
 	free(self->value);
 
 	return msg_cast(ObjectClass, self, "dealloc");
-}
+end
 
-DEFINE(copy) {
-	CONTEXT(String);
-
+def(copy)
 	return msg(StringClass, "newWithCString", self->value);
-}
+end
 
-DEFINE(length) {
-	CONTEXT(String);
-
+def(length)
 	Integer length = msg(IntegerClass, "newWithInt", strlen(self->value));
 
 	return length;
-}
+end
 
-DEFINE(description) {
+def(description)
 	return copy(v, args);
-}
+end
 
-DEFINE(equals) {
-	CONTEXT(String);
-	
+def(equals)
 	cstring other = NEXT_ARG(cstring);
 
 	int length = strlen(self->value);
@@ -165,9 +144,8 @@ DEFINE(equals) {
 	}
 	
 	return NO;
-}
+end
 
-DEFINE(cString) {
-	CONTEXT(String)
+def(cString)
 	return self->value;
-}
+end

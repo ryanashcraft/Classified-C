@@ -9,6 +9,6 @@ typedef struct _Stack {
 	list *llist;
 } *Stack;
 
-void stack_class_init();
+void StackInit();
 
 #endif

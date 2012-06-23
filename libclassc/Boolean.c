@@ -1,48 +1,45 @@
 
 #include "Classified-C.h"
 
+#define TYPE Boolean
+#define SUPER IntegerClass
+
+proto(newWithInt)
+proto(yes)
+proto(no)
+proto(isYes)
+
 static Boolean yesInstance = NULL;
 static Boolean noInstance = NULL;
 
-IMPLEMENTATION(BooleanClass);
-
-PROTOTYPE(newWithInt);
-PROTOTYPE(yes);
-PROTOTYPE(no);
-PROTOTYPE(isYes);
-
-void boolean_class_init() {
-	BooleanClass = msg(ClassClass, "new", "Integer", IntegerClass);
-
-	REGISTER_CLASS_METHOD(BooleanClass, "newWithInt", newWithInt);
-	REGISTER_CLASS_METHOD(BooleanClass, "yes", yes);
-	REGISTER_CLASS_METHOD(BooleanClass, "no", no);
-	REGISTER_CLASS_METHOD(BooleanClass, "isYes", isYes);
+defclass
+	registerStatic("newWithInt", newWithInt);
+	registerStatic("yes", yes);
+	registerStatic("no", no);
+	registerStatic("isYes", isYes);
 
 	yesInstance = msg(BooleanClass, "newWithInt", YES);
 	noInstance = msg(BooleanClass, "newWithInt", NO);
-}
+end
 
-DEFINE(newWithInt) {
-	NEW(BooleanClass, struct _Boolean);
-
+defcon(newWithInt)
 	msg(self, "initWithInt", args);
 
 	return self;
-}
+end
 
-DEFINE(yes) {
+def(yes)
 	return yesInstance;
-}
+end
 
-DEFINE(no) {
+def(no)
 	return noInstance;
-}
+end
 
-DEFINE(isYes) {
+def(isYes)
 	if (NEXT_ARG(size_t) == (size_t)NO) {
 		return NO;
 	}
 
 	return YES;
-}
+end

@@ -12,7 +12,7 @@ struct _Class {
 
 extern Class ClassClass;
 
-void class_class_init();
+void ClassInit();
 Class new_class(cstring name, Class parent_class);
 
 #endif

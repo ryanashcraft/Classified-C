@@ -1,58 +1,49 @@
 
 #include "Classified-C.h"
 
-IMPLEMENTATION(PrinterClass);
+#define TYPE Printer
+#define SUPER ObjectClass
 
-PROTOTYPE(newWithFile);
-PROTOTYPE(initWithFile);
-PROTOTYPE(dealloc);
-PROTOTYPE(print);
-PROTOTYPE(println);
-PROTOTYPE(flush);
-PROTOTYPE(printEach);
-PROTOTYPE(disable);
+proto(newWithFile)
+proto(initWithFile)
+proto(dealloc)
+proto(print)
+proto(println)
+proto(flush)
+proto(printEach)
+proto(disable)
 
-void printer_class_init() {
-	PrinterClass = msg(ClassClass, "new", "Printer", ObjectClass);
-
-	REGISTER_CLASS_METHOD(PrinterClass, "newWithFile", newWithFile);
+defclass
+	registerStatic("newWithFile", newWithFile);
 	
-	REGISTER_METHOD(PrinterClass, "initWithFile", initWithFile);
-	REGISTER_METHOD(PrinterClass, "dealloc", dealloc);
-	REGISTER_METHOD(PrinterClass, "print", print);
-	REGISTER_METHOD(PrinterClass, "println", println);
-	REGISTER_METHOD(PrinterClass, "flush", flush);
-	REGISTER_METHOD(PrinterClass, "printEach", printEach);
-	REGISTER_METHOD(PrinterClass, "disable", disable);
-}
+	register("initWithFile", initWithFile);
+	register("dealloc", dealloc);
+	register("print", print);
+	register("println", println);
+	register("flush", flush);
+	register("printEach", printEach);
+	register("disable", disable);
+end
 
-DEFINE(newWithFile) {
-	NEW(PrinterClass, struct _Printer);
-
+defcon(newWithFile)
 	initWithFile(self, args);
 
 	return self;
-}
+end
 
-DEFINE(initWithFile) {
-	CONTEXT(Printer);
-
+def(initWithFile)
 	self->output = NEXT_ARG(File);
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(Printer);
-
+def(dealloc)
 	msg(self->output, "release");
 
 	return msg_cast(ObjectClass, self, "dealloc");
-}
+end
 
-DEFINE(print) {
-	CONTEXT(Printer);
-
+def(print)
 	if (self->disabled) {
 		return self;
 	}
@@ -63,11 +54,9 @@ DEFINE(print) {
 	msg(toPrint, "release");
 
 	return self;
-}
+end
 
-DEFINE(println) {
-	CONTEXT(Printer);
-
+def(println)
 	if (self->disabled) {
 		return self;
 	}
@@ -77,11 +66,9 @@ DEFINE(println) {
 	msg(toPrint, "release");
 
 	return self;
-}
+end
 
-DEFINE(flush) {
-	CONTEXT(Printer);
-
+def(flush)
 	if (self->disabled) {
 		return self;
 	}
@@ -89,11 +76,9 @@ DEFINE(flush) {
 	fflush(self->output->file);
 
 	return self;
-}
+end
 
-DEFINE(printEach) {
-	CONTEXT(Printer);
-
+def(printEach)
 	if (self->disabled) {
 		return self;
 	}
@@ -111,12 +96,10 @@ DEFINE(printEach) {
 	msg(iterator, "release");
 
 	return self;
-}
+end
 
-DEFINE(disable) {
-	CONTEXT(Printer);
-
+def(disable)
 	self->disabled = YES;
 
 	return self;
-}
+end

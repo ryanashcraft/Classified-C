@@ -1,6 +1,6 @@
 
-#ifndef MY_STRING_H
-#define MY_STRING_H
+#ifndef Foo_H
+#define Foo_H
 
 extern Class FooClass;
 
@@ -9,6 +9,6 @@ typedef struct _Foo {
 	int value;
 } *Foo;
 
-void foo_class_init();
+void FooInit();
 
 #endif

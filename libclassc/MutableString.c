@@ -1,64 +1,57 @@
 
 #include "Classified-C.h"
 
-IMPLEMENTATION(MutableStringClass);
+#define TYPE MutableString
+#define SUPER StringClass
 
-PROTOTYPE(newWithCString);
-PROTOTYPE(newWithCStringAndCapacity);
-PROTOTYPE(initWithCString);
-PROTOTYPE(initWithCStringAndCapacity);
-PROTOTYPE(dealloc);
-PROTOTYPE(concatenateWithCString);
-PROTOTYPE(concatenateWithString);
-PROTOTYPE(appendCharacter);
-PROTOTYPE(vsprint);
+proto(newWithCString)
+proto(newWithCStringAndCapacity)
+proto(initWithCString)
+proto(initWithCStringAndCapacity)
+proto(dealloc)
+proto(concatenateWithCString)
+proto(concatenateWithString)
+proto(appendCharacter)
+proto(vsprint)
 
 static cstring concatenate(MutableString s, cstring part_two);
 static void virtual_vsprintf(char *, va_list *args);
 
-void mutable_string_class_init() {
+defclass
 	MutableStringClass = msg(ClassClass, "new", "MutableString", StringClass);
 
-	REGISTER_CLASS_METHOD(MutableStringClass, "newWithCString", newWithCString);
-	REGISTER_CLASS_METHOD(MutableStringClass, "newWithCStringAndCapacity", newWithCStringAndCapacity);
+	registerStatic("newWithCString", newWithCString);
+	registerStatic("newWithCStringAndCapacity", newWithCStringAndCapacity);
 
-	REGISTER_METHOD(MutableStringClass, "initWithCString", initWithCString);
-	REGISTER_METHOD(MutableStringClass, "initWithCStringAndCapacity", initWithCStringAndCapacity);
-	REGISTER_METHOD(MutableStringClass, "dealloc", dealloc);
-	REGISTER_METHOD(MutableStringClass, "concatenateWithCString", concatenateWithCString);
-	REGISTER_METHOD(MutableStringClass, "concatenateWithString", concatenateWithString);
-	REGISTER_METHOD(MutableStringClass, "appendCharacter", appendCharacter);
-	REGISTER_METHOD(MutableStringClass, "vsprint", vsprint);
-}
+	register("initWithCString", initWithCString);
+	register("initWithCStringAndCapacity", initWithCStringAndCapacity);
+	register("dealloc", dealloc);
+	register("concatenateWithCString", concatenateWithCString);
+	register("concatenateWithString", concatenateWithString);
+	register("appendCharacter", appendCharacter);
+	register("vsprint", vsprint);
+end
 
-DEFINE(newWithCString) {
-	NEW(MutableStringClass, struct _MutableString);
-
+defcon(newWithCString)
 	initWithCString(self, args);
 
 	return self;
-}
+end
 
-DEFINE(newWithCStringAndCapacity) {
-	NEW(MutableStringClass, struct _MutableString);
-
+defcon(newWithCStringAndCapacity)
 	initWithCStringAndCapacity(self, args);
 
 	return self;
-}
+end
 
-DEFINE(initWithCString) {
-	CONTEXT(MutableString);
-
+def(initWithCString)
 	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
 	self->capacity = strlen(self->base.value);
 
 	return self;
-}
+end
 
-DEFINE(initWithCStringAndCapacity) {
-	CONTEXT(MutableString);
-
+def(initWithCStringAndCapacity)
 	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
 
 	self->capacity = NEXT_ARG(int);
@@ -67,32 +60,26 @@ DEFINE(initWithCStringAndCapacity) {
 	self->base.value[string_length] = '\0';
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(MutableString);
-
+def(dealloc)
 	return msg_cast(StringClass, self, "dealloc");
-}
+end
 
-DEFINE(concatenateWithCString) {
-	CONTEXT(MutableString);
-
+def(concatenateWithCString)
 	cstring part_two = NEXT_ARG(cstring);
 	self->base.value = concatenate(self, part_two);
 
 	return self;
-}
+end
 
-DEFINE(concatenateWithString) {
-	CONTEXT(MutableString);
-
+def(concatenateWithString)
 	String stringArgument = NEXT_ARG(String);
 	cstring part_two = stringArgument->value;
 	self->base.value = concatenate(self, part_two);
 
 	return self;
-}
+end
 
 cstring concatenate(MutableString self, cstring part_two) {
 	int part_one_length = strlen(self->base.value);
@@ -108,9 +95,7 @@ cstring concatenate(MutableString self, cstring part_two) {
 	return self->base.value;
 }
 
-DEFINE(appendCharacter) {
-	CONTEXT(MutableString);
-
+def(appendCharacter)
 	char c = NEXT_ARG(int);
 
 	int string_length = strlen(self->base.value);
@@ -125,11 +110,9 @@ DEFINE(appendCharacter) {
 	self->base.value[string_length + 1] = '\0';
 
 	return self;
-}
+end
 
-DEFINE(vsprint) {
-	CONTEXT(MutableString);
-
+def(vsprint)
 	cstring dup = mstring(self->base.value);
 
 	va_list *format_args = NEXT_ARG(va_list *);
@@ -154,7 +137,7 @@ DEFINE(vsprint) {
 	self->base.value[string_length] = '\0';
 
 	return self;
-}
+end
 
 void virtual_vsprintf(char *format, va_list *args) {
 	const char *p = format;

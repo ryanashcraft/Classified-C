@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv) {
 	cc_init();
-	foo_class_init();
+	FooInit();
 
 	String s1 = msg(StringClass, "newWithCString", "1");
 	String s2 = msg(StringClass, "newWithCString", "2");

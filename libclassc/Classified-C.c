@@ -21,20 +21,20 @@ static void print_bt();
  */
 void cc_init() {
 	// Initialize and register standard classes to the class list
-	class_class_init();
-	object_class_init();
-	null_class_init();
-	array_class_init();
-	string_class_init();
-	mutable_string_class_init();
-	integer_class_init();
-	boolean_class_init();
-	stack_class_init();
-	file_class_init();
-	scanner_class_init();
-	printer_class_init();
-	iterator_class_init();
-	linked_list_class_init();
+	ClassInit();
+	ObjectInit();
+	NullInit();
+	ArrayInit();
+	StringInit();
+	MutableStringInit();
+	IntegerInit();
+	BooleanInit();
+	StackInit();
+	FileInit();
+	ScannerInit();
+	PrinterInit();
+	IteratorInit();
+	LinkedListInit();
 
 	SystemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
 }

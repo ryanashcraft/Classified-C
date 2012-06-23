@@ -1,80 +1,68 @@
 
 #include "Classified-C.h"
 
-IMPLEMENTATION(IteratorClass);
+#define TYPE Iterator
+#define SUPER ObjectClass
 
-PROTOTYPE(newWithArray);
-PROTOTYPE(newWithLinkedList);
-PROTOTYPE(initWithArray);
-PROTOTYPE(initWithLinkedList);
-PROTOTYPE(dealloc);
-PROTOTYPE(next);
+proto(newWithArray)
+proto(newWithLinkedList)
+proto(initWithArray)
+proto(initWithLinkedList)
+proto(dealloc)
+proto(next)
 
-void iterator_class_init() {
-	IteratorClass = msg(ClassClass, "new", "Iterator", ObjectClass);
-
-	REGISTER_CLASS_METHOD(IteratorClass, "newWithArray", newWithArray);
-	REGISTER_CLASS_METHOD(IteratorClass, "newWithLinkedList", newWithLinkedList);
+defclass
+	registerStatic("newWithArray", newWithArray);
+	registerStatic("newWithLinkedList", newWithLinkedList);
 	
-	REGISTER_METHOD(IteratorClass, "initWithObjects", initWithArray);
-	REGISTER_METHOD(IteratorClass, "initWithLinkedList", initWithLinkedList);
-	REGISTER_METHOD(IteratorClass, "dealloc", dealloc);
-	REGISTER_METHOD(IteratorClass, "next", next);
-}
+	register("initWithObjects", initWithArray);
+	register("initWithLinkedList", initWithLinkedList);
+	register("dealloc", dealloc);
+	register("next", next);
+end
 
-DEFINE(newWithArray) {
-	NEW(IteratorClass, struct _Iterator);
-
+defcon(newWithArray)
 	initWithArray(self, args);
 
 	return self;
-}
+end
 
-DEFINE(newWithLinkedList) {
-	NEW(IteratorClass, struct _Iterator);
-
+defcon(newWithLinkedList)
 	initWithLinkedList(self, args);
 
 	return self;
-}
+end
 
-DEFINE(initWithArray) {
-	CONTEXT(Iterator);
-
+def(initWithArray)
 	self->elements = NEXT_ARG(Object);
 	msg(self->elements, "retain");
 	self->nextPointer = 0;
 
 	return self;
-}
+end
 
-DEFINE(initWithLinkedList) {
-	CONTEXT(Iterator);
-
+def(initWithLinkedList)
 	self->elements = NEXT_ARG(Object);
 	msg(self->elements, "retain");
 	self->nextPointer = 0;
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(Iterator);
-
+def(dealloc)
 	msg(self->elements, "release");
 
 	return msg_cast(ObjectClass, self, "dealloc");
-}
+end
 
-DEFINE(next) {
-	CONTEXT(Iterator);
-
+def(next)
 	Integer length = msg(self->elements, "length");
 	if (self->nextPointer >= length->value) {
 		msg(length, "release");
 		return NULL;
 	}
+	
 	msg(length, "release");
 
 	return msg(self->elements, "get", self->nextPointer++);
-}
+end

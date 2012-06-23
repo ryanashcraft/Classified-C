@@ -8,6 +8,6 @@ typedef struct _Boolean {
 	struct _Integer base;	
 } *Boolean;
 
-void boolean_class_init();
+void BooleanInit();
 
 #endif
