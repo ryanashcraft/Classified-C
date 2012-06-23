@@ -10,6 +10,7 @@ proto(dealloc);
 proto(push);
 proto(pop);
 proto(peek);
+proto(isEmpty);
 
 defclass
 	static(new);
@@ -19,6 +20,7 @@ defclass
 	instance(push);
 	instance(pop);
 	instance(peek);
+	instance(isEmpty);
 end
 
 defcon(new)
@@ -40,8 +42,9 @@ def(dealloc)
 end
 
 def(push)
-	void *data = NEXT_ARG(void *);
-	push_front(self->llist, data);
+	Object o = NEXT_ARG(Object);
+	push_front(self->llist, o);
+	msg(o, "retain");
 
 	return self;
 end
@@ -63,4 +66,12 @@ def(peek)
 	}
 
 	return ll_front(self->llist);
+end
+
+def(isEmpty)
+	if (is_empty(self->llist)) {
+		return YES;
+	}
+
+	return NO;
 end
