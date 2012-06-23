@@ -1,7 +1,7 @@
 
 #include "Classified-C.h"
 
-implementation(ClassClass)
+Class ClassClass = NULL;
 
 #define TYPE Class
 #define SUPER ObjectClass
@@ -9,7 +9,7 @@ implementation(ClassClass)
 #define TABLE_START_MAX_SIZE 16
 #define TABLE_START_RATIO 2
 
-proto(new)
+proto(new);
 
 void ClassInit() {
 	ClassClass = malloc(sizeof(struct _Class));
@@ -19,7 +19,7 @@ void ClassInit() {
 	((Object)ClassClass)->retaincount = 1;
 
 	ClassClass->static_methods = ht_create(4, 2);
-	registerStatic("new", new);
+	static(new);
 
 	ClassClass->instance_methods = ht_create(4, 2);
 

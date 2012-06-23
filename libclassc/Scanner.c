@@ -6,17 +6,17 @@
 
 #define TOKEN_BUFFER_SIZE 256
 
-proto(newWithFile)
-proto(initWithFile)
-proto(next)
-proto(hasNext)
+proto(newWithFile);
+proto(initWithFile);
+proto(next);
+proto(hasNext);
 
 defclass
-	registerStatic("newWithFile", newWithFile);
+	static(newWithFile);
 
-	register("initWithFile", initWithFile);
-	register("next", next);
-	register("hasNext", hasNext);
+	instance(initWithFile);
+	instance(next);
+	instance(hasNext);
 end
 
 defcon(newWithFile)

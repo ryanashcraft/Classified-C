@@ -4,15 +4,15 @@
 #define TYPE MutableString
 #define SUPER StringClass
 
-proto(newWithCString)
-proto(newWithCStringAndCapacity)
-proto(initWithCString)
-proto(initWithCStringAndCapacity)
-proto(dealloc)
-proto(concatenateWithCString)
-proto(concatenateWithString)
-proto(appendCharacter)
-proto(vsprint)
+proto(newWithCString);
+proto(newWithCStringAndCapacity);
+proto(initWithCString);
+proto(initWithCStringAndCapacity);
+proto(dealloc);
+proto(concatenateWithCString);
+proto(concatenateWithString);
+proto(appendCharacter);
+proto(vsprint);
 
 static cstring concatenate(MutableString s, cstring part_two);
 static void virtual_vsprintf(char *, va_list *args);
@@ -20,16 +20,16 @@ static void virtual_vsprintf(char *, va_list *args);
 defclass
 	MutableStringClass = msg(ClassClass, "new", "MutableString", StringClass);
 
-	registerStatic("newWithCString", newWithCString);
-	registerStatic("newWithCStringAndCapacity", newWithCStringAndCapacity);
+	static(newWithCString);
+	static(newWithCStringAndCapacity);
 
-	register("initWithCString", initWithCString);
-	register("initWithCStringAndCapacity", initWithCStringAndCapacity);
-	register("dealloc", dealloc);
-	register("concatenateWithCString", concatenateWithCString);
-	register("concatenateWithString", concatenateWithString);
-	register("appendCharacter", appendCharacter);
-	register("vsprint", vsprint);
+	instance(initWithCString);
+	instance(initWithCStringAndCapacity);
+	instance(dealloc);
+	instance(concatenateWithCString);
+	instance(concatenateWithString);
+	instance(appendCharacter);
+	instance(vsprint);
 end
 
 defcon(newWithCString)

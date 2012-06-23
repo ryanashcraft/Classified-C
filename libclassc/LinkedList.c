@@ -5,37 +5,37 @@
 #define TYPE LinkedList
 #define SUPER ObjectClass
 
-proto(new)
-proto(init)
-proto(dealloc)
-proto(description)
-proto(length)
-proto(pushFront)
-proto(pushBack)
-proto(removeFront)
-proto(removeBack)
-proto(getFront)
-proto(getBack)
-proto(get)
-proto(performOnEach)
+proto(new);
+proto(init);
+proto(dealloc);
+proto(description);
+proto(length);
+proto(pushFront);
+proto(pushBack);
+proto(removeFront);
+proto(removeBack);
+proto(getFront);
+proto(getBack);
+proto(get);
+proto(performOnEach);
 
 void call_method(void *v, va_list *args);
 
 defclass
-	registerStatic("new", new);
+	static(new);
 
-	register("init", init);
-	register("dealloc", dealloc);
-	register("description", description);
-	register("length", length);
-	register("pushFront", pushFront);
-	register("pushBack", pushBack);
-	register("removeFront", removeFront);
-	register("removeBack", removeBack);
-	register("getFront", getFront);
-	register("getBack", getBack);
-	register("get", get);
-	register("performOnEach", performOnEach);
+	instance(init);
+	instance(dealloc);
+	instance(description);
+	instance(length);
+	instance(pushFront);
+	instance(pushBack);
+	instance(removeFront);
+	instance(removeBack);
+	instance(getFront);
+	instance(getBack);
+	instance(get);
+	instance(performOnEach);
 end
 
 defcon(new)

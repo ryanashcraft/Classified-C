@@ -3,21 +3,21 @@
 #define SUPER ObjectClass
 #include "Classified-C.h"
 
-proto(new)
-proto(init)
-proto(dealloc)
-proto(push)
-proto(pop)
-proto(peek)
+proto(new);
+proto(init);
+proto(dealloc);
+proto(push);
+proto(pop);
+proto(peek);
 
 defclass
-	registerStatic("new", new);
+	static(new);
 
-	register("init", init);
-	register("dealloc", dealloc);
-	register("push", push);
-	register("pop", pop);
-	register("peek", peek);
+	instance(init);
+	instance(dealloc);
+	instance(push);
+	instance(pop);
+	instance(peek);
 end
 
 defcon(new)

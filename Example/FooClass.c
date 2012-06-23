@@ -5,17 +5,17 @@
 #define TYPE Foo
 #define SUPER StringClass
 
-proto(new)
-proto(init)
-proto(dealloc)
-proto(description)
+proto(new);
+proto(init);
+proto(dealloc);
+proto(description);
 
 defclass
-	registerStatic("new", new);
+	static(new);
 
-	register("init", init);
-	register("dealloc", dealloc);
-	register("description", description);
+	instance(init);
+	instance(dealloc);
+	instance(description);
 end
 
 defcon(new)

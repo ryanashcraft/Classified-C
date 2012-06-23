@@ -4,10 +4,10 @@
 #define TYPE Null
 #define SUPER ObjectClass
 
-proto(new)
+proto(new);
 
 defclass
-	registerStatic("new", new);
+	static(new);
 end
 
 defcon(new)

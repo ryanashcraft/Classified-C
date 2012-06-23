@@ -6,23 +6,23 @@ Class ObjectClass = NULL;
 #define TYPE Object
 #define SUPER NULL
 
-proto(new)
-proto(init)
-proto(release)
-proto(dealloc)
-proto(retain)
-proto(description)
+proto(new);
+proto(init);
+proto(release);
+proto(dealloc);
+proto(retain);
+proto(description);
 
 void ObjectInit() {
 	ObjectClass = new_class("Object", NULL);
 
-	registerStatic("new", new);
+	static(new);
 
-	register("init", init);
-	register("release", release);
-	register("dealloc", dealloc);
-	register("retain", retain);
-	register("description", description);
+	instance(init);
+	instance(release);
+	instance(dealloc);
+	instance(retain);
+	instance(description);
 }
 
 Object object_init(void *v) {

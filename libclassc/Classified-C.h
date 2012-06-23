@@ -31,11 +31,8 @@
 
 // #define NAME STR(TYPE)
 
-#define implementation(CLASS) \
-	Class CLASS = NULL;
-
 #define proto(NAME) \
-	static void *NAME(METHOD_ARGS);
+	static void *NAME(METHOD_ARGS)
 
 #define METHOD_ARGS \
 	void *v, va_list *args
@@ -62,10 +59,11 @@
 
 #define end }
 
-#define register(METHOD, FUNCTION) \
-		ht_insert_method(&CLASS->instance_methods, METHOD, strlen(METHOD), mmethod(METHOD, &FUNCTION), sizeof(struct _method));
-#define registerStatic(METHOD, FUNCTION) \
-		ht_insert_method(&CLASS->static_methods, METHOD, strlen(METHOD), mmethod(METHOD, &FUNCTION), sizeof(struct _method));
+#define instance(FUNCTION) \
+		ht_insert_method(&CLASS->instance_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
+
+#define static(FUNCTION) \
+		ht_insert_method(&CLASS->static_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
 
 #define NEXT_ARG(TYPE) va_arg(*args, TYPE)
 #define ARGS args

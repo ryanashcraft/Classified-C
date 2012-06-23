@@ -4,21 +4,21 @@
 #define TYPE Iterator
 #define SUPER ObjectClass
 
-proto(newWithArray)
-proto(newWithLinkedList)
-proto(initWithArray)
-proto(initWithLinkedList)
-proto(dealloc)
-proto(next)
+proto(newWithArray);
+proto(newWithLinkedList);
+proto(initWithArray);
+proto(initWithLinkedList);
+proto(dealloc);
+proto(next);
 
 defclass
-	registerStatic("newWithArray", newWithArray);
-	registerStatic("newWithLinkedList", newWithLinkedList);
+	static(newWithArray);
+	static(newWithLinkedList);
 	
-	register("initWithObjects", initWithArray);
-	register("initWithLinkedList", initWithLinkedList);
-	register("dealloc", dealloc);
-	register("next", next);
+	instance(initWithArray);
+	instance(initWithLinkedList);
+	instance(dealloc);
+	instance(next);
 end
 
 defcon(newWithArray)

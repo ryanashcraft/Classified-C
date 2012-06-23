@@ -4,21 +4,21 @@
 #define TYPE File
 #define SUPER ObjectClass
 
-proto(newWithFilename)
-proto(newWithFile)
-proto(initWithFilename)
-proto(initWithFile)
-proto(dealloc)
-proto(file)
+proto(newWithFilename);
+proto(newWithFile);
+proto(initWithFilename);
+proto(initWithFile);
+proto(dealloc);
+proto(file);
 
 defclass
-	registerStatic("newWithFilename", newWithFilename);
-	registerStatic("newWithFile", newWithFile);
+	static(newWithFilename);
+	static(newWithFile);
 	
-	register("initWithFilename", initWithFilename);
-	register("initWithFile", initWithFilename);
-	register("dealloc", dealloc);
-	register("file", file);
+	instance(initWithFilename);
+	instance(initWithFilename);
+	instance(dealloc);
+	instance(file);
 end
 
 defcon(newWithFilename)

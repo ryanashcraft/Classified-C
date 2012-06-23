@@ -4,19 +4,19 @@
 #define TYPE Boolean
 #define SUPER IntegerClass
 
-proto(newWithInt)
-proto(yes)
-proto(no)
-proto(isYes)
+proto(newWithInt);
+proto(yes);
+proto(no);
+proto(isYes);
 
 static Boolean yesInstance = NULL;
 static Boolean noInstance = NULL;
 
 defclass
-	registerStatic("newWithInt", newWithInt);
-	registerStatic("yes", yes);
-	registerStatic("no", no);
-	registerStatic("isYes", isYes);
+	static(newWithInt);
+	static(yes);
+	static(no);
+	static(isYes);
 
 	yesInstance = msg(BooleanClass, "newWithInt", YES);
 	noInstance = msg(BooleanClass, "newWithInt", NO);

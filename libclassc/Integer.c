@@ -4,19 +4,19 @@
 #define TYPE Integer
 #define SUPER ObjectClass
 
-proto(newWithInt)
-proto(initWithInt)
-proto(equals)
-proto(description)
-proto(increment)
+proto(newWithInt);
+proto(initWithInt);
+proto(equals);
+proto(description);
+proto(increment);
 
 defclass
-	registerStatic("newWithInt", newWithInt);
+	static(newWithInt);
 	
-	register("initWithInt", initWithInt);
-	register("equals", equals);
-	register("description", description);
-	register("increment", increment);
+	instance(initWithInt);
+	instance(equals);
+	instance(description);
+	instance(increment);
 end
 
 defcon(newWithInt)

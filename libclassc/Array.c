@@ -4,23 +4,23 @@
 #define TYPE Array
 #define SUPER ObjectClass
 
-proto(newWithObjects)
-proto(initWithObjects)
-proto(dealloc)
-proto(performOnEach)
-proto(get)
-proto(length)
+proto(newWithObjects);
+proto(initWithObjects);
+proto(dealloc);
+proto(performOnEach);
+proto(get);
+proto(length);
 
 defclass
 	ArrayClass = msg(ClassClass, "new", "Array", ObjectClass);
 
-	registerStatic("newWithObjects", newWithObjects);
+	static(newWithObjects);
 
-	register("initWithObjects", initWithObjects);
-	register("dealloc", dealloc);
-	register("performOnEach", performOnEach);
-	register("get", get);
-	register("length", length);
+	instance(initWithObjects);
+	instance(dealloc);
+	instance(performOnEach);
+	instance(get);
+	instance(length);
 end
 
 defcon(newWithObjects)

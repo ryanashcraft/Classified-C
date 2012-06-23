@@ -4,25 +4,25 @@
 #define TYPE Printer
 #define SUPER ObjectClass
 
-proto(newWithFile)
-proto(initWithFile)
-proto(dealloc)
-proto(print)
-proto(println)
-proto(flush)
-proto(printEach)
-proto(disable)
+proto(newWithFile);
+proto(initWithFile);
+proto(dealloc);
+proto(print);
+proto(println);
+proto(flush);
+proto(printEach);
+proto(disable);
 
 defclass
-	registerStatic("newWithFile", newWithFile);
+	static(newWithFile);
 	
-	register("initWithFile", initWithFile);
-	register("dealloc", dealloc);
-	register("print", print);
-	register("println", println);
-	register("flush", flush);
-	register("printEach", printEach);
-	register("disable", disable);
+	instance(initWithFile);
+	instance(dealloc);
+	instance(print);
+	instance(println);
+	instance(flush);
+	instance(printEach);
+	instance(disable);
 end
 
 defcon(newWithFile)

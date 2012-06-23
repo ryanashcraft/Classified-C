@@ -6,35 +6,35 @@
 
 #define START_FORMAT_BUFFER_SIZE 32
 
-proto(newWithCString)
-proto(newWithFormatCString)
-proto(newWithFormatCStringAndArgList)
-proto(initWithCString)
-proto(initWithFormatCString)
-proto(initWithFormatCStringAndArgList)
-proto(dealloc)
-proto(copy)
-proto(length)
-proto(description)
-proto(equals)
-proto(cString)
+proto(newWithCString);
+proto(newWithFormatCString);
+proto(newWithFormatCStringAndArgList);
+proto(initWithCString);
+proto(initWithFormatCString);
+proto(initWithFormatCStringAndArgList);
+proto(dealloc);
+proto(copy);
+proto(length);
+proto(description);
+proto(equals);
+proto(cString);
 
 static cstring format(cstring format, va_list *format_args);
 
 defclass
-	registerStatic("newWithCString", newWithCString);
-	registerStatic("newWithFormatCString", newWithFormatCString);
-	registerStatic("newWithFormatCStringAndArgList", newWithFormatCStringAndArgList);
+	static(newWithCString);
+	static(newWithFormatCString);
+	static(newWithFormatCStringAndArgList);
 
-	register("initWithCString", initWithCString);
-	register("initWithFormatCString", initWithFormatCString);
-	register("initWithFormatCStringAndArgList", initWithFormatCStringAndArgList);
-	register("dealloc", dealloc);
-	register("copy", copy);
-	register("length", length);
-	register("description", description);
-	register("equals", equals);
-	register("cString", cString)
+	instance(initWithCString);
+	instance(initWithFormatCString);
+	instance(initWithFormatCStringAndArgList);
+	instance(dealloc);
+	instance(copy);
+	instance(length);
+	instance(description);
+	instance(equals);
+	instance(cString)
 end
 
 defcon(newWithCString)
