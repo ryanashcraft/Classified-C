@@ -3,7 +3,7 @@
 #define SUPER Object
 
 #include "../libclassc/Classified-C.h"
-#include "Vertex.h"
+#include "main.h"
 
 proto(new);
 
@@ -11,6 +11,6 @@ defclass
 	static(new);
 end
 
-def(new)
+defcon(new)
 	return self;
 end

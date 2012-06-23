@@ -45,21 +45,21 @@ end
 def(runWithVertex)
 	msg(self->visited, "clear");
 
-	msg(self->ds, msg(PathClass, "newWithVertex", NEXT_ARG(Vertex)));
+	msg(self->ds, "push", msg(PathClass, "newWithVertex", NEXT_ARG(Vertex)));
 
 	while(!msg(self->ds, "isEmpty")) {
-		Path currentPath = msg(self->ds, "remove");
+		Path currentPath = msg(self->ds, "pop");
 		Vertex nextOpenVertex = msg(currentPath, "getLastVertex");
 
 		if (!msg(self->visited, "contains", nextOpenVertex)) {
-			msg(self->visited, "add", nextOpenVertex);
-			msg(self->results, "add", currentPath);
+			msg(self->visited, "pushBack", nextOpenVertex);
+			msg(self->results, "pushBack", currentPath);
 
 			Iterator adjacencies = msg(nextOpenVertex, "getAdjacenciesIterator");
 			Pair p = NULL;
 			while ( (p = msg(adjacencies, "next")) ) {
 				Path newPath = msg(PathClass, "newWithPath", currentPath, p);
-				msg(self->ds, "add", newPath);
+				msg(self->ds, "pushBack", newPath);
 			}
 			msg(adjacencies, "release");
 		}
@@ -74,7 +74,7 @@ def(makeEdgeList)
 	Iterator adjacencies = msg(IteratorClass, "newWithLinkedList", self->results);
 	Path p = NULL;
 	while ( (p = msg(adjacencies, "next")) ) {
-		msg(self->edgeList, "add", msg(p, "getLastEdge"));
+		msg(self->edgeList, "pushBack", msg(p, "getLastEdge"));
 	}
 
 	return self;

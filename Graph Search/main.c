@@ -1,9 +1,6 @@
 
 #include "../libclassc/classified-c.h"
-#include "GraphSearch.h"
-#include "Path.h"
-#include "Vertex.h"
-#include "Pair.h"
+#include "main.h"
 
 int main(int argc, char **argv) {
 	cc_init();
@@ -22,6 +19,8 @@ int main(int argc, char **argv) {
 	GraphSearch search = msg(GraphSearchClass, "new", stack);
 	msg(stack, "release");
 	
-	msg(search, "runWithVertex");
+	Vertex v = msg(VertexClass, "new");
+	msg(search, "runWithVertex", v);
 	msg(search, "release");
+	msg(v, "release");
 }

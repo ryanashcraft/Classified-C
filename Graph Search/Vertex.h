@@ -1,6 +1,6 @@
 
 #ifndef VERTEX_H
-#define VERTEX
+#define VERTEX_H
 
 extern Class VertexClass;
 

@@ -1,6 +1,6 @@
 
 #ifndef PAIR_H
-#define PAIR
+#define PAIR_H
 
 extern Class PairClass;
 
