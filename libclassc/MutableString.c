@@ -1,8 +1,8 @@
 
-#include "Classified-C.h"
-
 #define TYPE MutableString
-#define SUPER StringClass
+#define SUPER String
+
+#include "Classified-C.h"
 
 proto(newWithCString);
 proto(newWithCStringAndCapacity);

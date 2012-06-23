@@ -1,10 +1,10 @@
 
+#define TYPE Object
+#define SUPER_CLASS NULL
+
 #include "Classified-C.h"
 
 Class ObjectClass = NULL;
-
-#define TYPE Object
-#define SUPER NULL
 
 proto(new);
 proto(init);

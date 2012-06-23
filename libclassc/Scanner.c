@@ -1,8 +1,8 @@
 
-#include "Classified-C.h"
-
 #define TYPE Scanner
-#define SUPER ObjectClass
+#define SUPER Object
+
+#include "Classified-C.h"
 
 #define TOKEN_BUFFER_SIZE 256
 

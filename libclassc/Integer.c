@@ -1,8 +1,8 @@
 
-#include "Classified-C.h"
-
 #define TYPE Integer
-#define SUPER ObjectClass
+#define SUPER Object
+
+#include "Classified-C.h"
 
 proto(newWithInt);
 proto(initWithInt);

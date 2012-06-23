@@ -1,8 +1,8 @@
 
-#include "Classified-C.h"
-
 #define TYPE String
-#define SUPER ObjectClass
+#define SUPER Object
+
+#include "Classified-C.h"
 
 #define START_FORMAT_BUFFER_SIZE 32
 

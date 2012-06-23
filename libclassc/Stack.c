@@ -1,6 +1,7 @@
 
 #define TYPE Stack
-#define SUPER ObjectClass
+#define SUPER Object
+
 #include "Classified-C.h"
 
 proto(new);

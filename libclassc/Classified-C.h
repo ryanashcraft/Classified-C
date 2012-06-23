@@ -22,6 +22,10 @@
 #define EXP_INIT(A) CAT_INIT(A)
 #define CLASS_INIT EXP_INIT(TYPE)
 
+#ifndef SUPER_CLASS
+#define SUPER_CLASS EXP_CLASS(SUPER)
+#endif
+
 #ifndef CLASSIFIEDC_H
 #define CLASSIFIEDC_H
 
@@ -38,7 +42,7 @@
 #define defclass \
 	Class CLASS = NULL; \
 	void CLASS_INIT() { \
-		CLASS = msg(ClassClass, "new", NAME, SUPER);
+		CLASS = msg(ClassClass, "new", NAME, SUPER_CLASS);
 
 #define defcon(METHOD) \
 	void *METHOD(METHOD_ARGS) { \

@@ -1,8 +1,8 @@
 
-#include "Classified-C.h"
-
 #define TYPE Array
-#define SUPER ObjectClass
+#define SUPER Object
+
+#include "Classified-C.h"
 
 proto(newWithObjects);
 proto(initWithObjects);

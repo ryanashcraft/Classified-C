@@ -1,8 +1,8 @@
 
-#include "Classified-C.h"
-
 #define TYPE Null
-#define SUPER ObjectClass
+#define SUPER Object
+
+#include "Classified-C.h"
 
 proto(new);
 

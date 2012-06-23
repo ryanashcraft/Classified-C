@@ -1,9 +1,8 @@
 
-#include "../libclassc/Classified-C.h"
-#include "LinkedList.h"
-
 #define TYPE LinkedList
-#define SUPER ObjectClass
+#define SUPER Object
+
+#include "Classified-C.h"
 
 proto(new);
 proto(init);

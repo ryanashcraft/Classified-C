@@ -1,8 +1,8 @@
 
-#include "Classified-C.h"
-
 #define TYPE Boolean
-#define SUPER IntegerClass
+#define SUPER Integer
+
+#include "Classified-C.h"
 
 proto(newWithInt);
 proto(yes);

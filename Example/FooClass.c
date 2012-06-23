@@ -1,9 +1,9 @@
 
+#define TYPE Foo
+#define SUPER String
+
 #include "../libclassc/Classified-C.h"
 #include "FooClass.h"
-
-#define TYPE Foo
-#define SUPER StringClass
 
 proto(new);
 proto(init);

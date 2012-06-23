@@ -1,10 +1,10 @@
 
+#define TYPE Class
+#define SUPER Object
+
 #include "Classified-C.h"
 
 Class ClassClass = NULL;
-
-#define TYPE Class
-#define SUPER ObjectClass
 
 #define TABLE_START_MAX_SIZE 16
 #define TABLE_START_RATIO 2
