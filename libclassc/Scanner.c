@@ -54,7 +54,7 @@ def(next)
 		msg(buffer, "appendCharacter", c);
 	} while (++i);
 
-	String token = msg_cast(StringClass, buffer, "copy");
+	String token = msg(buffer, "copy");
 	msg(buffer, "release");
 
 	return token;

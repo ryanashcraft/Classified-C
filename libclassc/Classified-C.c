@@ -77,7 +77,7 @@ void *msg(void *v, cstring message, ...) {
 	return cbmessage(o, c, message, &argp);
 }
 
-void *msg_cast(Class c, void *v, cstring message, ...) {
+void *msgCast(Class c, void *v, cstring message, ...) {
 	va_list argp;
 	Object o = (Object)v;
 

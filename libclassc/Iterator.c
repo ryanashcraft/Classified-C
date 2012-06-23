@@ -52,7 +52,7 @@ end
 def(dealloc)
 	msg(self->elements, "release");
 
-	return msg_cast(ObjectClass, self, "dealloc");
+	return msgSuper("dealloc");
 end
 
 def(next)

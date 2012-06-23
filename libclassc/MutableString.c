@@ -43,14 +43,14 @@ defcon(newWithCStringAndCapacity)
 end
 
 def(initWithCString)
-	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
+	msgSuper("initWithCString", NEXT_ARG(cstring));
 	self->capacity = strlen(self->base.value);
 
 	return self;
 end
 
 def(initWithCStringAndCapacity)
-	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
+	msgSuper("initWithCString", NEXT_ARG(cstring));
 
 	self->capacity = NEXT_ARG(int);
 	int string_length = strlen(self->base.value);
@@ -61,7 +61,7 @@ def(initWithCStringAndCapacity)
 end
 
 def(dealloc)
-	return msg_cast(StringClass, self, "dealloc");
+	return msgSuper("dealloc");
 end
 
 def(concatenateWithCString)

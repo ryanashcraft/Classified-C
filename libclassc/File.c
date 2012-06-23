@@ -53,7 +53,7 @@ def(dealloc)
 		free(self->filename);
 	}
 
-	return msg_cast(ObjectClass, self, "dealloc");
+	return msgSuper("dealloc");
 end
 
 def(file)

@@ -18,7 +18,7 @@ defclass
 end
 
 defcon(new)
-	msg_cast(TestClass, self, "init");
+	msgSuper("init");
 
 	String testCase = msg(StringClass, "newWithCString", "testNewWithCString");
 	msg(self, "addTestCase", testCase);
@@ -36,7 +36,7 @@ def(testNewWithCString)
 	Boolean isEqual = msg(foo, "equals", "foo");
 	msg(foo, "release");
 
-	return msg_cast(TestClass, self, "assertTrue", isEqual);
+	return msg(self, "assertTrue", isEqual);
 end
 
 def(testNewWithFormatCString)
@@ -44,5 +44,5 @@ def(testNewWithFormatCString)
 	Boolean isEqual = msg(foo, "equals", "foo 5");
 	msg(foo, "release");
 
-	return msg_cast(TestClass, self, "assertTrue", isEqual);
+	return msg(self, "assertTrue", isEqual);
 end

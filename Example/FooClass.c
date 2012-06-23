@@ -7,14 +7,12 @@
 
 proto(new);
 proto(init);
-proto(dealloc);
 proto(description);
 
 defclass
 	static(new);
 
 	instance(init);
-	instance(dealloc);
 	instance(description);
 end
 
@@ -26,18 +24,14 @@ end
 
 def(init)
 	int value = NEXT_ARG(int);
-	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
+	msgSuper("initWithCString", NEXT_ARG(cstring));
 	self->value = value;
 
 	return self;
 end
 
-def(dealloc)
-	return msg_cast(StringClass, self, "dealloc");
-end
-
 def(description)
-	String superDescription = msg_cast(StringClass, self, "description");
+	String superDescription = msgSuper("description");
 	String formattedDescription = msg(StringClass, "newWithFormatCString", "%d %@", self->value, superDescription);
 	msg(superDescription, "release");
 

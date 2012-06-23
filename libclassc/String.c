@@ -113,7 +113,7 @@ static cstring format(cstring format, va_list *format_args) {
 def(dealloc)
 	free(self->value);
 
-	return msg_cast(ObjectClass, self, "dealloc");
+	return msgSuper("dealloc");
 end
 
 def(copy)

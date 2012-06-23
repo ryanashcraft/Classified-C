@@ -58,13 +58,15 @@
 #define end }
 
 #define instance(FUNCTION) \
-		ht_insert_method(&CLASS_REF->instance_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
+	ht_insert_method(&CLASS_REF->instance_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
 
 #define static(FUNCTION) \
-		ht_insert_method(&CLASS_REF->static_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
+	ht_insert_method(&CLASS_REF->static_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
 
 #define NEXT_ARG(CLASS) va_arg(*args, CLASS)
 #define ARGS args
+
+#define msgSuper(...) msgCast(SUPER_CLASS_REF, self, __VA_ARGS__)
 
 #define YES (void *)1
 #define NO (void *)0
@@ -84,7 +86,7 @@ extern Object SystemOut;
 
 void cc_init();
 void *msg(void *v, cstring message, ...);
-void *msg_cast(Class c, void *v, cstring message, ...);
+void *msgCast(Class c, void *v, cstring message, ...);
 
 void *cc_alloc(size_t size);
 void msg_release(void *v);

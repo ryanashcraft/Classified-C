@@ -41,7 +41,7 @@ end
 def(dealloc)
 	msg(self->testCases, "release");
 
-	return msg_cast(ObjectClass, self, "dealloc");
+	return msgSuper("dealloc");
 end
 
 def(description)
