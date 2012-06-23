@@ -1,27 +1,24 @@
 
+#define CLASS GraphSearch
+#define SUPER Object
+
 #include "../libclassc/classified-c.h"
 #include "GraphSearch.h"
 
-IMPLEMENTATION(GraphSearchClass);
+proto(new);
+proto(dealloc);
+proto(runWithVertex);
+proto(makeEdgeList);
 
-PROTOTYPE(new);
-PROTOTYPE(dealloc);
-PROTOTYPE(runWithVertex);
-PROTOTYPE(makeEdgeList);
+defclass
+	static(new);
 
-void graph_search_class_init() {
-	GraphSearchClass = msg(ClassClass, "new", "GraphSearch", ObjectClass);
+	instance(dealloc);
+	instance(runWithVertex);
+	instance(makeEdgeList);
+end
 
-	REGISTER_CLASS_METHOD(GraphSearchClass, "new", new);
-
-	REGISTER_METHOD(GraphSearchClass, "dealloc", dealloc);
-	REGISTER_METHOD(GraphSearchClass, "runWithVertex", runWithVertex);
-	REGISTER_METHOD(GraphSearchClass, "makeEdgeList", makeEdgeList);
-}
-
-DEFINE(new) {
-	NEW(GraphSearchClass, struct _GraphSearch);
-
+defcon(new)
 	self->ds = NEXT_ARG(Object);
 	msg(self->ds, "retain");
 	self->results = msg(LinkedListClass, "new");
@@ -29,24 +26,20 @@ DEFINE(new) {
 	self->visited = msg(LinkedListClass, "new");
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(GraphSearch);
-
+def(dealloc)
 	msg(self->ds, "release");
 	msg(self->results, "release");
 	msg(self->edgeList, "release");
 	msg(self->visited, "release");
 
-	msg_cast(ObjectClass, self, "dealloc");
+	msgSuper("dealloc");
 
 	return self;
-}
+end
 
-DEFINE(runWithVertex) {
-	CONTEXT(GraphSearch);
-
+def(runWithVertex)
 	msg(self->visited, "clear");
 
 	msg(self->ds, msg(PathClass, "newWithVertex", NEXT_ARG(Vertex)));
@@ -72,11 +65,9 @@ DEFINE(runWithVertex) {
 	msg(self, "makeEdgeList");
 
 	return self;
-}
+end
 
-DEFINE(makeEdgeList) {
-	CONTEXT(GraphSearch);
-
+def(makeEdgeList)
 	Iterator adjacencies = msg(IteratorClass, "newWithLinkedList", self->results);
 	Path p = NULL;
 	while ( (p = msg(iterator, "next")) ) {
@@ -84,4 +75,4 @@ DEFINE(makeEdgeList) {
 	}
 
 	return self;
-}
+end
