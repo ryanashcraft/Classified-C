@@ -17,6 +17,7 @@ proto(getFront);
 proto(getBack);
 proto(get);
 proto(performOnEach);
+proto(clear);
 
 void call_method(void *v, va_list *args);
 
@@ -35,6 +36,7 @@ defclass
 	instance(getBack);
 	instance(get);
 	instance(performOnEach);
+	instance(clear);
 end
 
 defcon(new)
@@ -107,6 +109,12 @@ def(performOnEach)
 	cstring method_name = NEXT_ARG(cstring);
 
 	traverse_with_args(self->value, call_method, method_name);
+
+	return self;
+end
+
+def(clear)
+	empty_list(self->value, &msg_release);
 
 	return self;
 end
