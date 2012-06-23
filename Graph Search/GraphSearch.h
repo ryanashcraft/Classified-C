@@ -12,6 +12,6 @@ typedef struct _GraphSearch {
 	LinkedList visited;
 } *GraphSearch;
 
-void graph_search_class_init();
+void GraphSearchInit();
 
 #endif

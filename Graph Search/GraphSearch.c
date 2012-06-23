@@ -4,6 +4,9 @@
 
 #include "../libclassc/classified-c.h"
 #include "GraphSearch.h"
+#include "Path.h"
+#include "Vertex.h"
+#include "Pair.h"
 
 proto(new);
 proto(dealloc);
@@ -54,11 +57,11 @@ def(runWithVertex)
 
 			Iterator adjacencies = msg(nextOpenVertex, "getAdjacenciesIterator");
 			Pair p = NULL;
-			while ( (p = msg(iterator, "next")) ) {
+			while ( (p = msg(adjacencies, "next")) ) {
 				Path newPath = msg(PathClass, "newWithPath", currentPath, p);
 				msg(self->ds, "add", newPath);
 			}
-			msg(self->paths, "release");
+			msg(adjacencies, "release");
 		}
 	}
 
@@ -70,7 +73,7 @@ end
 def(makeEdgeList)
 	Iterator adjacencies = msg(IteratorClass, "newWithLinkedList", self->results);
 	Path p = NULL;
-	while ( (p = msg(iterator, "next")) ) {
+	while ( (p = msg(adjacencies, "next")) ) {
 		msg(self->edgeList, "add", msg(p, "getLastEdge"));
 	}
 
