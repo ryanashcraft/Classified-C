@@ -12,8 +12,6 @@ proto(get);
 proto(length);
 
 defclass
-	ArrayClass = msg(ClassClass, "new", "Array", ObjectClass);
-
 	static(newWithObjects);
 
 	instance(initWithObjects);
