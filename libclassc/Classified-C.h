@@ -29,17 +29,11 @@
 
 #define EXP_STR(A) STR(A)
 
-// #define NAME STR(TYPE)
-
 #define proto(NAME) \
 	static void *NAME(METHOD_ARGS)
 
 #define METHOD_ARGS \
 	void *v, va_list *args
-
-#define defclassinit \
-	void CLASS_INIT() { \
-		CLASS = msg(ClassClass, "new", NAME, SUPER);
 
 #define defclass \
 	Class CLASS = NULL; \
