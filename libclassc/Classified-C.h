@@ -10,20 +10,20 @@
 
 #define CAT_CLASS(A) A ## Class
 #define EXP_CLASS(A) CAT_CLASS(A)
-#define CLASS EXP_CLASS(TYPE)
+#define CLASS_REF EXP_CLASS(CLASS)
 
-#define NAME EXP_STR(TYPE)
+#define NAME EXP_STR(CLASS)
 
 #define CAT_STRUCT(A) struct _ ## A
 #define EXP_STRUCT(A) CAT_STRUCT(A)
-#define STRUCT EXP_STRUCT(TYPE)
+#define STRUCT EXP_STRUCT(CLASS)
 
 #define CAT_INIT(A) A ## Init
 #define EXP_INIT(A) CAT_INIT(A)
-#define CLASS_INIT EXP_INIT(TYPE)
+#define CLASS_INIT EXP_INIT(CLASS)
 
-#ifndef SUPER_CLASS
-#define SUPER_CLASS EXP_CLASS(SUPER)
+#ifndef SUPER_CLASS_REF
+#define SUPER_CLASS_REF EXP_CLASS(SUPER)
 #endif
 
 #ifndef CLASSIFIEDC_H
@@ -40,30 +40,30 @@
 	void *v, va_list *args
 
 #define defclass \
-	Class CLASS = NULL; \
+	Class CLASS_REF = NULL; \
 	void CLASS_INIT() { \
-		CLASS = msg(ClassClass, "new", NAME, SUPER_CLASS);
+		CLASS_REF = msg(ClassClass, "new", NAME, SUPER_CLASS_REF);
 
 #define defcon(METHOD) \
 	void *METHOD(METHOD_ARGS) { \
 		STRUCT *self = cc_alloc(sizeof(STRUCT)); \
 		object_init(self); \
-		((Object)self)->root = CLASS;
+		((Object)self)->root = CLASS_REF;
 
 #define def(METHOD) \
 	void *METHOD(METHOD_ARGS) { \
-		TYPE self = (TYPE)v; \
+		CLASS self = (CLASS)v; \
 		(void)self;
 
 #define end }
 
 #define instance(FUNCTION) \
-		ht_insert_method(&CLASS->instance_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
+		ht_insert_method(&CLASS_REF->instance_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
 
 #define static(FUNCTION) \
-		ht_insert_method(&CLASS->static_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
+		ht_insert_method(&CLASS_REF->static_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
 
-#define NEXT_ARG(TYPE) va_arg(*args, TYPE)
+#define NEXT_ARG(CLASS) va_arg(*args, CLASS)
 #define ARGS args
 
 #define YES (void *)1

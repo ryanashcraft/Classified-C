@@ -1,5 +1,5 @@
 
-#define TYPE Stack
+#define CLASS Stack
 #define SUPER Object
 
 #include "Classified-C.h"

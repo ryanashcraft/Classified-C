@@ -1,5 +1,5 @@
 
-#define TYPE Foo
+#define CLASS Foo
 #define SUPER String
 
 #include "../libclassc/Classified-C.h"

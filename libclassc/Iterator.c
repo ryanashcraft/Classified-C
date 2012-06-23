@@ -1,5 +1,5 @@
 
-#define TYPE Iterator
+#define CLASS Iterator
 #define SUPER Object
 
 #include "Classified-C.h"

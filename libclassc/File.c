@@ -1,7 +1,7 @@
 
 #include "Classified-C.h"
 
-#define TYPE File
+#define CLASS File
 #define SUPER Object
 
 proto(newWithFilename);

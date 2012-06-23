@@ -1,5 +1,5 @@
 
-#define TYPE Scanner
+#define CLASS Scanner
 #define SUPER Object
 
 #include "Classified-C.h"

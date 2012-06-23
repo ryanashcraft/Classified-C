@@ -1,5 +1,5 @@
 
-#define TYPE StringTest
+#define CLASS StringTest
 #define SUPER Test
 
 #include "../libclassc/Classified-C.h"

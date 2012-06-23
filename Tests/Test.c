@@ -1,5 +1,5 @@
 
-#define TYPE Test
+#define CLASS Test
 #define SUPER Object
 
 #include "../libclassc/Classified-C.h"

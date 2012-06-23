@@ -1,5 +1,5 @@
 
-#define TYPE Integer
+#define CLASS Integer
 #define SUPER Object
 
 #include "Classified-C.h"

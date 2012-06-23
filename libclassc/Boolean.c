@@ -1,5 +1,5 @@
 
-#define TYPE Boolean
+#define CLASS Boolean
 #define SUPER Integer
 
 #include "Classified-C.h"

@@ -1,6 +1,6 @@
 
-#define TYPE Object
-#define SUPER_CLASS NULL
+#define CLASS Object
+#define SUPER_CLASS_REF NULL
 
 #include "Classified-C.h"
 

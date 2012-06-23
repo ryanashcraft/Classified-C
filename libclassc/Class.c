@@ -1,5 +1,5 @@
 
-#define TYPE Class
+#define CLASS Class
 #define SUPER Object
 
 #include "Classified-C.h"
@@ -29,7 +29,7 @@ void ClassInit() {
 Class new_class(cstring name, Class parent_class) {
 	STRUCT *self = cc_alloc(sizeof(STRUCT));
 	object_init(self);
-	((Object)self)->root = CLASS;
+	((Object)self)->root = ClassClass;
 
 	self->parent_class = parent_class;
 	self->static_methods = ht_create(TABLE_START_MAX_SIZE, TABLE_START_RATIO);

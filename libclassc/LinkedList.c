@@ -1,5 +1,5 @@
 
-#define TYPE LinkedList
+#define CLASS LinkedList
 #define SUPER Object
 
 #include "Classified-C.h"

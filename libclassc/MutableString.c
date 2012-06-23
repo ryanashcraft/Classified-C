@@ -1,5 +1,5 @@
 
-#define TYPE MutableString
+#define CLASS MutableString
 #define SUPER String
 
 #include "Classified-C.h"

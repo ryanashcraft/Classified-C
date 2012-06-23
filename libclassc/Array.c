@@ -1,5 +1,5 @@
 
-#define TYPE Array
+#define CLASS Array
 #define SUPER Object
 
 #include "Classified-C.h"

@@ -1,5 +1,5 @@
 
-#define TYPE Null
+#define CLASS Null
 #define SUPER Object
 
 #include "Classified-C.h"

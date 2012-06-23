@@ -1,5 +1,5 @@
 
-#define TYPE String
+#define CLASS String
 #define SUPER Object
 
 #include "Classified-C.h"

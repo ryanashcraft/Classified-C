@@ -1,5 +1,5 @@
 
-#define TYPE Printer
+#define CLASS Printer
 #define SUPER Object
 
 #include "Classified-C.h"
