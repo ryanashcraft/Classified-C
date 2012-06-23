@@ -1,54 +1,39 @@
 
+#define CLASS Foo
+#define SUPER String
+
 #include "../libclassc/Classified-C.h"
 #include "FooClass.h"
 
-IMPLEMENTATION(FooClass);
+proto(new);
+proto(init);
+proto(description);
 
-PROTOTYPE(new);
-PROTOTYPE(init);
-PROTOTYPE(dealloc);
-PROTOTYPE(description);
+defclass
+	static(new);
 
-void foo_class_init() {
-	FooClass = msg(ClassClass, "new", "Foo", StringClass);
+	instance(init);
+	instance(description);
+end
 
-	REGISTER_CLASS_METHOD(FooClass, "new", new);
-
-	REGISTER_METHOD(FooClass, "init", init);
-	REGISTER_METHOD(FooClass, "dealloc", dealloc);
-	REGISTER_METHOD(FooClass, "description", description);
-}
-
-DEFINE(new) {
-	NEW(FooClass, struct _Foo);
-
+defcon(new)
 	init(self, args);
 
 	return self;
-}
+end
 
-DEFINE(init) {
-	CONTEXT(Foo);
-
+def(init)
 	int value = NEXT_ARG(int);
-	msg_cast(StringClass, self, "initWithCString", NEXT_ARG(cstring));
+	msgSuper("initWithCString", NEXT_ARG(cstring));
 	self->value = value;
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(Foo);
-
-	return msg_cast(StringClass, self, "dealloc");
-}
-
-DEFINE(description) {
-	CONTEXT(Foo);
-
-	String superDescription = msg_cast(StringClass, self, "description");
+def(description)
+	String superDescription = msgSuper("description");
 	String formattedDescription = msg(StringClass, "newWithFormatCString", "%d %@", self->value, superDescription);
 	msg(superDescription, "release");
 
 	return formattedDescription;
-}
+end

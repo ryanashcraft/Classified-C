@@ -9,6 +9,6 @@ typedef struct _Scanner {
 	File file;
 } *Scanner;
 
-void scanner_class_init();
+void ScannerInit();
 
 #endif

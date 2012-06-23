@@ -9,6 +9,6 @@ typedef struct _String {
 	cstring value;
 } *String;
 
-void string_class_init();
+void StringInit();
 
 #endif

@@ -1,141 +1,115 @@
 
-#include "../libclassc/Classified-C.h"
-#include "LinkedList.h"
+#define CLASS LinkedList
+#define SUPER Object
 
-IMPLEMENTATION(LinkedListClass);
+#include "Classified-C.h"
 
-PROTOTYPE(new);
-PROTOTYPE(init);
-PROTOTYPE(dealloc);
-PROTOTYPE(description);
-PROTOTYPE(length);
-PROTOTYPE(pushFront);
-PROTOTYPE(pushBack);
-PROTOTYPE(removeFront);
-PROTOTYPE(removeBack);
-PROTOTYPE(getFront);
-PROTOTYPE(getBack);
-PROTOTYPE(get);
-PROTOTYPE(performOnEach);
+proto(new);
+proto(init);
+proto(dealloc);
+proto(description);
+proto(length);
+proto(pushFront);
+proto(pushBack);
+proto(removeFront);
+proto(removeBack);
+proto(getFront);
+proto(getBack);
+proto(get);
+proto(performOnEach);
 
 void call_method(void *v, va_list *args);
 
-void linked_list_class_init() {
-	LinkedListClass = msg(ClassClass, "new", "LinkedList", ObjectClass);
+defclass
+	static(new);
 
-	REGISTER_CLASS_METHOD(LinkedListClass, "new", new);
+	instance(init);
+	instance(dealloc);
+	instance(description);
+	instance(length);
+	instance(pushFront);
+	instance(pushBack);
+	instance(removeFront);
+	instance(removeBack);
+	instance(getFront);
+	instance(getBack);
+	instance(get);
+	instance(performOnEach);
+end
 
-	REGISTER_METHOD(LinkedListClass, "init", init);
-	REGISTER_METHOD(LinkedListClass, "dealloc", dealloc);
-	REGISTER_METHOD(LinkedListClass, "description", description);
-	REGISTER_METHOD(LinkedListClass, "length", length);
-	REGISTER_METHOD(LinkedListClass, "pushFront", pushFront);
-	REGISTER_METHOD(LinkedListClass, "pushBack", pushBack);
-	REGISTER_METHOD(LinkedListClass, "removeFront", removeFront);
-	REGISTER_METHOD(LinkedListClass, "removeBack", removeBack);
-	REGISTER_METHOD(LinkedListClass, "getFront", getFront);
-	REGISTER_METHOD(LinkedListClass, "getBack", getBack);
-	REGISTER_METHOD(LinkedListClass, "get", get);
-	REGISTER_METHOD(LinkedListClass, "performOnEach", performOnEach);
-}
-
-DEFINE(new) {
-	NEW(LinkedListClass, struct _LinkedList);
-
+defcon(new)
 	init(self, args);
 
 	return self;
-}
+end
 
-DEFINE(init) {
-	CONTEXT(LinkedList);
-
+def(init)
 	self->value = create_list();
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(LinkedList);
-
+def(dealloc)
 	free_list(self->value, &msg_release);
 
-	return msg_cast(ObjectClass, self, "dealloc");
-}
+	return msgSuper("dealloc");
+end
 
-DEFINE(description) {
+def(description)
 	return msg(StringClass, "newWithFormatCString", "%s", "[LinkedList]");
-}
+end
 
-DEFINE(length) {
-	CONTEXT(LinkedList);
-
+def(length)
 	return msg(IntegerClass, "newWithInt", self->value->size);
-}
+end
 
-DEFINE(pushFront) {
-	CONTEXT(LinkedList);
-
+def(pushFront)
 	Object o = NEXT_ARG(Object);
 	push_front(self->value, o);
 	msg(o, "retain");
 
 	return self;
-}
+end
 
-DEFINE(pushBack) {
-	CONTEXT(LinkedList);
-
+def(pushBack)
 	Object o = NEXT_ARG(Object);
 	push_back(self->value, o);
 	msg(o, "retain");
 
 	return self;
-}
+end
 
-DEFINE(removeFront) {
-	CONTEXT(LinkedList);
-
+def(removeFront)
 	remove_front(self->value, &msg_release);
 
 	return self;
-}
+end
 
-DEFINE(removeBack) {
-	CONTEXT(LinkedList);
-
+def(removeBack)
 	remove_back(self->value, &msg_release);
 
 	return self;
-}
+end
 
-DEFINE(getFront) {
-	CONTEXT(LinkedList);
-
+def(getFront)
 	return ll_front(self->value);
-}
+end
 
-DEFINE(getBack) {
-	CONTEXT(LinkedList);
-
+def(getBack)
 	return ll_back(self->value);
-}
+end
 
-DEFINE(get) {
-	CONTEXT(LinkedList);
-
+def(get)
 	return ll_get_index(self->value, NEXT_ARG(int));
-}
+end
 
-DEFINE(performOnEach) {
-	CONTEXT(LinkedList);
-
+def(performOnEach)
 	cstring method_name = NEXT_ARG(cstring);
 
 	traverse_with_args(self->value, call_method, method_name);
 
 	return self;
-}
+end
 
 void call_method(void *v, va_list *args) {
 	cstring method_name = va_arg(*args, cstring);

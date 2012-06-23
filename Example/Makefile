@@ -29,7 +29,7 @@ gdb-clean: clean-all
 	gdb ./$(target)
 
 valgrind-clean: clean-all
-	valgrind --leak-check=full ./$(target)
+	valgrind --leak-check=full --dsymutil=yes ./$(target)
 
 $(target) : $(obj) $(misc) $(lcbang)
 	$(c) $(lflags) $(obj) $(lcbang) -o $(target)

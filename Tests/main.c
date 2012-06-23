@@ -5,8 +5,8 @@
 
 int main(int argc, char **argv) {
 	cc_init();
-	test_class_init();
-	string_test_class_init();
+	TestInit();
+	StringTestInit();
 	
 	int i = 100000;
 	msg(SystemOut, "disable");

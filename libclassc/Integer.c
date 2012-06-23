@@ -1,44 +1,37 @@
 
+#define CLASS Integer
+#define SUPER Object
+
 #include "Classified-C.h"
 
-IMPLEMENTATION(IntegerClass);
+proto(newWithInt);
+proto(initWithInt);
+proto(equals);
+proto(description);
+proto(increment);
 
-PROTOTYPE(newWithInt);
-PROTOTYPE(initWithInt);
-PROTOTYPE(equals);
-PROTOTYPE(description);
-PROTOTYPE(increment);
-
-void integer_class_init() {
-	IntegerClass = msg(ClassClass, "new", "Integer", ObjectClass);
-
-	REGISTER_CLASS_METHOD(IntegerClass, "newWithInt", newWithInt);
+defclass
+	static(newWithInt);
 	
-	REGISTER_METHOD(IntegerClass, "initWithInt", initWithInt);
-	REGISTER_METHOD(IntegerClass, "equals", equals);
-	REGISTER_METHOD(IntegerClass, "description", description);
-	REGISTER_METHOD(IntegerClass, "increment", increment);
-}
+	instance(initWithInt);
+	instance(equals);
+	instance(description);
+	instance(increment);
+end
 
-DEFINE(newWithInt) {
-	NEW(IntegerClass, struct _Integer);
-
+defcon(newWithInt)
 	initWithInt(self, args);
 
 	return self;
-}
+end
 
-DEFINE(initWithInt) {
-	CONTEXT(Integer);
-
+def(initWithInt)
 	self->value = NEXT_ARG(size_t);
 
 	return self;
-}
+end
 
-DEFINE(equals) {
-	CONTEXT(Integer);
-
+def(equals)
 	size_t other = NEXT_ARG(size_t);
 
 	if (self->value == other) {
@@ -46,18 +39,14 @@ DEFINE(equals) {
 	}
 
 	return NO;
-}
+end
 
-DEFINE(description) {
-	CONTEXT(Integer);
-
+def(description)
 	return msg(StringClass, "newWithFormatCString", "%d", self->value);
-}
+end
 
-DEFINE(increment) {
-	CONTEXT(Integer);
-	
+def(increment)
 	self->value++;
 
 	return self;
-}
+end

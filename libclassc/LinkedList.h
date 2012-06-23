@@ -9,6 +9,6 @@ typedef struct _LinkedList {
 	list *value;
 } *LinkedList;
 
-void linked_list_class_init();
+void LinkedListInit();
 
 #endif

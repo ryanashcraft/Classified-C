@@ -1,74 +1,61 @@
 
 #include "Classified-C.h"
 
-IMPLEMENTATION(FileClass);
+#define CLASS File
+#define SUPER Object
 
-PROTOTYPE(newWithFilename);
-PROTOTYPE(newWithFile);
-PROTOTYPE(initWithFilename);
-PROTOTYPE(initWithFile);
-PROTOTYPE(dealloc);
-PROTOTYPE(file);
+proto(newWithFilename);
+proto(newWithFile);
+proto(initWithFilename);
+proto(initWithFile);
+proto(dealloc);
+proto(file);
 
-void file_class_init() {
-	FileClass = msg(ClassClass, "new", "File", ObjectClass);
-
-	REGISTER_CLASS_METHOD(FileClass, "newWithFilename", newWithFilename);
-	REGISTER_CLASS_METHOD(FileClass, "newWithFile", newWithFile);
+defclass
+	static(newWithFilename);
+	static(newWithFile);
 	
-	REGISTER_METHOD(FileClass, "initWithFilename", initWithFilename);
-	REGISTER_METHOD(FileClass, "initWithFile", initWithFilename);
-	REGISTER_METHOD(FileClass, "dealloc", dealloc);
-	REGISTER_METHOD(FileClass, "file", file);
-}
+	instance(initWithFilename);
+	instance(initWithFilename);
+	instance(dealloc);
+	instance(file);
+end
 
-DEFINE(newWithFilename) {
-	NEW(FileClass, struct _File);
-
+defcon(newWithFilename)
 	initWithFilename(self, args);
 
 	return self;
-}
+end
 
-DEFINE(newWithFile) {
-	NEW(FileClass, struct _File);
-
+defcon(newWithFile)
 	initWithFile(self, args);
 
 	return self;
-}
+end
 
-DEFINE(initWithFilename) {
-	CONTEXT(File);
-
+def(initWithFilename)
 	self->filename = mstring(NEXT_ARG(cstring));
 	self->file = fopen(self->filename, "r");
 
 	return self;
-}
+end
 
-DEFINE(initWithFile) {
-	CONTEXT(File);
-	
+def(initWithFile)
 	self->filename = NULL;
 	self->file = NEXT_ARG(FILE *);
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(File);
-
+def(dealloc)
 	fclose(self->file);
 	if (self->filename) {
 		free(self->filename);
 	}
 
-	return msg_cast(ObjectClass, self, "dealloc");
-}
+	return msgSuper("dealloc");
+end
 
-DEFINE(file) {
-	CONTEXT(File);
-
+def(file)
 	return self->file;
-}
+end

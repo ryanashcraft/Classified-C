@@ -14,6 +14,6 @@ typedef struct _Test {
 	LinkedList testCases;
 } *Test;
 
-void test_class_init();
+void TestInit();
 
 #endif

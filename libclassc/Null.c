@@ -1,17 +1,15 @@
 
+#define CLASS Null
+#define SUPER Object
+
 #include "Classified-C.h"
 
-IMPLEMENTATION(NullClass);
+proto(new);
 
-PROTOTYPE(new);
+defclass
+	static(new);
+end
 
-void null_class_init() {
-	NullClass = msg(ClassClass, "new", "Null", ObjectClass);
-
-	REGISTER_CLASS_METHOD(NullClass, "new", new);
-}
-
-DEFINE(new) {
-	NEW(NullClass, struct _Null);
+defcon(new)
 	return self;
-}
+end

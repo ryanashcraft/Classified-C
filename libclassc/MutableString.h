@@ -9,6 +9,6 @@ typedef struct _MutableString {
 	int capacity;
 } *MutableString;
 
-void mutable_string_class_init();
+void MutableStringInit();
 
 #endif

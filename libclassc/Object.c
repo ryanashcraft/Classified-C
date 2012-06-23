@@ -1,25 +1,28 @@
 
+#define CLASS Object
+#define SUPER_CLASS_REF NULL
+
 #include "Classified-C.h"
 
-IMPLEMENTATION(ObjectClass);
+Class ObjectClass = NULL;
 
-PROTOTYPE(new);
-PROTOTYPE(init);
-PROTOTYPE(release);
-PROTOTYPE(dealloc);
-PROTOTYPE(retain);
-PROTOTYPE(description);
+proto(new);
+proto(init);
+proto(release);
+proto(dealloc);
+proto(retain);
+proto(description);
 
-void object_class_init() {
+void ObjectInit() {
 	ObjectClass = new_class("Object", NULL);
 
-	REGISTER_CLASS_METHOD(ObjectClass, "new", new);
+	static(new);
 
-	REGISTER_METHOD(ObjectClass, "init", init);
-	REGISTER_METHOD(ObjectClass, "release", release);
-	REGISTER_METHOD(ObjectClass, "dealloc", dealloc);
-	REGISTER_METHOD(ObjectClass, "retain", retain);
-	REGISTER_METHOD(ObjectClass, "description", description);
+	instance(init);
+	instance(release);
+	instance(dealloc);
+	instance(retain);
+	instance(description);
 }
 
 Object object_init(void *v) {
@@ -30,19 +33,15 @@ Object object_init(void *v) {
 	return self;
 }
 
-DEFINE(new) {
-	NEW(ObjectClass, struct _Object);
-
+defcon(new)
 	return self;
-}
+end
 
-DEFINE(init) {
+def(init)
 	return object_init(v);
-}
+end
 
-DEFINE(release) {
-	CONTEXT(Object);
-
+def(release)
 	--self->retaincount;
 
 	if (self->retaincount == 0) {
@@ -50,26 +49,20 @@ DEFINE(release) {
 	}
 
 	return self;
-}
+end
 
-DEFINE(dealloc) {
-	CONTEXT(Object);
-	
+def(dealloc)	
 	free(self);
 
 	return NULL;
-}
+end
 
-DEFINE(retain) {
-	CONTEXT(Object);
-
+def(retain)
 	self->retaincount++;
 
 	return self;
-}
+end
 
-DEFINE(description) {
-	CONTEXT(Object);
-
+def(description)
 	return msg(StringClass, "newWithFormatCString", "%s (%p)", self->root->name, v);
-}
+end

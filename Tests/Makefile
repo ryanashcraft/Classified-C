@@ -2,7 +2,7 @@
 # Classified-C
 # Ryan Ashcraft
 
-obj=TestMain.o Test.o StringTest.o
+obj=main.o Test.o StringTest.o
 inc=Test.h StringTest.h
 misc=Makefile
 target=Tests.o

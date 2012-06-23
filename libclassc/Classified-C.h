@@ -1,4 +1,4 @@
- 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,21 +8,65 @@
 #include "list.h"
 #include "hashtable/hashtable.h"
 
+#define CAT_CLASS(A) A ## Class
+#define EXP_CLASS(A) CAT_CLASS(A)
+#define CLASS_REF EXP_CLASS(CLASS)
+
+#define NAME EXP_STR(CLASS)
+
+#define CAT_STRUCT(A) struct _ ## A
+#define EXP_STRUCT(A) CAT_STRUCT(A)
+#define STRUCT EXP_STRUCT(CLASS)
+
+#define CAT_INIT(A) A ## Init
+#define EXP_INIT(A) CAT_INIT(A)
+#define CLASS_INIT EXP_INIT(CLASS)
+
+#ifndef SUPER_CLASS_REF
+#define SUPER_CLASS_REF EXP_CLASS(SUPER)
+#endif
+
 #ifndef CLASSIFIEDC_H
 #define CLASSIFIEDC_H
 
-#define IMPLEMENTATION(CLASS) Class CLASS = NULL
-#define PROTOTYPE(NAME) static void *NAME(METHOD_ARGS)
-#define METHOD_ARGS void *v, va_list *args
-#define DEFINE(NAME) void *NAME(METHOD_ARGS)
-#define NEW(CLASS_REF, STRUCT) STRUCT *self = cc_alloc(sizeof(STRUCT)); object_init(self); ((Object)self)->root = CLASS_REF;
-#define CONTEXT(CLASS) CLASS self = (CLASS)v;
+#define STR(A) #A
 
-#define REGISTER_METHOD(CLASS, NAME, FUNCTION) ht_insert_method(&CLASS->instance_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
-#define REGISTER_CLASS_METHOD(CLASS, NAME, FUNCTION) ht_insert_method(&CLASS->static_methods, NAME, strlen(NAME), mmethod(NAME, &FUNCTION), sizeof(struct _method));
+#define EXP_STR(A) STR(A)
 
-#define NEXT_ARG(TYPE) va_arg(*args, TYPE)
+#define proto(NAME) \
+	static void *NAME(METHOD_ARGS)
+
+#define METHOD_ARGS \
+	void *v, va_list *args
+
+#define defclass \
+	Class CLASS_REF = NULL; \
+	void CLASS_INIT() { \
+		CLASS_REF = msg(ClassClass, "new", NAME, SUPER_CLASS_REF);
+
+#define defcon(METHOD) \
+	void *METHOD(METHOD_ARGS) { \
+		STRUCT *self = cc_alloc(sizeof(STRUCT)); \
+		object_init(self); \
+		((Object)self)->root = CLASS_REF;
+
+#define def(METHOD) \
+	void *METHOD(METHOD_ARGS) { \
+		CLASS self = (CLASS)v; \
+		(void)self;
+
+#define end }
+
+#define instance(FUNCTION) \
+	ht_insert_method(&CLASS_REF->instance_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
+
+#define static(FUNCTION) \
+	ht_insert_method(&CLASS_REF->static_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
+
+#define NEXT_ARG(CLASS) va_arg(*args, CLASS)
 #define ARGS args
+
+#define msgSuper(...) msgCast(SUPER_CLASS_REF, self, __VA_ARGS__)
 
 #define YES (void *)1
 #define NO (void *)0
@@ -42,7 +86,7 @@ extern Object SystemOut;
 
 void cc_init();
 void *msg(void *v, cstring message, ...);
-void *msg_cast(Class c, void *v, cstring message, ...);
+void *msgCast(Class c, void *v, cstring message, ...);
 
 void *cc_alloc(size_t size);
 void msg_release(void *v);

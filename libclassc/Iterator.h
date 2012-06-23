@@ -10,6 +10,6 @@ typedef struct _Iterator {
 	int nextPointer;
 } *Iterator;
 
-void iterator_class_init();
+void IteratorInit();
 
 #endif
