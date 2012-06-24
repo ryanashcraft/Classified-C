@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 	// adjacency_list_class_init();
 	PairInit();
 	PathInit();
-	// edge_class_init();
+	EdgeInit();
 	VertexInit();
 	// dijkstra_comparator_class_init();
 	// prim_comparator_class_init();
@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 	GraphSearch search = msg(GraphSearchClass, "new", stack);
 	msg(stack, "release");
 	
-	Vertex v = msg(VertexClass, "new");
+	Vertex v = msg(VertexClass, "newWithName");
 	msg(search, "runWithVertex", v);
 	msg(search, "release");
 	msg(v, "release");

@@ -6,7 +6,8 @@ extern Class VertexClass;
 
 typedef struct _Vertex {
 	struct _Object base;
-
+	LinkedList adjacencies;
+	String name;
 } *Vertex;
 
 void VertexInit();

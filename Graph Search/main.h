@@ -3,3 +3,4 @@
 #include "Path.h"
 #include "Vertex.h"
 #include "Pair.h"
+#include "Edge.h"

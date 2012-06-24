@@ -6,9 +6,12 @@
 #include "main.h"
 
 proto(newWithVertex);
+proto(getLastVertex);
 
 defclass
 	static(newWithVertex);
+
+	instance(getLastVertex);
 end
 
 defcon(newWithVertex)
@@ -19,4 +22,28 @@ defcon(newWithVertex)
 	self->lastEdgeWeight = msg(IntegerClass, "newWithInt", 0);
 
 	return self;
+end
+
+def(getLastVertex)
+	return msg(self->vertices, "getBack");
+end
+
+def(getLastEdge)
+	Integer size = msg(self->vertices, "size");
+	if (msg(size, "greaterThan", 1)) {
+		return msg(EdgeClass, "new", msg(self->vertices, "get", msg(msg(self->vertices, "size"), "subtract", 2)));
+	}
+
+	return NULL;
+end
+
+def(getPathway)
+	return self->vertices;
+end
+
+def(description)
+	MutableString buffer = msg(MutableStringClass, "new");
+	msg(buffer, "append", "Path: ");
+
+	return buffer;
 end

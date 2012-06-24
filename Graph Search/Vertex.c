@@ -5,12 +5,21 @@
 #include "../libclassc/Classified-C.h"
 #include "main.h"
 
-proto(new);
+proto(newWithName);
+proto(getAdjacenciesIterator);
 
 defclass
-	static(new);
+	static(newWithName);
+
+	instance(getAdjacenciesIterator);
 end
 
-defcon(new)
+defcon(newWithName)
+	self->adjacencies = msg(LinkedListClass, "new");
+	self->name = msg(StringClass, "newWithCString", NEXT_ARG(cstring));
 	return self;
+end
+
+def(getAdjacenciesIterator)
+	return msg(IteratorClass, "newWithLinkedList", self->adjacencies);
 end

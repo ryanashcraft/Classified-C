@@ -2,8 +2,8 @@
 # Classified-C
 # Ryan Ashcraft
 
-obj=main.o GraphSearch.o Path.o Vertex.o Pair.o
-inc=main.h GraphSearch.h Path.h Vertex.h Pair.h
+obj=main.o GraphSearch.o Path.o Vertex.o Pair.o Edge.o
+inc=main.h GraphSearch.h Path.h Vertex.h Pair.h Edge.h
 misc=Makefile
 target=Tests.o
 cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug
