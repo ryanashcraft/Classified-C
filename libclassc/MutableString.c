@@ -84,7 +84,8 @@ cstring concatenate(MutableString self, cstring part_two) {
 	int part_two_length = strlen(part_two);
 
 	if (part_one_length + part_two_length + 1 > self->capacity) {
-		self->base.value = realloc(self->base.value, self->capacity * 2 + part_two_length + 1);
+		self->capacity = (self->capacity * 2) + part_two_length + 1;
+		self->base.value = realloc(self->base.value, self->capacity);
 		assert(self->base.value);
 	}
  	
