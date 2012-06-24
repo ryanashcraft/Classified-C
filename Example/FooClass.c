@@ -8,14 +8,14 @@
 proto(new);
 proto(init);
 proto(description);
-proto(print);
+proto(catAndPrint);
 
 defclass
 	static(new);
 
 	instance(init);
 	instance(description);
-	instance(print);
+	instance(catAndPrint);
 end
 
 defcon(new)
@@ -40,8 +40,10 @@ def(description)
 	return formattedDescription;
 end
 
-def(print)
-	msg(systemOut, "println", "I'M MAD AS HELL AND I'M NOT GOING TO TAKE IT ANYMORE! %@", self);
+def(catAndPrint)
+	LinkedList userData = NEXT_ARG(LinkedList);
+	String cat = msg(userData, "getFront");
+	msg(systemOut, "println", "%@ %@", cat, self);
 
 	return self;
 end

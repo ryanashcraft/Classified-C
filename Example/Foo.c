@@ -66,9 +66,12 @@ int main(int argc, char **argv) {
 
 	Foo threadFoo = msg(FooClass, "new", 88, "threadFoo");
 	String qwerty = msg(StringClass, "newWithCString", "qwerty");
-	Thread secondThread = msg(ThreadClass, "newWithTargetAndSelector", threadFoo, "print", qwerty);
-	msg(secondThread, "run");
+	LinkedList ll = msg(LinkedListClass, "new");
+	msg(ll, "pushBack", qwerty);
 	msg(qwerty, "release");
+	Thread secondThread = msg(ThreadClass, "newWithTargetAndSelectorAndUserData", threadFoo, "catAndPrint", ll);
+	msg(secondThread, "run");
+	msg(ll, "release");
 	msg(threadFoo, "release");
 
 	cc_end();
