@@ -18,8 +18,10 @@ proto(getBack);
 proto(get);
 proto(performOnEach);
 proto(clear);
+proto(contains);
 
-void call_method(void *v, va_list *args);
+int msg_is_equal(const void *a, const void *b);
+void msg_with_string(void *v, va_list *args);
 
 defclass
 	static(new);
@@ -37,6 +39,7 @@ defclass
 	instance(get);
 	instance(performOnEach);
 	instance(clear);
+	instance(contains);
 end
 
 defcon(new)
@@ -108,7 +111,7 @@ end
 def(performOnEach)
 	cstring method_name = NEXT_ARG(cstring);
 
-	traverse_with_args(self->value, call_method, method_name);
+	traverse_with_args(self->value, &msg_with_string, method_name);
 
 	return self;
 end
@@ -119,7 +122,19 @@ def(clear)
 	return self;
 end
 
-void call_method(void *v, va_list *args) {
+def(contains)
+	if (find_occurrence(self->value, NEXT_ARG(Object), &msg_is_equal)) {
+		return YES;
+	}
+
+	return NO;
+end
+
+int msg_is_equal(const void *a, const void *b) {
+	return (size_t)msg((Object)a, "equals", b);
+}
+
+void msg_with_string(void *v, va_list *args) {
 	cstring method_name = va_arg(*args, cstring);
 
 	msg(v, method_name);
