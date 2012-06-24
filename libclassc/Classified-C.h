@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <assert.h>
+#include <pthread.h>
 
 #include "list.h"
 #include "hashtable/hashtable.h"
@@ -82,11 +83,20 @@ typedef struct _method {
 	fpointer function;
 } method;
 
-extern Object SystemOut;
+struct _message {
+	Object target;
+	cstring selector;
+	va_list *argp;
+};
+
+extern Object systemOut;
 
 void cc_init();
+void cc_end();
 void *msg(void *v, cstring message, ...);
 void *msgCast(Class c, void *v, cstring message, ...);
+
+void *msgWithMessage(void *arg);
 
 void *cc_alloc(size_t size);
 void msg_release(void *v);
@@ -101,6 +111,7 @@ void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value
 
 #include "Object.h"
 #include "Class.h"
+#include "Thread.h"
 #include "Null.h"
 #include "Array.h"
 #include "String.h"

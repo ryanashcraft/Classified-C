@@ -4,8 +4,8 @@
 
 VPATH = hashtable:
 
-obj=Classified-C.o list.o hashtable.o Object.o Class.o Null.o Array.o String.o MutableString.o File.o Integer.o Boolean.o Stack.o Scanner.o Printer.o Iterator.o LinkedList.o
-inc=Classified-C.h list.h hashtable.h Object.h Class.h Null.h Array.h String.h MutableString.h File.h Integer.h Boolean.h Stack.h Scanner.h Printer.h Iterator.h LinkedList.h
+obj=Classified-C.o list.o hashtable.o Object.o Class.o Thread.o Null.o Array.o String.o MutableString.o File.o Integer.o Boolean.o Stack.o Scanner.o Printer.o Iterator.o LinkedList.o
+inc=Classified-C.h list.h hashtable.h Object.h Class.h Thread.h Null.h Array.h String.h MutableString.h File.h Integer.h Boolean.h Stack.h Scanner.h Printer.h Iterator.h LinkedList.h
 misc=Makefile
 libtarget=libclassc.a
 cflags=-fPIC -Wall -g -Werror -pedantic -std=c99 -DDebug

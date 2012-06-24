@@ -3,6 +3,7 @@
 #define SUPER_CLASS_REF NULL
 
 #include "Classified-C.h"
+#include "Thread.h"
 
 Class ObjectClass = NULL;
 
@@ -59,6 +60,12 @@ end
 
 def(retain)
 	self->retaincount++;
+
+	return self;
+end
+
+def(autorelease)
+	msg(msg(ThreadClass, "currentThread"), "addToAutoReleasePool", self);
 
 	return self;
 end

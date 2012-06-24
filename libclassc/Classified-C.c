@@ -10,7 +10,8 @@
 #include "Classified-C.h"
 #include <execinfo.h>
 
-Object SystemOut = NULL;
+Object systemOut = NULL;
+Thread mainThread = NULL;
 
 static Object cbmessage(Object o, Class c, cstring message, va_list *args);
 static Object cbmessageclass(Class c, cstring message, va_list *args);
@@ -23,20 +24,26 @@ void cc_init() {
 	// Initialize and register standard classes to the class list
 	ClassInit();
 	ObjectInit();
-	NullInit();
-	ArrayInit();
+	IteratorInit();
 	StringInit();
 	MutableStringInit();
+	LinkedListInit();
+	ThreadInit();
+	NullInit();
+	ArrayInit();
 	IntegerInit();
 	BooleanInit();
 	StackInit();
 	FileInit();
 	ScannerInit();
 	PrinterInit();
-	IteratorInit();
-	LinkedListInit();
 
-	SystemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
+	systemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
+	mainThread = msg(ThreadClass, "new");
+}
+
+void cc_end() {
+	msg(ThreadClass, "joinAllThreads");
 }
 
 /**
@@ -62,6 +69,11 @@ void cc_init() {
 void *msg(void *v, cstring message, ...) {
 	va_list argp;
 	Object o = (Object)v;
+
+	if (o->retaincount <= 0) {
+		// Only message allowed when retain count is zero is dealloc
+		assert(strcmp(message, "dealloc") == 0);
+	}
 
 	Class c = o->root;
 
@@ -139,6 +151,15 @@ Object cbmessage(Object o, Class c, cstring message, va_list *argp) {
 	}
 
 	return m->function(o, argp);
+}
+
+void *msgWithMessage(void *messagep) {
+	struct _message *message = (struct _message *)messagep;
+	Object target = message->target;
+	cstring selector = message->selector;
+	va_list *argp = message->argp;
+	free(message);
+	return cbmessage(target, target->root, selector, argp);
 }
 
 void print_bt() {
