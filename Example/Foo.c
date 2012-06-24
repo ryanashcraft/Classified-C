@@ -10,23 +10,23 @@ int main(int argc, char **argv) {
 	String s2 = msg(StringClass, "newWithCString", "2");
 	Integer i3 = msg(IntegerClass, "newWithInt", 3);
 	Array arr = msg(ArrayClass, "newWithObjects", s1, s2, i3, NULL);
-	msg(SystemOut, "printEach", " ", arr);
+	msg(systemOut, "printEach", " ", arr);
 	msg(arr, "performOnEach", "release");
 	msg(arr, "release");
-	msg(SystemOut, "println", "");
+	msg(systemOut, "println", "");
 
 	Object o = msg(ObjectClass, "new");
-	msg(SystemOut, "println", "%@", o);
+	msg(systemOut, "println", "%@", o);
 	msg(o, "release");
 
 	Null n = msg(NullClass, "new");
-	msg(SystemOut, "println", "%@", n);
+	msg(systemOut, "println", "%@", n);
 	msg(n, "release");
 
 	String ohhai = msg(StringClass, "newWithCString", "oh hai");
 
 	String st = msg(StringClass, "newWithFormatCString", "test %d %f %@", 5, 4.0, ohhai);
-	msg(SystemOut, "println", "%@", st);
+	msg(systemOut, "println", "%@", st);
 	msg(st, "release");
 
 	msg(ohhai, "release");
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 	Integer hasNext = msg(IntegerClass, "newWithInt", 1);
 	while (msg(hasNext, "equals", YES)) {
 		String token = msg(s, "next");
-		msg(SystemOut, "print", "%@ ", token);
+		msg(systemOut, "print", "%@ ", token);
 		msg(token, "release");
 
 		msg(hasNext, "release");
@@ -45,10 +45,10 @@ int main(int argc, char **argv) {
 	msg(hasNext, "release");
 	msg(s, "release");
 	msg(f, "release");
-	msg(SystemOut, "println", "");
+	msg(systemOut, "println", "");
 
 	Foo mys = msg(FooClass, "new", 77, "Foo");
-	msg(SystemOut, "println", "%@", mys);
+	msg(systemOut, "println", "%@", mys);
 	msg(mys, "release");
 
 	Stack stack = msg(StackClass, "new");
@@ -57,7 +57,19 @@ int main(int argc, char **argv) {
 	msg(stack, "pop");
 	String str = msg(stack, "peek");
 	if (str) {
-		msg(SystemOut, "println", "%@", str);
+		msg(systemOut, "println", "%@", str);
 	}
 	stack = msg(stack, "release");
+
+	Thread thread = msg(ThreadClass, "currentThread");
+	msg(systemOut, "println", "Current Thread: %@", thread);
+
+	Foo threadFoo = msg(FooClass, "new", 88, "threadFoo");
+	String qwerty = msg(StringClass, "newWithCString", "qwerty");
+	Thread secondThread = msg(ThreadClass, "newWithTargetAndSelector", threadFoo, "print", qwerty);
+	msg(secondThread, "run");
+	msg(qwerty, "release");
+	msg(threadFoo, "release");
+
+	cc_end();
 }

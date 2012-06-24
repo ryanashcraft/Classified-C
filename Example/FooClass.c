@@ -8,12 +8,14 @@
 proto(new);
 proto(init);
 proto(description);
+proto(print);
 
 defclass
 	static(new);
 
 	instance(init);
 	instance(description);
+	instance(print);
 end
 
 defcon(new)
@@ -36,4 +38,10 @@ def(description)
 	msg(superDescription, "release");
 
 	return formattedDescription;
+end
+
+def(print)
+	msg(systemOut, "println", "I'M MAD AS HELL AND I'M NOT GOING TO TAKE IT ANYMORE! %@", self);
+
+	return self;
 end
