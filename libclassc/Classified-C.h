@@ -83,12 +83,6 @@ typedef struct _method {
 	fpointer function;
 } method;
 
-struct _message {
-	Object target;
-	cstring selector;
-	va_list *argp;
-};
-
 extern Object systemOut;
 
 void cc_init();
@@ -124,3 +118,9 @@ void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value
 #include "Printer.h"
 #include "Iterator.h"
 #include "LinkedList.h"
+
+struct _message {
+	Object target;
+	cstring selector;
+	LinkedList userData;
+};

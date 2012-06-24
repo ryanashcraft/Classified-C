@@ -10,6 +10,7 @@ typedef struct _Thread {
 	struct _Object base;
 	Object target;
 	cstring selector;
+	LinkedList userData;
 	pthread_t thread;
 	LinkedList autoReleasePool;
 } *Thread;

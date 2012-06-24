@@ -157,9 +157,9 @@ void *msgWithMessage(void *messagep) {
 	struct _message *message = (struct _message *)messagep;
 	Object target = message->target;
 	cstring selector = message->selector;
-	va_list *argp = message->argp;
+	LinkedList userData = message->userData;
 	free(message);
-	return cbmessage(target, target->root, selector, argp);
+	return msg(target, selector, userData);
 }
 
 void print_bt() {

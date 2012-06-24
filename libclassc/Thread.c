@@ -5,7 +5,7 @@
 #include "Classified-C.h"
 
 proto(new);
-proto(newWithTargetAndSelector);
+proto(newWithTargetAndSelectorAndUserData);
 proto(currentThread);
 proto(joinAllThreads);
 proto(run);
@@ -20,7 +20,7 @@ static LinkedList threads;
 
 defclass
 	static(new);
-	static(newWithTargetAndSelector);
+	static(newWithTargetAndSelectorAndUserData);
 	static(currentThread);
 	static(joinAllThreads);
 
@@ -42,10 +42,13 @@ defcon(new)
 	return self;
 end
 
-defcon(newWithTargetAndSelector)
+defcon(newWithTargetAndSelectorAndUserData)
 	self->target = NEXT_ARG(Object);
 	msg(self->target, "retain");
-	self->selector = NEXT_ARG(cstring);
+	self->selector = mstring(NEXT_ARG(cstring));
+	self->userData = NEXT_ARG(LinkedList);
+	msg(self->userData, "retain");
+
 	self->thread = NULL;
 	self->autoReleasePool = msg(LinkedListClass, "new");
 
@@ -85,6 +88,7 @@ def(run)
 	struct _message *message = malloc(sizeof(struct _message));
 	message->target = self->target;
 	message->selector = self->selector;
+	message->userData = self->userData;
 	assert(message);
 
 	pthread_create(&self->thread, NULL, msgWithMessage, message);
