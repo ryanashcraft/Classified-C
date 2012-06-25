@@ -87,11 +87,12 @@ extern Object systemOut;
 
 void cc_init();
 void cc_end();
-void *msg(void *v, cstring message, ...);
+void *msg(const void *v, cstring message, ...);
 void *msgCast(Class c, void *v, cstring message, ...);
 void *msgWithMessage(void *arg);
 void *cc_alloc(size_t size);
 void call_method(void *v, va_list *args);
+int test_by_calling_method(const void *v, va_list *args);
 void msg_release(void *v);
 
 method *mmethod(cstring name, fpointer function);
@@ -104,7 +105,6 @@ void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value
 
 #include "Object.h"
 #include "Class.h"
-#include "Thread.h"
 #include "Null.h"
 #include "Array.h"
 #include "String.h"
@@ -117,6 +117,8 @@ void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value
 #include "Printer.h"
 #include "Iterator.h"
 #include "LinkedList.h"
+#include "Thread.h"
+#include "AutoReleasePool.h"
 
 struct _message {
 	Object target;

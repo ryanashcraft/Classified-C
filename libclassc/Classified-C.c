@@ -28,15 +28,16 @@ void cc_init() {
 	StringInit();
 	MutableStringInit();
 	LinkedListInit();
+	StackInit();
 	ThreadInit();
 	NullInit();
 	ArrayInit();
 	IntegerInit();
 	BooleanInit();
-	StackInit();
 	FileInit();
 	ScannerInit();
 	PrinterInit();
+	AutoReleasePoolInit();
 
 	systemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
 	mainThread = msg(ThreadClass, "new");
@@ -66,7 +67,7 @@ void cc_end() {
 
   @return the object returned from the function call
  */
-void *msg(void *v, cstring message, ...) {
+void *msg(const void *v, cstring message, ...) {
 	va_list argp;
 	Object o = (Object)v;	
 
@@ -197,6 +198,17 @@ void call_method(void *v, va_list *args) {
 	cstring method_name = va_arg(*args, cstring);
 
 	msg(v, method_name);
+}
+
+int test_by_calling_method(const void *v, va_list *args) {
+	cstring method_name = va_arg(*args, cstring);
+
+	void *retval = msg(v, method_name, args);
+	if (retval) {
+		return 1;
+	}
+
+	return 0;
 }
 
 void msg_release(void *v) {

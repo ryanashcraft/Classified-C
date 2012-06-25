@@ -12,9 +12,10 @@ typedef struct _Thread {
 	cstring selector;
 	LinkedList userData;
 	pthread_t thread;
-	LinkedList autoReleasePool;
+	Stack autoReleasePools;
 } *Thread;
 
 void ThreadInit();
+Thread current_thread();
 
 #endif

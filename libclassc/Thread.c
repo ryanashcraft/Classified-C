@@ -3,6 +3,7 @@
 #define SUPER Object
 
 #include "Classified-C.h"
+#include "Stack.h"
 
 proto(new);
 proto(newWithTargetAndSelectorAndUserData);
@@ -11,6 +12,8 @@ proto(joinAllThreads);
 proto(run);
 proto(join);
 proto(isCurrentThread);
+proto(pushAutoReleasePool);
+proto(releaseTopAutoReleasePool);
 proto(addToAutoReleasePool);
 proto(description);
 
@@ -27,6 +30,8 @@ defclass
 	instance(run);
 	instance(join);
 	instance(isCurrentThread);
+	instance(pushAutoReleasePool);
+	instance(releaseTopAutoReleasePool);
 	instance(addToAutoReleasePool);
 	instance(description);
 
@@ -35,7 +40,10 @@ end
 
 defcon(new)
 	self->thread = pthread_self();
-	self->autoReleasePool = msg(LinkedListClass, "new");
+	self->autoReleasePools = msg(StackClass, "new");
+
+	AutoReleasePool pool = msg(AutoReleasePoolClass, "new");
+	msg(self, "pushAutoReleasePool", pool);
 
 	msg(threads, "pushBack", self);
 
@@ -50,7 +58,10 @@ defcon(newWithTargetAndSelectorAndUserData)
 	msg(self->userData, "retain");
 
 	self->thread = NULL;
-	self->autoReleasePool = msg(LinkedListClass, "new");
+	self->autoReleasePools = msg(StackClass, "new");
+
+	AutoReleasePool pool = msg(AutoReleasePoolClass, "new");
+	msg(self, "pushAutoReleasePool", pool);
 
 	msg(threads, "pushBack", self);
 
@@ -58,28 +69,13 @@ defcon(newWithTargetAndSelectorAndUserData)
 end
 
 def(currentThread)
-	Iterator iterator = msg(IteratorClass, "newWithLinkedList", threads);
-	Thread element = NULL;
-	Thread currentThread = NULL;
-	while ( (element = msg(iterator, "next")) ) {
-		if (msg(element, "isCurrentThread")) {
-			currentThread = element;
-			break;
-		}
-	}
-	msg(iterator, "release");
-
-	return currentThread;
+	return current_thread();
 end
 
 def(joinAllThreads)
-	Iterator iterator = msg(IteratorClass, "newWithLinkedList", threads);
-	Thread element = NULL;
-	while ( (element = msg(iterator, "next")) ) {
-		msg(element, "join");
-	}
+	msg(threads, "performOnEach", "join");
 
-	msg(iterator, "release");
+	msg(threads, "performOnEach", "releaseTopAutoReleasePool");
 
 	return self;
 end
@@ -110,8 +106,23 @@ def(isCurrentThread)
 	return NO;
 end
 
+def(pushAutoReleasePool)
+	AutoReleasePool pool = NEXT_ARG(AutoReleasePool);
+	msg(self->autoReleasePools, "push", pool);
+
+	return self;
+end
+
+def(releaseTopAutoReleasePool)
+	msg(msg(self->autoReleasePools, "peek"), "release");
+
+	return self;
+end
+
 def(addToAutoReleasePool)
-	msg(self->autoReleasePool, "pushBack", NEXT_ARG(Object));
+	Object o = NEXT_ARG(Object);
+	msg(msg(self->autoReleasePools, "peek"), "push", o);
+
 	return self;
 end
 
@@ -127,3 +138,9 @@ def(description)
 
 	return buffer;
 end
+
+Thread current_thread() {
+	Thread thread = msg(threads, "getFirst", "isCurrentThread");
+
+	return thread;
+}
