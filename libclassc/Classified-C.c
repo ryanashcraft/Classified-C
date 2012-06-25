@@ -256,3 +256,11 @@ cstring mstring(cstring s) {
 	the_string = strncpy(the_string, s, strlen(s) + 1);
 	return the_string;
 }
+
+int same_pointer(const void *a, const void *b) {
+	if (a == b) {
+		return 1;
+	}
+
+	return 0;
+}

@@ -13,6 +13,7 @@ proto(pushFront);
 proto(pushBack);
 proto(removeFront);
 proto(removeBack);
+proto(removeObject);
 proto(getFront);
 proto(getBack);
 proto(get);
@@ -31,6 +32,7 @@ defclass
 	instance(pushBack);
 	instance(removeFront);
 	instance(removeBack);
+	instance(removeObject);
 	instance(getFront);
 	instance(getBack);
 	instance(get);
@@ -82,15 +84,24 @@ def(pushBack)
 end
 
 def(removeFront)
+	Object retVal = msg(self, "getFront");
 	remove_front(self->value, &msg_release);
 
-	return self;
+	return retVal;
 end
 
 def(removeBack)
+	Object retVal = msg(self, "getBack");
 	remove_back(self->value, &msg_release);
 
-	return self;
+	return retVal;
+end
+
+def(removeObject)
+	Object o = NEXT_ARG(Object);
+	remove_data(self->value, o, same_pointer, &msg_release);
+
+	return NULL;
 end
 
 def(getFront)
@@ -122,5 +133,5 @@ end
 def(getFirst)
 	cstring method_name = NEXT_ARG(cstring);
 
-	return get_first_occurrence(self->value, test_by_calling_method, method_name);
+	return get_first_occurrence(self->value, &test_by_calling_method, method_name);
 end

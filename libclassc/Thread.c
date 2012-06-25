@@ -12,9 +12,10 @@ proto(joinAllThreads);
 proto(run);
 proto(join);
 proto(isCurrentThread);
-proto(pushAutoReleasePool);
-proto(releaseTopAutoReleasePool);
+proto(pushNewAutoReleasePool);
+proto(popAutoReleasePool);
 proto(addToAutoReleasePool);
+proto(removeFromAutoReleasePool);
 proto(description);
 
 void *msgWithStruct(void *arg);
@@ -30,9 +31,10 @@ defclass
 	instance(run);
 	instance(join);
 	instance(isCurrentThread);
-	instance(pushAutoReleasePool);
-	instance(releaseTopAutoReleasePool);
+	instance(pushNewAutoReleasePool);
+	instance(popAutoReleasePool);
 	instance(addToAutoReleasePool);
+	instance(removeFromAutoReleasePool);
 	instance(description);
 
 	threads = msg(LinkedListClass, "new");
@@ -42,8 +44,7 @@ defcon(new)
 	self->thread = pthread_self();
 	self->autoReleasePools = msg(StackClass, "new");
 
-	AutoReleasePool pool = msg(AutoReleasePoolClass, "new");
-	msg(self, "pushAutoReleasePool", pool);
+	msg(self, "pushNewAutoReleasePool");
 
 	msg(threads, "pushBack", self);
 
@@ -60,8 +61,7 @@ defcon(newWithTargetAndSelectorAndUserData)
 	self->thread = NULL;
 	self->autoReleasePools = msg(StackClass, "new");
 
-	AutoReleasePool pool = msg(AutoReleasePoolClass, "new");
-	msg(self, "pushAutoReleasePool", pool);
+	msg(self, "pushNewAutoReleasePool");
 
 	msg(threads, "pushBack", self);
 
@@ -75,7 +75,7 @@ end
 def(joinAllThreads)
 	msg(threads, "performOnEach", "join");
 
-	msg(threads, "performOnEach", "releaseTopAutoReleasePool");
+	msg(threads, "performOnEach", "popAutoReleasePool");
 
 	return self;
 end
@@ -106,15 +106,16 @@ def(isCurrentThread)
 	return NO;
 end
 
-def(pushAutoReleasePool)
-	AutoReleasePool pool = NEXT_ARG(AutoReleasePool);
+def(pushNewAutoReleasePool)
+	AutoReleasePool pool = msg(AutoReleasePoolClass, "new");
 	msg(self->autoReleasePools, "push", pool);
 
 	return self;
 end
 
-def(releaseTopAutoReleasePool)
-	msg(msg(self->autoReleasePools, "peek"), "release");
+def(popAutoReleasePool)
+	AutoReleasePool pool = msg(self->autoReleasePools, "pop");
+	msg(pool, "release");
 
 	return self;
 end
@@ -122,6 +123,15 @@ end
 def(addToAutoReleasePool)
 	Object o = NEXT_ARG(Object);
 	msg(msg(self->autoReleasePools, "peek"), "push", o);
+
+	return self;
+end
+
+def(removeFromAutoReleasePool)
+	Object o = NEXT_ARG(Object);
+	AutoReleasePool pool = msg(self->autoReleasePools, "peek");
+	assert(pool);
+	msg(pool, "removeObject", o);
 
 	return self;
 end

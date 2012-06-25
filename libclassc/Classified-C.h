@@ -101,6 +101,8 @@ cstring mstring(cstring s);
 
 void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value, size_t value_size);
 
+int same_pointer(const void *a, const void *b);
+
 #endif
 
 #include "Object.h"
@@ -111,12 +113,12 @@ void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value
 #include "MutableString.h"
 #include "Integer.h"
 #include "Boolean.h"
+#include "LinkedList.h"
 #include "Stack.h"
 #include "File.h"
 #include "Scanner.h"
 #include "Printer.h"
 #include "Iterator.h"
-#include "LinkedList.h"
 #include "Thread.h"
 #include "AutoReleasePool.h"
 

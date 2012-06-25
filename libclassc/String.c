@@ -88,7 +88,6 @@ static cstring format(cstring format, va_list *format_args) {
 			Object objectArgument = va_arg(*format_args, Object);
 			String objectDescription = msg(objectArgument, "description");
 			msg(buffer, "concatenateWithCString", objectDescription->value);
-			msg(objectDescription, "release");
 			i++;
 			needsFinalVSprint = NO;
 		} else {
@@ -127,7 +126,7 @@ def(length)
 end
 
 def(description)
-	return copy(v, args);
+	return msg(copy(v, args), "autorelease");
 end
 
 def(equals)
