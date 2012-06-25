@@ -15,11 +15,13 @@ int main(int argc, char **argv) {
 	msg(arr, "release");
 	msg(systemOut, "println", "");
 
+	msg(msg(ThreadClass, "currentThread"), "pushNewAutoReleasePool");
 	s1 = msg(StringClass, "newWithCString", "fooey");
 	Integer i4 = msg(s1, "length");
 	(void)i4;
 	// msg(systemOut, "println", "%@", i4);
 	msg(s1, "release");
+	msg(msg(ThreadClass, "currentThread"), "popAutoReleasePool");
 
 	Object o = msg(ObjectClass, "new");
 	msg(systemOut, "println", "%@", o);
@@ -39,16 +41,11 @@ int main(int argc, char **argv) {
 
 	File f = msg(FileClass, "newWithFilename", "../README.md");
 	Scanner s = msg(ScannerClass, "newWithFile", f);
-	Integer hasNext = msg(IntegerClass, "newWithInt", 1);
-	while (msg(hasNext, "equals", YES)) {
+	while (msg(s, "hasNext")) {
 		String token = msg(s, "next");
 		msg(systemOut, "print", "%@ ", token);
 		msg(token, "release");
-
-		msg(hasNext, "release");
-		hasNext = msg(s, "hasNext");
 	}
-	msg(hasNext, "release");
 	msg(s, "release");
 	msg(f, "release");
 	msg(systemOut, "println", "");
@@ -58,8 +55,12 @@ int main(int argc, char **argv) {
 	msg(mys, "release");
 
 	Stack stack = msg(StackClass, "new");
-	msg(stack, "push", msg(StringClass, "newWithCString", "Ryan"));
-	msg(stack, "push", msg(StringClass, "newWithCString", "Tanner"));
+	String ryan = msg(StringClass, "newWithCString", "Ryan");
+	msg(stack, "push", ryan);
+	msg(ryan, "release");
+	String tanner = msg(StringClass, "newWithCString", "Tanner");
+	msg(stack, "push", tanner);
+	msg(tanner, "release");
 	msg(stack, "pop");
 	String str = msg(stack, "peek");
 	if (str) {
