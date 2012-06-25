@@ -15,6 +15,12 @@ int main(int argc, char **argv) {
 	msg(arr, "release");
 	msg(systemOut, "println", "");
 
+	s1 = msg(StringClass, "newWithCString", "fooey");
+	Integer i4 = msg(s1, "length");
+	(void)i4;
+	// msg(systemOut, "println", "%@", i4);
+	msg(s1, "release");
+
 	Object o = msg(ObjectClass, "new");
 	msg(systemOut, "println", "%@", o);
 	msg(o, "release");
