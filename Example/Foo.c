@@ -18,8 +18,7 @@ int main(int argc, char **argv) {
 	msg(msg(ThreadClass, "currentThread"), "pushNewAutoReleasePool");
 	s1 = msg(StringClass, "newWithCString", "fooey");
 	Integer i4 = msg(s1, "length");
-	(void)i4;
-	// msg(systemOut, "println", "%@", i4);
+	msg(systemOut, "println", "%@", i4);
 	msg(s1, "release");
 	msg(msg(ThreadClass, "currentThread"), "popAutoReleasePool");
 
@@ -55,12 +54,9 @@ int main(int argc, char **argv) {
 	msg(mys, "release");
 
 	Stack stack = msg(StackClass, "new");
-	String ryan = msg(StringClass, "newWithCString", "Ryan");
-	msg(stack, "push", ryan);
-	msg(ryan, "release");
-	String tanner = msg(StringClass, "newWithCString", "Tanner");
-	msg(stack, "push", tanner);
-	msg(tanner, "release");
+	msg(stack, "push", msg(StringClass, "newWithCString", "Ryan"));
+	msg(stack, "push", msg(StringClass, "newWithCString", "Tanner"));
+	msg(stack, "performOnEach", "release");
 	msg(stack, "pop");
 	String str = msg(stack, "peek");
 	if (str) {
@@ -72,13 +68,20 @@ int main(int argc, char **argv) {
 	msg(systemOut, "println", "Current Thread: %@", thread);
 
 	Foo threadFoo = msg(FooClass, "new", 88, "threadFoo");
-	String qwerty = msg(StringClass, "newWithCString", "qwerty");
+
 	LinkedList ll = msg(LinkedListClass, "new");
-	msg(ll, "pushBack", qwerty);
-	msg(qwerty, "release");
+	msg(ll, "pushBack", msg(StringClass, "newWithCString", "qwerty"));
+
+	for (int i = 0; i < to_int(msg(ll, "length")); i++) {
+		msg(systemOut, "println", "%@", msg(ll, "get", i));
+	}
+
+	msg(ll, "performOnEach", "release");
+
 	Thread secondThread = msg(ThreadClass, "newWithTargetAndSelectorAndUserData", threadFoo, "catAndPrint", ll);
 	msg(secondThread, "run");
 	msg(ll, "release");
+
 	msg(threadFoo, "release");
 
 	cc_end();
