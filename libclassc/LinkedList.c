@@ -17,8 +17,7 @@ proto(getFront);
 proto(getBack);
 proto(get);
 proto(performOnEach);
-
-void call_method(void *v, va_list *args);
+proto(clear);
 
 defclass
 	static(new);
@@ -35,6 +34,7 @@ defclass
 	instance(getBack);
 	instance(get);
 	instance(performOnEach);
+	instance(clear);
 end
 
 defcon(new)
@@ -60,7 +60,7 @@ def(description)
 end
 
 def(length)
-	return msg(IntegerClass, "newWithInt", self->value->size);
+	return msg(msg(IntegerClass, "newWithInt", self->value->size), "autorelease");
 end
 
 def(pushFront)
@@ -111,8 +111,8 @@ def(performOnEach)
 	return self;
 end
 
-void call_method(void *v, va_list *args) {
-	cstring method_name = va_arg(*args, cstring);
+def(clear)
+	empty_list(self->value, &msg_release);
 
-	msg(v, method_name);
-}
+	return self;
+end

@@ -89,10 +89,9 @@ void cc_init();
 void cc_end();
 void *msg(void *v, cstring message, ...);
 void *msgCast(Class c, void *v, cstring message, ...);
-
 void *msgWithMessage(void *arg);
-
 void *cc_alloc(size_t size);
+void call_method(void *v, va_list *args);
 void msg_release(void *v);
 
 method *mmethod(cstring name, fpointer function);

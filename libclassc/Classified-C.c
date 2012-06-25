@@ -68,7 +68,7 @@ void cc_end() {
  */
 void *msg(void *v, cstring message, ...) {
 	va_list argp;
-	Object o = (Object)v;
+	Object o = (Object)v;	
 
 	if (o->retaincount <= 0) {
 		// Only message allowed when retain count is zero is dealloc
@@ -86,12 +86,18 @@ void *msg(void *v, cstring message, ...) {
 
 	// Call the method's function pointer with the object and a reference
 	// to the variable argument list
+
 	return cbmessage(o, c, message, &argp);
 }
 
 void *msgCast(Class c, void *v, cstring message, ...) {
 	va_list argp;
 	Object o = (Object)v;
+
+	if (o->retaincount <= 0) {
+		// Only message allowed when retain count is zero is dealloc
+		assert(strcmp(message, "dealloc") == 0);
+	}
 
 	// Instantiate the variable argument list for the method's parameters
 	va_start(argp, message);
@@ -185,6 +191,12 @@ void *cc_alloc(size_t size) {
 	((Object)v)->retaincount = 1;
 
 	return v;
+}
+
+void call_method(void *v, va_list *args) {
+	cstring method_name = va_arg(*args, cstring);
+
+	msg(v, method_name);
 }
 
 void msg_release(void *v) {
