@@ -35,9 +35,8 @@ end
 def(description)
 	String superDescription = msgSuper("description");
 	String formattedDescription = msg(StringClass, "newWithFormatCString", "%d %@", self->value, superDescription);
-	msg(superDescription, "release");
 
-	return formattedDescription;
+	return msg(formattedDescription, "autorelease");
 end
 
 def(catAndPrint)
