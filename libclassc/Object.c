@@ -12,6 +12,7 @@ proto(init);
 proto(release);
 proto(dealloc);
 proto(retain);
+proto(autorelease);
 proto(description);
 
 void ObjectInit() {
@@ -23,6 +24,7 @@ void ObjectInit() {
 	instance(release);
 	instance(dealloc);
 	instance(retain);
+	instance(autorelease);
 	instance(description);
 }
 
