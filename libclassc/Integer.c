@@ -7,6 +7,8 @@
 proto(newWithInt);
 proto(initWithInt);
 proto(equals);
+proto(greaterThan);
+proto(lessThan);
 proto(description);
 proto(increment);
 
@@ -15,6 +17,8 @@ defclass
 	
 	instance(initWithInt);
 	instance(equals);
+	instance(greaterThan);
+	instance(lessThan);
 	instance(description);
 	instance(increment);
 end
@@ -26,15 +30,36 @@ defcon(newWithInt)
 end
 
 def(initWithInt)
-	self->value = NEXT_ARG(size_t);
+	self->value = NEXT_ARG(int);
 
 	return self;
 end
 
 def(equals)
-	size_t other = NEXT_ARG(size_t);
+	Integer other = NEXT_ARG(Integer);
 
-	if (self->value == other) {
+	if (self->value == other->value) {
+		return YES;
+	}
+
+	return NO;
+end
+
+
+def(greaterThan)
+	Integer other = NEXT_ARG(Integer);
+
+	if (self->value > other->value) {
+		return YES;
+	}
+
+	return NO;
+end
+
+def(lessThan)
+	Integer other = NEXT_ARG(Integer);
+
+	if (self->value < other->value) {
 		return YES;
 	}
 
@@ -50,3 +75,7 @@ def(increment)
 
 	return self;
 end
+
+int to_int(Integer i) {
+	return i->value;
+}
