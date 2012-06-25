@@ -122,11 +122,11 @@ end
 def(length)
 	Integer length = msg(IntegerClass, "newWithInt", strlen(self->value));
 
-	return msg(length, "autorelease");
+	return msg(length, "autoRelease");
 end
 
 def(description)
-	return msg(copy(v, args), "autorelease");
+	return msg(copy(v, args), "autoRelease");
 end
 
 def(equals)

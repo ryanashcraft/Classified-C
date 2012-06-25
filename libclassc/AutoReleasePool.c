@@ -7,7 +7,7 @@
 proto(new);
 proto(dealloc);
 
-void msg_finish_autorelease(void *v);
+void msg_finish_auto_release(void *v);
 
 defclass
 	static(new);
@@ -20,11 +20,11 @@ defcon(new)
 end
 
 def(dealloc)
-	free_list(self->base.base.value, &msg_finish_autorelease);
+	free_list(self->base.base.value, &msg_finish_auto_release);
 
 	return msgCast(ObjectClass, self, "dealloc");
 end
 
-void msg_finish_autorelease(void *v) {
+void msg_finish_auto_release(void *v) {
 	msg(v, "finishAutoRelease");
 }

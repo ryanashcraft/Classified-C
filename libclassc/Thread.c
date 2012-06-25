@@ -146,7 +146,7 @@ def(description)
 	msg(buffer, "concatenateWithString", part);
 	msg(part, "release");
 
-	return buffer;
+	return msg(buffer, "autoRelease");
 end
 
 Thread current_thread() {

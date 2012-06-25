@@ -7,7 +7,6 @@
 proto(new);
 proto(init);
 proto(dealloc);
-proto(description);
 proto(length);
 proto(pushFront);
 proto(pushBack);
@@ -26,7 +25,6 @@ defclass
 
 	instance(init);
 	instance(dealloc);
-	instance(description);
 	instance(length);
 	instance(pushFront);
 	instance(pushBack);
@@ -59,12 +57,8 @@ def(dealloc)
 	return msgSuper("dealloc");
 end
 
-def(description)
-	return msg(StringClass, "newWithFormatCString", "%s", "[LinkedList]");
-end
-
 def(length)
-	return msg(msg(IntegerClass, "newWithInt", self->value->size), "autorelease");
+	return msg(msg(IntegerClass, "newWithInt", self->value->size), "autoRelease");
 end
 
 def(pushFront)

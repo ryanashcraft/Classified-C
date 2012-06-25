@@ -12,7 +12,7 @@ proto(init);
 proto(release);
 proto(dealloc);
 proto(retain);
-proto(autorelease);
+proto(autoRelease);
 proto(finishAutoRelease);
 proto(description);
 
@@ -25,7 +25,7 @@ void ObjectInit() {
 	instance(release);
 	instance(dealloc);
 	instance(retain);
-	instance(autorelease);
+	instance(autoRelease);
 	instance(finishAutoRelease);
 	instance(description);
 }
@@ -34,7 +34,7 @@ Object object_init(void *v) {
 	Object self = (Object)v;
 
 	self->retaincount = 1;
-	self->autoreleased = NO;
+	self->autoReleased = NO;
 
 	return self;
 }
@@ -48,8 +48,8 @@ def(init)
 end
 
 def(release)
-	if (self->autoreleased) {
-		self->autoreleased = NO;
+	if (self->autoReleased) {
+		self->autoReleased = NO;
 		msg(msg(ThreadClass, "currentThread"), "removeFromAutoReleasePool", self);
 	} else {
 		--self->retaincount;
@@ -74,8 +74,8 @@ def(retain)
 	return self;
 end
 
-def(autorelease)
-	self->autoreleased = YES;
+def(autoRelease)
+	self->autoReleased = YES;
 	msg(msg(ThreadClass, "currentThread"), "addToAutoReleasePool", self);
 	--self->retaincount;
 
@@ -83,10 +83,10 @@ def(autorelease)
 end
 
 def(finishAutoRelease)
-	self->autoreleased = NO;
+	self->autoReleased = NO;
 	return msg(self, "release");
 end
 
 def(description)
-	return msg(msg(StringClass, "newWithFormatCString", "%s (%p)", self->root->name, v), "autorelease");
+	return msg(msg(StringClass, "newWithFormatCString", "%s (%p)", self->root->name, v), "autoRelease");
 end

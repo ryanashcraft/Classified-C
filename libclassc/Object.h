@@ -7,7 +7,7 @@ extern Class ObjectClass;
 struct _Object {
 	Class root;
 	int retaincount;
-	boolean autoreleased;
+	boolean autoReleased;
 };
 
 void ObjectInit();

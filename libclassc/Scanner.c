@@ -57,7 +57,7 @@ def(next)
 	String token = msg(buffer, "copy");
 	msg(buffer, "release");
 
-	return msg(token, "autorelease");
+	return msg(token, "autoRelease");
 end
 
 def(hasNext)

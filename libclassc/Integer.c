@@ -42,7 +42,7 @@ def(equals)
 end
 
 def(description)
-	return msg(msg(StringClass, "newWithFormatCString", "%d", self->value), "autorelease");
+	return msg(msg(StringClass, "newWithFormatCString", "%d", self->value), "autoRelease");
 end
 
 def(increment)
