@@ -123,7 +123,7 @@ end
 def(length)
 	Integer length = msg(IntegerClass, "newWithInt", strlen(self->value));
 
-	return length;
+	return msg(length, "autorelease");
 end
 
 def(description)
