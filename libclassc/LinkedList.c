@@ -18,6 +18,7 @@ proto(getBack);
 proto(get);
 proto(performOnEach);
 proto(clear);
+proto(getFirst);
 
 defclass
 	static(new);
@@ -35,6 +36,7 @@ defclass
 	instance(get);
 	instance(performOnEach);
 	instance(clear);
+	instance(getFirst);
 end
 
 defcon(new)
@@ -115,4 +117,10 @@ def(clear)
 	empty_list(self->value, &msg_release);
 
 	return self;
+end
+
+def(getFirst)
+	cstring method_name = NEXT_ARG(cstring);
+
+	return get_first_occurrence(self->value, test_by_calling_method, method_name);
 end
