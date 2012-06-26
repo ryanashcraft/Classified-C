@@ -62,7 +62,7 @@ def(length)
 end
 
 def(pushFront)
-	Object o = NEXT_ARG(Object);
+	Object o = nextArg(Object);
 	push_front(self->value, o);
 	msg(o, "retain");
 
@@ -70,7 +70,7 @@ def(pushFront)
 end
 
 def(pushBack)
-	Object o = NEXT_ARG(Object);
+	Object o = nextArg(Object);
 	push_back(self->value, o);
 	msg(o, "retain");
 
@@ -92,7 +92,7 @@ def(removeBack)
 end
 
 def(removeObject)
-	Object o = NEXT_ARG(Object);
+	Object o = nextArg(Object);
 	remove_data(self->value, o, same_pointer, &msg_release);
 
 	return NULL;
@@ -107,11 +107,11 @@ def(getBack)
 end
 
 def(get)
-	return ll_get_index(self->value, NEXT_ARG(int));
+	return ll_get_index(self->value, nextArg(int));
 end
 
 def(performOnEach)
-	cstring method_name = NEXT_ARG(cstring);
+	cstring method_name = nextArg(cstring);
 
 	traverse_with_args(self->value, call_method, method_name);
 
@@ -125,7 +125,7 @@ def(clear)
 end
 
 def(getFirst)
-	cstring method_name = NEXT_ARG(cstring);
+	cstring method_name = nextArg(cstring);
 
 	return get_first_occurrence(self->value, &test_by_calling_method, method_name);
 end

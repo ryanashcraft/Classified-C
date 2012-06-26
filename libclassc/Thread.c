@@ -53,10 +53,10 @@ defcon(new)
 end
 
 defcon(newWithTargetAndSelectorAndUserData)
-	self->target = NEXT_ARG(Object);
+	self->target = nextArg(Object);
 	msg(self->target, "retain");
-	self->selector = mstring(NEXT_ARG(cstring));
-	self->userData = NEXT_ARG(LinkedList);
+	self->selector = mstring(nextArg(cstring));
+	self->userData = nextArg(LinkedList);
 	msg(self->userData, "retain");
 
 	self->thread = NULL;
@@ -122,14 +122,14 @@ def(popAutoReleasePool)
 end
 
 def(addToAutoReleasePool)
-	Object o = NEXT_ARG(Object);
+	Object o = nextArg(Object);
 	msg(msg(self->autoReleasePools, "peek"), "push", o);
 
 	return self;
 end
 
 def(removeFromAutoReleasePool)
-	Object o = NEXT_ARG(Object);
+	Object o = nextArg(Object);
 	AutoReleasePool pool = msg(self->autoReleasePools, "peek");
 	assert(pool);
 	msg(pool, "removeObject", o);

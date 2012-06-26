@@ -22,7 +22,7 @@ defcon(new)
 end
 
 def(push)
-	return msgSuper("pushFront", NEXT_ARG(Object));
+	return msgSuper("pushFront", nextArg(Object));
 end
 
 def(pop)

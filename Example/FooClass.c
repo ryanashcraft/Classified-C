@@ -25,8 +25,8 @@ defcon(new)
 end
 
 def(init)
-	int value = NEXT_ARG(int);
-	msgSuper("initWithCString", NEXT_ARG(cstring));
+	int value = nextArg(int);
+	msgSuper("initWithCString", nextArg(cstring));
 	self->value = value;
 
 	return self;
@@ -40,7 +40,7 @@ def(description)
 end
 
 def(catAndPrint)
-	LinkedList userData = NEXT_ARG(LinkedList);
+	LinkedList userData = nextArg(LinkedList);
 	String cat = msg(userData, "getFront");
 	msg(systemOut, "println", "%@ %@", cat, self);
 

@@ -30,13 +30,13 @@ defcon(newWithInt)
 end
 
 def(initWithInt)
-	self->value = NEXT_ARG(int);
+	self->value = nextArg(int);
 
 	return self;
 end
 
 def(equals)
-	Integer other = NEXT_ARG(Integer);
+	Integer other = nextArg(Integer);
 
 	if (self->value == other->value) {
 		return YES;
@@ -47,7 +47,7 @@ end
 
 
 def(greaterThan)
-	Integer other = NEXT_ARG(Integer);
+	Integer other = nextArg(Integer);
 
 	if (self->value > other->value) {
 		return YES;
@@ -57,7 +57,7 @@ def(greaterThan)
 end
 
 def(lessThan)
-	Integer other = NEXT_ARG(Integer);
+	Integer other = nextArg(Integer);
 
 	if (self->value < other->value) {
 		return YES;

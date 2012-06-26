@@ -34,7 +34,7 @@ defcon(newWithLinkedList)
 end
 
 def(initWithArray)
-	self->elements = NEXT_ARG(Object);
+	self->elements = nextArg(Object);
 	msg(self->elements, "retain");
 	self->nextPointer = 0;
 
@@ -42,7 +42,7 @@ def(initWithArray)
 end
 
 def(initWithLinkedList)
-	self->elements = NEXT_ARG(Object);
+	self->elements = nextArg(Object);
 	msg(self->elements, "retain");
 	self->nextPointer = 0;
 

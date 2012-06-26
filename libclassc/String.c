@@ -56,22 +56,22 @@ defcon(newWithFormatCStringAndArgList)
 end
 
 def(initWithCString)
-	cstring string_arg = NEXT_ARG(cstring);
+	cstring string_arg = nextArg(cstring);
 	self->value = mstring(string_arg);
 
 	return self;
 end
 
 def(initWithFormatCString)
-	cstring formatString = NEXT_ARG(cstring);
+	cstring formatString = nextArg(cstring);
 	self->value = format(formatString, args);
 
 	return self;
 end
 
 def(initWithFormatCStringAndArgList)
-	cstring formatString = NEXT_ARG(cstring);
-	va_list *formatArgList = NEXT_ARG(va_list *);
+	cstring formatString = nextArg(cstring);
+	va_list *formatArgList = nextArg(va_list *);
 	self->value = format(formatString, formatArgList);
 
 	return self;
@@ -130,7 +130,7 @@ def(description)
 end
 
 def(equals)
-	cstring other = NEXT_ARG(cstring);
+	cstring other = nextArg(cstring);
 
 	int length = strlen(self->value);
 	int other_length = strlen(other);

@@ -72,8 +72,7 @@
 #define constructor(FUNCTION) \
 	static(FUNCTION)
 
-#define NEXT_ARG(CLASS) va_arg(*args, CLASS)
-#define ARGS args
+#define nextArg(CLASS) va_arg(*args, CLASS)
 
 #define msgSuper(...) msgCast(SUPER_CLASS_REF, self, __VA_ARGS__)
 

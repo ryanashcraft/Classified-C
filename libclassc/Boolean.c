@@ -38,7 +38,7 @@ defstat(no)
 end
 
 defstat(isYes)
-	if (NEXT_ARG(size_t) == (size_t)NO) {
+	if (nextArg(size_t) == (size_t)NO) {
 		return NO;
 	}
 

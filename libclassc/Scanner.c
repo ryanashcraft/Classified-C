@@ -26,7 +26,7 @@ defcon(newWithFile)
 end
 
 def(initWithFile)
-	self->file = NEXT_ARG(File);
+	self->file = nextArg(File);
 
 	return self;
 end
