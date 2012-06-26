@@ -10,7 +10,8 @@
 #include "Classified-C.h"
 #include <execinfo.h>
 
-Object SystemOut = NULL;
+Object systemOut = NULL;
+Thread mainThread = NULL;
 
 static Object cbmessage(Object o, Class c, cstring message, va_list *args);
 static Object cbmessageclass(Class c, cstring message, va_list *args);
@@ -23,20 +24,27 @@ void cc_init() {
 	// Initialize and register standard classes to the class list
 	ClassInit();
 	ObjectInit();
-	NullInit();
-	ArrayInit();
+	IteratorInit();
 	StringInit();
 	MutableStringInit();
+	LinkedListInit();
+	StackInit();
+	ThreadInit();
+	NullInit();
+	ArrayInit();
 	IntegerInit();
 	BooleanInit();
-	StackInit();
 	FileInit();
 	ScannerInit();
 	PrinterInit();
-	IteratorInit();
-	LinkedListInit();
+	AutoReleasePoolInit();
 
-	SystemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
+	systemOut = msg(PrinterClass, "newWithFile", msg(FileClass, "newWithFile", stderr));
+	mainThread = msg(ThreadClass, "new");
+}
+
+void cc_end() {
+	msg(ThreadClass, "joinAllThreads");
 }
 
 /**
@@ -59,9 +67,14 @@ void cc_init() {
 
   @return the object returned from the function call
  */
-void *msg(void *v, cstring message, ...) {
+void *msg(const void *v, cstring message, ...) {
 	va_list argp;
-	Object o = (Object)v;
+	Object o = (Object)v;	
+
+	if (o->retaincount <= 0) {
+		// Only message allowed when retain count is zero is dealloc
+		assert(strcmp(message, "dealloc") == 0);
+	}
 
 	Class c = o->root;
 
@@ -74,12 +87,18 @@ void *msg(void *v, cstring message, ...) {
 
 	// Call the method's function pointer with the object and a reference
 	// to the variable argument list
+
 	return cbmessage(o, c, message, &argp);
 }
 
 void *msgCast(Class c, void *v, cstring message, ...) {
 	va_list argp;
 	Object o = (Object)v;
+
+	if (o->retaincount <= 0) {
+		// Only message allowed when retain count is zero is dealloc
+		assert(strcmp(message, "dealloc") == 0);
+	}
 
 	// Instantiate the variable argument list for the method's parameters
 	va_start(argp, message);
@@ -141,6 +160,15 @@ Object cbmessage(Object o, Class c, cstring message, va_list *argp) {
 	return m->function(o, argp);
 }
 
+void *msgWithMessage(void *messagep) {
+	struct _message *message = (struct _message *)messagep;
+	Object target = message->target;
+	cstring selector = message->selector;
+	LinkedList userData = message->userData;
+	free(message);
+	return msg(target, selector, userData);
+}
+
 void print_bt() {
 	void *array[10];
 	size_t size;
@@ -164,6 +192,23 @@ void *cc_alloc(size_t size) {
 	((Object)v)->retaincount = 1;
 
 	return v;
+}
+
+void call_method(void *v, va_list *args) {
+	cstring method_name = va_arg(*args, cstring);
+
+	msg(v, method_name);
+}
+
+int test_by_calling_method(const void *v, va_list *args) {
+	cstring method_name = va_arg(*args, cstring);
+
+	void *retval = msg(v, method_name, args);
+	if (retval) {
+		return 1;
+	}
+
+	return 0;
 }
 
 void msg_release(void *v) {
@@ -210,4 +255,12 @@ cstring mstring(cstring s) {
 	assert(the_string);
 	the_string = strncpy(the_string, s, strlen(s) + 1);
 	return the_string;
+}
+
+int same_pointer(const void *a, const void *b) {
+	if (a == b) {
+		return 1;
+	}
+
+	return 0;
 }

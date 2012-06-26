@@ -12,8 +12,8 @@ proto(dealloc);
 proto(file);
 
 defclass
-	static(newWithFilename);
-	static(newWithFile);
+	constructor(newWithFilename);
+	constructor(newWithFile);
 	
 	instance(initWithFilename);
 	instance(initWithFilename);
@@ -34,7 +34,7 @@ defcon(newWithFile)
 end
 
 def(initWithFilename)
-	self->filename = mstring(NEXT_ARG(cstring));
+	self->filename = mstring(nextArg(cstring));
 	self->file = fopen(self->filename, "r");
 
 	return self;
@@ -42,7 +42,7 @@ end
 
 def(initWithFile)
 	self->filename = NULL;
-	self->file = NEXT_ARG(FILE *);
+	self->file = nextArg(FILE *);
 
 	return self;
 end

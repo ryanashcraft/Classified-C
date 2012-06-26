@@ -12,7 +12,7 @@ proto(next);
 proto(hasNext);
 
 defclass
-	static(newWithFile);
+	constructor(newWithFile);
 
 	instance(initWithFile);
 	instance(next);
@@ -26,7 +26,7 @@ defcon(newWithFile)
 end
 
 def(initWithFile)
-	self->file = NEXT_ARG(File);
+	self->file = nextArg(File);
 
 	return self;
 end
@@ -57,21 +57,19 @@ def(next)
 	String token = msg(buffer, "copy");
 	msg(buffer, "release");
 
-	return token;
+	return msg(token, "autoRelease");
 end
 
 def(hasNext)
 	FILE *f = msg(self->file, "file");
-	int has_next = 1;
+	boolean hasNext = YES;
 	char c = 0;
 
 	c = fgetc(f);
 	if (c == EOF) {
-		has_next = 0;
+		hasNext = NO;
 	}
 	ungetc(c, f);
-
-	Integer hasNext = msg(IntegerClass, "newWithInt", has_next);
 
 	return hasNext;
 end

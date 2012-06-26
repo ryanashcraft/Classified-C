@@ -11,7 +11,7 @@ proto(testNewWithCString);
 proto(testNewWithFormatCString);
 
 defclass
-	static(new);
+	constructor(new);
 
 	instance(testNewWithCString);
 	instance(testNewWithFormatCString);

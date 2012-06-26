@@ -40,8 +40,8 @@ Class new_class(cstring name, Class parent_class) {
 }
 
 def(new)
-	cstring name = NEXT_ARG(cstring);
-	Class parent_class = NEXT_ARG(Class);
+	cstring name = nextArg(cstring);
+	Class parent_class = nextArg(Class);
 
 	return new_class(name, parent_class);
 end

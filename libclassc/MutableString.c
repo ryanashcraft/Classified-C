@@ -18,8 +18,8 @@ static cstring concatenate(MutableString s, cstring part_two);
 static void virtual_vsprintf(char *, va_list *args);
 
 defclass
-	static(newWithCString);
-	static(newWithCStringAndCapacity);
+	constructor(newWithCString);
+	constructor(newWithCStringAndCapacity);
 
 	instance(initWithCString);
 	instance(initWithCStringAndCapacity);
@@ -43,16 +43,16 @@ defcon(newWithCStringAndCapacity)
 end
 
 def(initWithCString)
-	msgSuper("initWithCString", NEXT_ARG(cstring));
+	msgSuper("initWithCString", nextArg(cstring));
 	self->capacity = strlen(self->base.value);
 
 	return self;
 end
 
 def(initWithCStringAndCapacity)
-	msgSuper("initWithCString", NEXT_ARG(cstring));
+	msgSuper("initWithCString", nextArg(cstring));
 
-	self->capacity = NEXT_ARG(int);
+	self->capacity = nextArg(int);
 	int string_length = strlen(self->base.value);
 	self->base.value = realloc(self->base.value, self->capacity);
 	self->base.value[string_length] = '\0';
@@ -65,14 +65,14 @@ def(dealloc)
 end
 
 def(concatenateWithCString)
-	cstring part_two = NEXT_ARG(cstring);
+	cstring part_two = nextArg(cstring);
 	self->base.value = concatenate(self, part_two);
 
 	return self;
 end
 
 def(concatenateWithString)
-	String stringArgument = NEXT_ARG(String);
+	String stringArgument = nextArg(String);
 	cstring part_two = stringArgument->value;
 	self->base.value = concatenate(self, part_two);
 
@@ -84,7 +84,8 @@ cstring concatenate(MutableString self, cstring part_two) {
 	int part_two_length = strlen(part_two);
 
 	if (part_one_length + part_two_length + 1 > self->capacity) {
-		self->base.value = realloc(self->base.value, self->capacity * 2 + part_two_length + 1);
+		self->capacity = (self->capacity * 2) + part_two_length + 1;
+		self->base.value = realloc(self->base.value, self->capacity);
 		assert(self->base.value);
 	}
  	
@@ -94,7 +95,7 @@ cstring concatenate(MutableString self, cstring part_two) {
 }
 
 def(appendCharacter)
-	char c = NEXT_ARG(int);
+	char c = nextArg(int);
 
 	int string_length = strlen(self->base.value);
 
@@ -113,7 +114,7 @@ end
 def(vsprint)
 	cstring dup = mstring(self->base.value);
 
-	va_list *format_args = NEXT_ARG(va_list *);
+	va_list *format_args = nextArg(va_list *);
 	va_list duplicate_format_args;
 	va_copy(duplicate_format_args, *format_args);
 	size_t required = vsnprintf(NULL, 0, dup, duplicate_format_args);
@@ -169,20 +170,20 @@ void virtual_vsprintf(char *format, va_list *args) {
 				case 'x':
 				case 'X':
 				case 'c':
-					NEXT_ARG(int);
+					nextArg(int);
 					break;
 				case 'f':
 				case 'e':
 				case 'E':
 				case 'g':
 				case 'G':
-					NEXT_ARG(double);
+					nextArg(double);
 					break;
 				case 's':
 					break;
 				case 'p':
 				case 'n':
-					NEXT_ARG(char *);
+					nextArg(char *);
 					break;
 			}
 		}

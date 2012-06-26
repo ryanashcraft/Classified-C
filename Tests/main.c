@@ -8,8 +8,8 @@ int main(int argc, char **argv) {
 	TestInit();
 	StringTestInit();
 	
-	int i = 100000;
-	msg(SystemOut, "disable");
+	int i = 100;
+	msg(systemOut, "disable");
 	while (--i > 0) {
 		Test stringTest = msg(StringTestClass, "new");
 		msg(stringTest, "run");

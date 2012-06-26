@@ -5,8 +5,7 @@
 extern Class StackClass;
 
 typedef struct _Stack {
-	struct _Object base;
-	list *llist;
+	struct _LinkedList base;
 } *Stack;
 
 void StackInit();

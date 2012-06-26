@@ -6,9 +6,10 @@ extern Class IntegerClass;
 
 typedef struct _Integer {
 	struct _Object base;	
-	size_t value;
+	int value;
 } *Integer;
 
 void IntegerInit();
+int to_int(Integer);
 
 #endif

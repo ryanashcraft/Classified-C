@@ -7,7 +7,7 @@
 proto(new);
 
 defclass
-	static(new);
+	constructor(new);
 end
 
 defcon(new)

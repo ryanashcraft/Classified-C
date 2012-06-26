@@ -7,12 +7,12 @@
 proto(new);
 proto(init);
 proto(dealloc);
-proto(description);
 proto(length);
 proto(pushFront);
 proto(pushBack);
 proto(removeFront);
 proto(removeBack);
+proto(removeObject);
 proto(getFront);
 proto(getBack);
 proto(get);
@@ -23,23 +23,26 @@ proto(contains);
 int msg_is_equal(const void *a, const void *b);
 void msg_with_string(void *v, va_list *args);
 
+proto(getFirst);
+
 defclass
-	static(new);
+	constructor(new);
 
 	instance(init);
 	instance(dealloc);
-	instance(description);
 	instance(length);
 	instance(pushFront);
 	instance(pushBack);
 	instance(removeFront);
 	instance(removeBack);
+	instance(removeObject);
 	instance(getFront);
 	instance(getBack);
 	instance(get);
 	instance(performOnEach);
 	instance(clear);
 	instance(contains);
+	instance(getFirst);
 end
 
 defcon(new)
@@ -60,16 +63,12 @@ def(dealloc)
 	return msgSuper("dealloc");
 end
 
-def(description)
-	return msg(StringClass, "newWithFormatCString", "%s", "[LinkedList]");
-end
-
 def(length)
-	return msg(IntegerClass, "newWithInt", self->value->size);
+	return msg(msg(IntegerClass, "newWithInt", self->value->size), "autoRelease");
 end
 
 def(pushFront)
-	Object o = NEXT_ARG(Object);
+	Object o = nextArg(Object);
 	push_front(self->value, o);
 	msg(o, "retain");
 
@@ -77,7 +76,7 @@ def(pushFront)
 end
 
 def(pushBack)
-	Object o = NEXT_ARG(Object);
+	Object o = nextArg(Object);
 	push_back(self->value, o);
 	msg(o, "retain");
 
@@ -85,15 +84,24 @@ def(pushBack)
 end
 
 def(removeFront)
+	Object retVal = msg(self, "getFront");
 	remove_front(self->value, &msg_release);
 
-	return self;
+	return retVal;
 end
 
 def(removeBack)
+	Object retVal = msg(self, "getBack");
 	remove_back(self->value, &msg_release);
 
-	return self;
+	return retVal;
+end
+
+def(removeObject)
+	Object o = nextArg(Object);
+	remove_data(self->value, o, same_pointer, &msg_release);
+
+	return NULL;
 end
 
 def(getFront)
@@ -105,11 +113,11 @@ def(getBack)
 end
 
 def(get)
-	return ll_get_index(self->value, NEXT_ARG(int));
+	return ll_get_index(self->value, nextArg(int));
 end
 
 def(performOnEach)
-	cstring method_name = NEXT_ARG(cstring);
+	cstring method_name = nextArg(cstring);
 
 	traverse_with_args(self->value, &msg_with_string, method_name);
 
@@ -123,7 +131,7 @@ def(clear)
 end
 
 def(contains)
-	if (find_occurrence(self->value, NEXT_ARG(Object), &msg_is_equal)) {
+	if (find_occurrence(self->value, nextArg(Object), &msg_is_equal)) {
 		return YES;
 	}
 
@@ -136,6 +144,11 @@ int msg_is_equal(const void *a, const void *b) {
 
 void msg_with_string(void *v, va_list *args) {
 	cstring method_name = va_arg(*args, cstring);
-
-	msg(v, method_name);
+	msg(v, method_name, args);
 }
+
+def(getFirst)
+	cstring method_name = nextArg(cstring);
+
+	return get_first_occurrence(self->value, &test_by_calling_method, method_name);
+end

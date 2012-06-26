@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <assert.h>
+#include <pthread.h>
 
 #include "list.h"
 #include "hashtable/hashtable.h"
@@ -50,6 +51,11 @@
 		object_init(self); \
 		((Object)self)->root = CLASS_REF;
 
+#define defstat(METHOD) \
+	void *METHOD(METHOD_ARGS) { \
+		Class self = CLASS_REF; \
+		(void)self;
+
 #define def(METHOD) \
 	void *METHOD(METHOD_ARGS) { \
 		CLASS self = (CLASS)v; \
@@ -63,8 +69,10 @@
 #define static(FUNCTION) \
 	ht_insert_method(&CLASS_REF->static_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
 
-#define NEXT_ARG(CLASS) va_arg(*args, CLASS)
-#define ARGS args
+#define constructor(FUNCTION) \
+	static(FUNCTION)
+
+#define nextArg(CLASS) va_arg(*args, CLASS)
 
 #define msgSuper(...) msgCast(SUPER_CLASS_REF, self, __VA_ARGS__)
 
@@ -82,13 +90,16 @@ typedef struct _method {
 	fpointer function;
 } method;
 
-extern Object SystemOut;
+extern Object systemOut;
 
 void cc_init();
-void *msg(void *v, cstring message, ...);
+void cc_end();
+void *msg(const void *v, cstring message, ...);
 void *msgCast(Class c, void *v, cstring message, ...);
-
+void *msgWithMessage(void *arg);
 void *cc_alloc(size_t size);
+void call_method(void *v, va_list *args);
+int test_by_calling_method(const void *v, va_list *args);
 void msg_release(void *v);
 
 method *mmethod(cstring name, fpointer function);
@@ -96,6 +107,8 @@ void dmethod(method *m);
 cstring mstring(cstring s);
 
 void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value, size_t value_size);
+
+int same_pointer(const void *a, const void *b);
 
 #endif
 
@@ -107,9 +120,17 @@ void ht_insert_method(hashtable **table, void *key, size_t key_size, void *value
 #include "MutableString.h"
 #include "Integer.h"
 #include "Boolean.h"
+#include "LinkedList.h"
 #include "Stack.h"
 #include "File.h"
 #include "Scanner.h"
 #include "Printer.h"
 #include "Iterator.h"
-#include "LinkedList.h"
+#include "Thread.h"
+#include "AutoReleasePool.h"
+
+struct _message {
+	Object target;
+	cstring selector;
+	LinkedList userData;
+};

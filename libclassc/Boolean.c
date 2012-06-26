@@ -13,7 +13,8 @@ static Boolean yesInstance = NULL;
 static Boolean noInstance = NULL;
 
 defclass
-	static(newWithInt);
+	constructor(newWithInt);
+
 	static(yes);
 	static(no);
 	static(isYes);
@@ -28,16 +29,16 @@ defcon(newWithInt)
 	return self;
 end
 
-def(yes)
+defstat(yes)
 	return yesInstance;
 end
 
-def(no)
+defstat(no)
 	return noInstance;
 end
 
-def(isYes)
-	if (NEXT_ARG(size_t) == (size_t)NO) {
+defstat(isYes)
+	if (nextArg(size_t) == (size_t)NO) {
 		return NO;
 	}
 

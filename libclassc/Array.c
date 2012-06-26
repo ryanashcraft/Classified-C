@@ -12,7 +12,7 @@ proto(get);
 proto(length);
 
 defclass
-	static(newWithObjects);
+	constructor(newWithObjects);
 
 	instance(initWithObjects);
 	instance(dealloc);
@@ -33,7 +33,7 @@ def(initWithObjects)
 
 	Object element = NULL;
 	va_list duplicate_arg_list;
-	va_copy(duplicate_arg_list, *ARGS);
+	va_copy(duplicate_arg_list, *args);
 	while ((element = va_arg(duplicate_arg_list, Object)) != NULL) {
 		self->capacity++;
 	}
@@ -42,7 +42,7 @@ def(initWithObjects)
 	self->value = calloc(self->capacity, sizeof(Object));
 	assert(self->value);
 	int i;
-	for (i = 0; (element = NEXT_ARG(Object)) != NULL; i++) {
+	for (i = 0; (element = nextArg(Object)) != NULL; i++) {
 		self->value[i] = element;
 		msg(element, "retain");
 		self->length++;
@@ -64,7 +64,7 @@ def(dealloc)
 end
 
 def(performOnEach)
-	cstring method_name = NEXT_ARG(cstring);
+	cstring method_name = nextArg(cstring);
 	Object element = NULL;
 	int i;
 	for (i = 0; (element = self->value[i]) != NULL; i++) {
@@ -75,7 +75,7 @@ def(performOnEach)
 end
 
 def(get)
-	int index = NEXT_ARG(int);
+	int index = nextArg(int);
 	Object obj = self->value[index];
 
 	return obj;

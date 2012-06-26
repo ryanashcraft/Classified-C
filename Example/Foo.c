@@ -10,54 +10,79 @@ int main(int argc, char **argv) {
 	String s2 = msg(StringClass, "newWithCString", "2");
 	Integer i3 = msg(IntegerClass, "newWithInt", 3);
 	Array arr = msg(ArrayClass, "newWithObjects", s1, s2, i3, NULL);
-	msg(SystemOut, "printEach", " ", arr);
+	msg(systemOut, "printEach", " ", arr);
 	msg(arr, "performOnEach", "release");
 	msg(arr, "release");
-	msg(SystemOut, "println", "");
+	msg(systemOut, "println", "");
+
+	msg(msg(ThreadClass, "currentThread"), "pushNewAutoReleasePool");
+	s1 = msg(StringClass, "newWithCString", "fooey");
+	Integer i4 = msg(s1, "length");
+	msg(systemOut, "println", "%@", i4);
+	msg(s1, "release");
+	msg(msg(ThreadClass, "currentThread"), "popAutoReleasePool");
 
 	Object o = msg(ObjectClass, "new");
-	msg(SystemOut, "println", "%@", o);
+	msg(systemOut, "println", "%@", o);
 	msg(o, "release");
 
 	Null n = msg(NullClass, "new");
-	msg(SystemOut, "println", "%@", n);
+	msg(systemOut, "println", "%@", n);
 	msg(n, "release");
 
 	String ohhai = msg(StringClass, "newWithCString", "oh hai");
 
 	String st = msg(StringClass, "newWithFormatCString", "test %d %f %@", 5, 4.0, ohhai);
-	msg(SystemOut, "println", "%@", st);
+	msg(systemOut, "println", "%@", st);
 	msg(st, "release");
 
 	msg(ohhai, "release");
 
 	File f = msg(FileClass, "newWithFilename", "../README.md");
 	Scanner s = msg(ScannerClass, "newWithFile", f);
-	Integer hasNext = msg(IntegerClass, "newWithInt", 1);
-	while (msg(hasNext, "equals", YES)) {
+	while (msg(s, "hasNext")) {
 		String token = msg(s, "next");
-		msg(SystemOut, "print", "%@ ", token);
+		msg(systemOut, "print", "%@ ", token);
 		msg(token, "release");
-
-		msg(hasNext, "release");
-		hasNext = msg(s, "hasNext");
 	}
-	msg(hasNext, "release");
 	msg(s, "release");
 	msg(f, "release");
-	msg(SystemOut, "println", "");
+	msg(systemOut, "println", "");
 
 	Foo mys = msg(FooClass, "new", 77, "Foo");
-	msg(SystemOut, "println", "%@", mys);
+	msg(systemOut, "println", "%@", mys);
 	msg(mys, "release");
 
 	Stack stack = msg(StackClass, "new");
 	msg(stack, "push", msg(StringClass, "newWithCString", "Ryan"));
 	msg(stack, "push", msg(StringClass, "newWithCString", "Tanner"));
+	msg(stack, "performOnEach", "release");
 	msg(stack, "pop");
 	String str = msg(stack, "peek");
 	if (str) {
-		msg(SystemOut, "println", "%@", str);
+		msg(systemOut, "println", "%@", str);
 	}
 	stack = msg(stack, "release");
+
+	Thread thread = msg(ThreadClass, "currentThread");
+	msg(systemOut, "println", "Current Thread: %@", thread);
+
+	Foo threadFoo = msg(FooClass, "new", 88, "threadFoo");
+
+	LinkedList ll = msg(LinkedListClass, "new");
+	msg(ll, "pushBack", msg(StringClass, "newWithCString", "qwerty"));
+
+	for (int i = 0; i < to_int(msg(ll, "length")); i++) {
+		msg(systemOut, "println", "%@", msg(ll, "get", i));
+	}
+
+	msg(ll, "performOnEach", "release");
+
+	Thread secondThread = msg(ThreadClass, "newWithTargetAndSelectorAndUserData", threadFoo, "catAndPrint", ll);
+	msg(secondThread, "run");
+	msg(ll, "release");
+
+	msg(threadFoo, "release");
+
+	cc_end();
 }

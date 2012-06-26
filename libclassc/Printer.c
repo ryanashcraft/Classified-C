@@ -14,7 +14,7 @@ proto(printEach);
 proto(disable);
 
 defclass
-	static(newWithFile);
+	constructor(newWithFile);
 	
 	instance(initWithFile);
 	instance(dealloc);
@@ -32,7 +32,7 @@ defcon(newWithFile)
 end
 
 def(initWithFile)
-	self->output = NEXT_ARG(File);
+	self->output = nextArg(File);
 
 	return self;
 end
@@ -48,7 +48,7 @@ def(print)
 		return self;
 	}
 
-	cstring format = NEXT_ARG(cstring);
+	cstring format = nextArg(cstring);
 	String toPrint = msg(StringClass, "newWithFormatCStringAndArgList", format, args);
 	fprintf(self->output->file, "%s", toPrint->value);
 	msg(toPrint, "release");
@@ -61,7 +61,7 @@ def(println)
 		return self;
 	}
 
-	String toPrint = msg(StringClass, "newWithFormatCStringAndArgList", NEXT_ARG(cstring), args);
+	String toPrint = msg(StringClass, "newWithFormatCStringAndArgList", nextArg(cstring), args);
 	fprintf(self->output->file, "%s\n", toPrint->value);
 	msg(toPrint, "release");
 
@@ -83,8 +83,8 @@ def(printEach)
 		return self;
 	}
 
-	cstring separator = NEXT_ARG(cstring);
-	Array elements = NEXT_ARG(Array);
+	cstring separator = nextArg(cstring);
+	Array elements = nextArg(Array);
 
 	Object element = NULL;
 	Iterator iterator = msg(IteratorClass, "newWithArray", elements);
