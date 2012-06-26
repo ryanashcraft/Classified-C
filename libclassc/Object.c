@@ -19,7 +19,7 @@ proto(description);
 void ObjectInit() {
 	ObjectClass = new_class("Object", NULL);
 
-	static(new);
+	constructor(new);
 
 	instance(init);
 	instance(release);

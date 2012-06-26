@@ -12,8 +12,8 @@ proto(dealloc);
 proto(next);
 
 defclass
-	static(newWithArray);
-	static(newWithLinkedList);
+	constructor(newWithArray);
+	constructor(newWithLinkedList);
 	
 	instance(initWithArray);
 	instance(initWithLinkedList);

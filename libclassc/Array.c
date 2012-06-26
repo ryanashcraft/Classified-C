@@ -12,7 +12,7 @@ proto(get);
 proto(length);
 
 defclass
-	static(newWithObjects);
+	constructor(newWithObjects);
 
 	instance(initWithObjects);
 	instance(dealloc);

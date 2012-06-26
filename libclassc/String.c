@@ -22,9 +22,9 @@ proto(cString);
 static cstring format(cstring format, va_list *format_args);
 
 defclass
-	static(newWithCString);
-	static(newWithFormatCString);
-	static(newWithFormatCStringAndArgList);
+	constructor(newWithCString);
+	constructor(newWithFormatCString);
+	constructor(newWithFormatCStringAndArgList);
 
 	instance(initWithCString);
 	instance(initWithFormatCString);

@@ -18,8 +18,8 @@ static cstring concatenate(MutableString s, cstring part_two);
 static void virtual_vsprintf(char *, va_list *args);
 
 defclass
-	static(newWithCString);
-	static(newWithCStringAndCapacity);
+	constructor(newWithCString);
+	constructor(newWithCStringAndCapacity);
 
 	instance(initWithCString);
 	instance(initWithCStringAndCapacity);

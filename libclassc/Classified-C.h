@@ -51,6 +51,11 @@
 		object_init(self); \
 		((Object)self)->root = CLASS_REF;
 
+#define defstat(METHOD) \
+	void *METHOD(METHOD_ARGS) { \
+		Class self = CLASS_REF; \
+		(void)self;
+
 #define def(METHOD) \
 	void *METHOD(METHOD_ARGS) { \
 		CLASS self = (CLASS)v; \
@@ -63,6 +68,9 @@
 
 #define static(FUNCTION) \
 	ht_insert_method(&CLASS_REF->static_methods, #FUNCTION, strlen(#FUNCTION), mmethod(#FUNCTION, &FUNCTION), sizeof(struct _method));
+
+#define constructor(FUNCTION) \
+	static(FUNCTION)
 
 #define NEXT_ARG(CLASS) va_arg(*args, CLASS)
 #define ARGS args

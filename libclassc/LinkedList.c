@@ -21,7 +21,7 @@ proto(clear);
 proto(getFirst);
 
 defclass
-	static(new);
+	constructor(new);
 
 	instance(init);
 	instance(dealloc);

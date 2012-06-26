@@ -10,7 +10,7 @@ proto(dealloc);
 void msg_finish_auto_release(void *v);
 
 defclass
-	static(new);
+	constructor(new);
 
 	instance(dealloc);
 end

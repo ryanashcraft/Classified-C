@@ -12,8 +12,8 @@ proto(dealloc);
 proto(file);
 
 defclass
-	static(newWithFilename);
-	static(newWithFile);
+	constructor(newWithFilename);
+	constructor(newWithFile);
 	
 	instance(initWithFilename);
 	instance(initWithFilename);

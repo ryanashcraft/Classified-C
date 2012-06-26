@@ -10,7 +10,7 @@ proto(pop);
 proto(peek);
 
 defclass
-	static(new);
+	constructor(new);
 
 	instance(push);
 	instance(pop);

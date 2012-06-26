@@ -23,8 +23,9 @@ void *msgWithStruct(void *arg);
 static LinkedList threads;
 
 defclass
-	static(new);
-	static(newWithTargetAndSelectorAndUserData);
+	constructor(new);
+	constructor(newWithTargetAndSelectorAndUserData);
+
 	static(currentThread);
 	static(joinAllThreads);
 
@@ -68,11 +69,11 @@ defcon(newWithTargetAndSelectorAndUserData)
 	return self;
 end
 
-def(currentThread)
+defstat(currentThread)
 	return current_thread();
 end
 
-def(joinAllThreads)
+defstat(joinAllThreads)
 	msg(threads, "performOnEach", "join");
 
 	msg(threads, "performOnEach", "popAutoReleasePool");

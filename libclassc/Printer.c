@@ -14,7 +14,7 @@ proto(printEach);
 proto(disable);
 
 defclass
-	static(newWithFile);
+	constructor(newWithFile);
 	
 	instance(initWithFile);
 	instance(dealloc);

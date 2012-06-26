@@ -13,7 +13,7 @@ proto(description);
 proto(increment);
 
 defclass
-	static(newWithInt);
+	constructor(newWithInt);
 	
 	instance(initWithInt);
 	instance(equals);

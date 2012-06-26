@@ -12,7 +12,7 @@ proto(next);
 proto(hasNext);
 
 defclass
-	static(newWithFile);
+	constructor(newWithFile);
 
 	instance(initWithFile);
 	instance(next);
