@@ -14,7 +14,7 @@ proto(run);
 proto(assertEquals);
 proto(assertTrue);
 
-defclass
+defclass {
 	constructor(new);
 
 	instance(init);
@@ -26,36 +26,36 @@ defclass
 	instance(assertTrue);
 }
 
-def(new)
+def(new) {
 	init(self, args);
 
 	return self;
-end
+} end
 
-def(init)
+def(init) {
 	self->testCases = msg(LinkedListClass, "new");
 
 	return self;
-end
+} end
 
-def(dealloc)
+def(dealloc) {
 	msg(self->testCases, "release");
 
 	return msgSuper("dealloc");
-end
+} end
 
-def(description)
+def(description) {
 	return msg(StringClass, "newWithCString", ((Object)self)->root->name);
-end
+} end
 
-def(addTestCase)
+def(addTestCase) {
 	String testCase = nextArg(String);
 	msg(self->testCases, "pushBack", testCase);
 
 	return self;
-end
+} end
 
-def(run)
+def(run) {
 	Integer totalTestCases = msg(self->testCases, "length");
 	Integer successCount = msg(IntegerClass, "newWithInt", 0);
 
@@ -82,20 +82,20 @@ def(run)
 	msg(totalTestCases, "release");
 
 	return self;
-end
+} end
 
-def(assertEquals)
+def(assertEquals) {
 	if (msg(nextArg(Object), "equals", nextArg(Object))) {
 		return TestCaseResultSuccess;
 	}
 
 	return (void *)TestCaseResultFailure;
-end
+} end
 
-def(assertTrue)
+def(assertTrue) {
 	if (msg(BooleanClass, "isYes", nextArg(size_t))) {
 		return TestCaseResultSuccess;
 	}
 
 	return (void *)TestCaseResultFailure;
-end
+} end

@@ -10,39 +10,39 @@ proto(init);
 proto(description);
 proto(catAndPrint);
 
-defclass
+defclass {
 	static(new);
 
 	instance(init);
 	instance(description);
 	instance(catAndPrint);
-end
+} end
 
-defcon(new)
+defcon(new) {
 	init(self, args);
 
 	return self;
-end
+} end
 
-def(init)
+def(init) {
 	int value = nextArg(int);
 	msgSuper("initWithCString", nextArg(cstring));
 	self->value = value;
 
 	return self;
-end
+} end
 
-def(description)
+def(description) {
 	String superDescription = msgSuper("description");
 	String formattedDescription = msg(StringClass, "newWithFormatCString", "%d %@", self->value, superDescription);
 
 	return msg(formattedDescription, "autoRelease");
-end
+} end
 
-def(catAndPrint)
+def(catAndPrint) {
 	LinkedList userData = nextArg(LinkedList);
 	String cat = msg(userData, "getFront");
 	msg(systemOut, "println", "%@ %@", cat, self);
 
 	return self;
-end
+} end

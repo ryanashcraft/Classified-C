@@ -21,7 +21,7 @@ proto(cString);
 
 static cstring format(cstring format, va_list *format_args);
 
-defclass
+defclass {
 	constructor(newWithCString);
 	constructor(newWithFormatCString);
 	constructor(newWithFormatCStringAndArgList);
@@ -35,47 +35,47 @@ defclass
 	instance(description);
 	instance(equals);
 	instance(cString)
-end
+} end
 
-defcon(newWithCString)
+defcon(newWithCString) {
 	initWithCString(self, args);
 
 	return self;
-end
+} end
 
-defcon(newWithFormatCString)
+defcon(newWithFormatCString) {
 	initWithFormatCString(self, args);
 
 	return self;
-end
+} end
 
-defcon(newWithFormatCStringAndArgList)
+defcon(newWithFormatCStringAndArgList) {
 	initWithFormatCStringAndArgList(self, args);
 
 	return self;
-end
+} end
 
-def(initWithCString)
+def(initWithCString) {
 	cstring string_arg = nextArg(cstring);
 	self->value = mstring(string_arg);
 
 	return self;
-end
+} end
 
-def(initWithFormatCString)
+def(initWithFormatCString) {
 	cstring formatString = nextArg(cstring);
 	self->value = format(formatString, args);
 
 	return self;
-end
+} end
 
-def(initWithFormatCStringAndArgList)
+def(initWithFormatCStringAndArgList) {
 	cstring formatString = nextArg(cstring);
 	va_list *formatArgList = nextArg(va_list *);
 	self->value = format(formatString, formatArgList);
 
 	return self;
-end
+} end
 
 static cstring format(cstring format, va_list *format_args) {
 	int format_length = strlen(format);
@@ -109,27 +109,27 @@ static cstring format(cstring format, va_list *format_args) {
 	return formatted_string;;
 }
 
-def(dealloc)
+def(dealloc) {
 	free(self->value);
 
 	return msgSuper("dealloc");
-end
+} end
 
-def(copy)
+def(copy) {
 	return msg(StringClass, "newWithCString", self->value);
-end
+} end
 
-def(length)
+def(length) {
 	Integer length = msg(IntegerClass, "newWithInt", strlen(self->value));
 
 	return msg(length, "autoRelease");
-end
+} end
 
-def(description)
+def(description) {
 	return msg(copy(v, args), "autoRelease");
-end
+} end
 
-def(equals)
+def(equals) {
 	cstring other = nextArg(cstring);
 
 	int length = strlen(self->value);
@@ -143,8 +143,8 @@ def(equals)
 	}
 	
 	return NO;
-end
+} end
 
-def(cString)
+def(cString) {
 	return self->value;
-end
+} end

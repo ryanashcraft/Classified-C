@@ -6,10 +6,10 @@
 
 proto(new);
 
-defclass
+defclass {
 	constructor(new);
-end
+} end
 
-defcon(new)
+defcon(new) {
 	return self;
-end
+} end

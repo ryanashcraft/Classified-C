@@ -20,7 +20,7 @@ proto(performOnEach);
 proto(clear);
 proto(getFirst);
 
-defclass
+defclass {
 	constructor(new);
 
 	instance(init);
@@ -37,95 +37,95 @@ defclass
 	instance(performOnEach);
 	instance(clear);
 	instance(getFirst);
-end
+} end
 
-defcon(new)
+defcon(new) {
 	init(self, args);
 
 	return self;
-end
+} end
 
-def(init)
+def(init) {
 	self->value = create_list();
 
 	return self;
-end
+} end
 
-def(dealloc)
+def(dealloc) {
 	free_list(self->value, &msg_release);
 
 	return msgSuper("dealloc");
-end
+} end
 
-def(length)
+def(length) {
 	return msg(msg(IntegerClass, "newWithInt", self->value->size), "autoRelease");
-end
+} end
 
-def(pushFront)
+def(pushFront) {
 	Object o = nextArg(Object);
 	push_front(self->value, o);
 	msg(o, "retain");
 
 	return self;
-end
+} end
 
-def(pushBack)
+def(pushBack) {
 	Object o = nextArg(Object);
 	push_back(self->value, o);
 	msg(o, "retain");
 
 	return self;
-end
+} end
 
-def(removeFront)
+def(removeFront) {
 	Object retVal = msg(self, "getFront");
 	remove_front(self->value, &msg_release);
 
 	return retVal;
-end
+} end
 
-def(removeBack)
+def(removeBack) {
 	Object retVal = msg(self, "getBack");
 	remove_back(self->value, &msg_release);
 
 	return retVal;
-end
+} end
 
-def(removeObject)
+def(removeObject) {
 	Object o = nextArg(Object);
 	remove_data(self->value, o, same_pointer, &msg_release);
 
 	return NULL;
-end
+} end
 
-def(getFront)
+def(getFront) {
 	return ll_front(self->value);
-end
+} end
 
-def(getBack)
+def(getBack) {
 	return ll_back(self->value);
-end
+} end
 
-def(get)
+def(get) {
 	return ll_get_index(self->value, nextArg(int));
-end
+} end
 
-def(performOnEach)
+def(performOnEach) {
 	cstring method_name = nextArg(cstring);
 
 	traverse_with_args(self->value, call_method, method_name);
 
 	return self;
-end
+} end
 
-def(clear)
+def(clear) {
 	empty_list(self->value, &msg_release);
 
 	return self;
-end
+} end
 
-def(getFirst)
+def(getFirst) {
 	cstring method_name = nextArg(cstring);
 
 	return get_first_occurrence(self->value, &test_by_calling_method, method_name);
-end
+} end

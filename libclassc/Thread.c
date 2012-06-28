@@ -22,7 +22,7 @@ void *msgWithStruct(void *arg);
 
 static LinkedList threads;
 
-defclass
+defclass {
 	constructor(new);
 	constructor(newWithTargetAndSelectorAndUserData);
 
@@ -39,9 +39,9 @@ defclass
 	instance(description);
 
 	threads = msg(LinkedListClass, "new");
-end
+} end
 
-defcon(new)
+defcon(new) {
 	self->thread = pthread_self();
 	self->autoReleasePools = msg(StackClass, "new");
 
@@ -50,9 +50,9 @@ defcon(new)
 	msg(threads, "pushBack", self);
 
 	return self;
-end
+} end
 
-defcon(newWithTargetAndSelectorAndUserData)
+defcon(newWithTargetAndSelectorAndUserData) {
 	self->target = nextArg(Object);
 	msg(self->target, "retain");
 	self->selector = mstring(nextArg(cstring));
@@ -67,21 +67,21 @@ defcon(newWithTargetAndSelectorAndUserData)
 	msg(threads, "pushBack", self);
 
 	return self;
-end
+} end
 
-defstat(currentThread)
+defstat(currentThread) {
 	return current_thread();
-end
+} end
 
-defstat(joinAllThreads)
+defstat(joinAllThreads) {
 	msg(threads, "performOnEach", "join");
 
 	msg(threads, "performOnEach", "popAutoReleasePool");
 
 	return self;
-end
+} end
 
-def(run)
+def(run) {
 	struct _message *message = malloc(sizeof(struct _message));
 	message->target = self->target;
 	message->selector = self->selector;
@@ -91,53 +91,53 @@ def(run)
 	pthread_create(&self->thread, NULL, msgWithMessage, message);
 
 	return self;
-end
+} end
 
-def(join)
+def(join) {
 	pthread_join(self->thread, NULL);
 
 	return self;
-end
+} end
 
-def(isCurrentThread)
+def(isCurrentThread) {
 	if (self->thread == pthread_self()) {
 		return YES;
 	}
 
 	return NO;
-end
+} end
 
-def(pushNewAutoReleasePool)
+def(pushNewAutoReleasePool) {
 	AutoReleasePool pool = msg(AutoReleasePoolClass, "new");
 	msg(self->autoReleasePools, "push", pool);
 
 	return self;
-end
+} end
 
-def(popAutoReleasePool)
+def(popAutoReleasePool) {
 	AutoReleasePool pool = msg(self->autoReleasePools, "pop");
 	msg(pool, "release");
 
 	return self;
-end
+} end
 
-def(addToAutoReleasePool)
+def(addToAutoReleasePool) {
 	Object o = nextArg(Object);
 	msg(msg(self->autoReleasePools, "peek"), "push", o);
 
 	return self;
-end
+} end
 
-def(removeFromAutoReleasePool)
+def(removeFromAutoReleasePool) {
 	Object o = nextArg(Object);
 	AutoReleasePool pool = msg(self->autoReleasePools, "peek");
 	assert(pool);
 	msg(pool, "removeObject", o);
 
 	return self;
-end
+} end
 
-def(description)
+def(description) {
 	MutableString buffer = msg(MutableStringClass, "newWithCString", "");
 	String part = msgSuper("description");
 	msg(buffer, "concatenateWithString", part);
@@ -148,7 +148,7 @@ def(description)
 	msg(part, "release");
 
 	return msg(buffer, "autoRelease");
-end
+} end
 
 Thread current_thread() {
 	Thread thread = msg(threads, "getFirst", "isCurrentThread");

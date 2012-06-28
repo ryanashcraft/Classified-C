@@ -39,15 +39,15 @@ Object object_init(void *v) {
 	return self;
 }
 
-defcon(new)
+defcon(new) {
 	return self;
-end
+} end
 
-def(init)
+def(init) {
 	return object_init(v);
-end
+} end
 
-def(release)
+def(release) {
 	if (self->autoReleased) {
 		self->autoReleased = NO;
 		msg(msg(ThreadClass, "currentThread"), "removeFromAutoReleasePool", self);
@@ -60,33 +60,33 @@ def(release)
 	}
 
 	return self;
-end
+} end
 
-def(dealloc)	
+def(dealloc) {	
 	free(self);
 
 	return NULL;
-end
+} end
 
-def(retain)
+def(retain) {
 	self->retaincount++;
 
 	return self;
-end
+} end
 
-def(autoRelease)
+def(autoRelease) {
 	self->autoReleased = YES;
 	msg(msg(ThreadClass, "currentThread"), "addToAutoReleasePool", self);
 	--self->retaincount;
 
 	return self;
-end
+} end
 
-def(finishAutoRelease)
+def(finishAutoRelease) {
 	self->autoReleased = NO;
 	return msg(self, "release");
-end
+} end
 
-def(description)
+def(description) {
 	return msg(msg(StringClass, "newWithFormatCString", "%s (%p)", self->root->name, v), "autoRelease");
-end
+} end

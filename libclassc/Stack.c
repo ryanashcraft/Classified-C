@@ -9,26 +9,26 @@ proto(push);
 proto(pop);
 proto(peek);
 
-defclass
+defclass {
 	constructor(new);
 
 	instance(push);
 	instance(pop);
 	instance(peek);
-end
+} end
 
-defcon(new)
+defcon(new) {
 	return msgSuper("init");
-end
+} end
 
-def(push)
+def(push) {
 	return msgSuper("pushFront", nextArg(Object));
-end
+} end
 
-def(pop)
+def(pop) {
 	return msgSuper("removeFront");
-end
+} end
 
-def(peek)
+def(peek) {
 	return msgSuper("getFront");
-end
+} end

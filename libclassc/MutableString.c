@@ -17,7 +17,7 @@ proto(vsprint);
 static cstring concatenate(MutableString s, cstring part_two);
 static void virtual_vsprintf(char *, va_list *args);
 
-defclass
+defclass {
 	constructor(newWithCString);
 	constructor(newWithCStringAndCapacity);
 
@@ -28,28 +28,28 @@ defclass
 	instance(concatenateWithString);
 	instance(appendCharacter);
 	instance(vsprint);
-end
+} end
 
-defcon(newWithCString)
+defcon(newWithCString) {
 	initWithCString(self, args);
 
 	return self;
-end
+} end
 
-defcon(newWithCStringAndCapacity)
+defcon(newWithCStringAndCapacity) {
 	initWithCStringAndCapacity(self, args);
 
 	return self;
-end
+} end
 
-def(initWithCString)
+def(initWithCString) {
 	msgSuper("initWithCString", nextArg(cstring));
 	self->capacity = strlen(self->base.value);
 
 	return self;
-end
+} end
 
-def(initWithCStringAndCapacity)
+def(initWithCStringAndCapacity) {
 	msgSuper("initWithCString", nextArg(cstring));
 
 	self->capacity = nextArg(int);
@@ -58,26 +58,26 @@ def(initWithCStringAndCapacity)
 	self->base.value[string_length] = '\0';
 
 	return self;
-end
+} end
 
-def(dealloc)
+def(dealloc) {
 	return msgSuper("dealloc");
-end
+} end
 
-def(concatenateWithCString)
+def(concatenateWithCString) {
 	cstring part_two = nextArg(cstring);
 	self->base.value = concatenate(self, part_two);
 
 	return self;
-end
+} end
 
-def(concatenateWithString)
+def(concatenateWithString) {
 	String stringArgument = nextArg(String);
 	cstring part_two = stringArgument->value;
 	self->base.value = concatenate(self, part_two);
 
 	return self;
-end
+} end
 
 cstring concatenate(MutableString self, cstring part_two) {
 	int part_one_length = strlen(self->base.value);
@@ -94,7 +94,7 @@ cstring concatenate(MutableString self, cstring part_two) {
 	return self->base.value;
 }
 
-def(appendCharacter)
+def(appendCharacter) {
 	char c = nextArg(int);
 
 	int string_length = strlen(self->base.value);
@@ -109,9 +109,9 @@ def(appendCharacter)
 	self->base.value[string_length + 1] = '\0';
 
 	return self;
-end
+} end
 
-def(vsprint)
+def(vsprint) {
 	cstring dup = mstring(self->base.value);
 
 	va_list *format_args = nextArg(va_list *);
@@ -136,7 +136,7 @@ def(vsprint)
 	self->base.value[string_length] = '\0';
 
 	return self;
-end
+} end
 
 void virtual_vsprintf(char *format, va_list *args) {
 	const char *p = format;

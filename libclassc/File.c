@@ -11,7 +11,7 @@ proto(initWithFile);
 proto(dealloc);
 proto(file);
 
-defclass
+defclass {
 	constructor(newWithFilename);
 	constructor(newWithFile);
 	
@@ -19,43 +19,43 @@ defclass
 	instance(initWithFilename);
 	instance(dealloc);
 	instance(file);
-end
+} end
 
-defcon(newWithFilename)
+defcon(newWithFilename) {
 	initWithFilename(self, args);
 
 	return self;
-end
+} end
 
-defcon(newWithFile)
+defcon(newWithFile) {
 	initWithFile(self, args);
 
 	return self;
-end
+} end
 
-def(initWithFilename)
+def(initWithFilename) {
 	self->filename = mstring(nextArg(cstring));
 	self->file = fopen(self->filename, "r");
 
 	return self;
-end
+} end
 
-def(initWithFile)
+def(initWithFile) {
 	self->filename = NULL;
 	self->file = nextArg(FILE *);
 
 	return self;
-end
+} end
 
-def(dealloc)
+def(dealloc) {
 	fclose(self->file);
 	if (self->filename) {
 		free(self->filename);
 	}
 
 	return msgSuper("dealloc");
-end
+} end
 
-def(file)
+def(file) {
 	return self->file;
-end
+} end

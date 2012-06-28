@@ -39,9 +39,9 @@ Class new_class(cstring name, Class parent_class) {
 	return self;
 }
 
-def(new)
+def(new) {
 	cstring name = nextArg(cstring);
 	Class parent_class = nextArg(Class);
 
 	return new_class(name, parent_class);
-end
+} end

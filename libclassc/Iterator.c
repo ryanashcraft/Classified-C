@@ -11,7 +11,7 @@ proto(initWithLinkedList);
 proto(dealloc);
 proto(next);
 
-defclass
+defclass {
 	constructor(newWithArray);
 	constructor(newWithLinkedList);
 	
@@ -19,43 +19,43 @@ defclass
 	instance(initWithLinkedList);
 	instance(dealloc);
 	instance(next);
-end
+} end
 
-defcon(newWithArray)
+defcon(newWithArray) {
 	initWithArray(self, args);
 
 	return self;
-end
+} end
 
-defcon(newWithLinkedList)
+defcon(newWithLinkedList) {
 	initWithLinkedList(self, args);
 
 	return self;
-end
+} end
 
-def(initWithArray)
+def(initWithArray) {
 	self->elements = nextArg(Object);
 	msg(self->elements, "retain");
 	self->nextPointer = 0;
 
 	return self;
-end
+} end
 
-def(initWithLinkedList)
+def(initWithLinkedList) {
 	self->elements = nextArg(Object);
 	msg(self->elements, "retain");
 	self->nextPointer = 0;
 
 	return self;
-end
+} end
 
-def(dealloc)
+def(dealloc) {
 	msg(self->elements, "release");
 
 	return msgSuper("dealloc");
-end
+} end
 
-def(next)
+def(next) {
 	Integer length = msg(self->elements, "length");
 	if (self->nextPointer >= length->value) {
 		msg(length, "release");
@@ -65,4 +65,4 @@ def(next)
 	msg(length, "release");
 
 	return msg(self->elements, "get", self->nextPointer++);
-end
+} end

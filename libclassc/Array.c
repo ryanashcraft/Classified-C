@@ -11,7 +11,7 @@ proto(performOnEach);
 proto(get);
 proto(length);
 
-defclass
+defclass {
 	constructor(newWithObjects);
 
 	instance(initWithObjects);
@@ -19,15 +19,15 @@ defclass
 	instance(performOnEach);
 	instance(get);
 	instance(length);
-end
+} end
 
-defcon(newWithObjects)
+defcon(newWithObjects) {
 	initWithObjects(self, args);
 
 	return self;
-end
+} end
 
-def(initWithObjects)	
+def(initWithObjects) {	
 	self->capacity = 0;
 	self->length = 0;
 
@@ -49,9 +49,9 @@ def(initWithObjects)
 	}
 
 	return self;
-end
+} end
 
-def(dealloc)
+def(dealloc) {
 	Object element = NULL;
 	int i;
 	for (i = 0; (element = self->value[i]) != NULL; i++) {
@@ -61,9 +61,9 @@ def(dealloc)
 	free(self->value);
 
 	return msgSuper("dealloc");
-end
+} end
 
-def(performOnEach)
+def(performOnEach) {
 	cstring method_name = nextArg(cstring);
 	Object element = NULL;
 	int i;
@@ -72,15 +72,15 @@ def(performOnEach)
 	}
 
 	return self;
-end
+} end
 
-def(get)
+def(get) {
 	int index = nextArg(int);
 	Object obj = self->value[index];
 
 	return obj;
-end
+} end
 
-def(length)
+def(length) {
 	return msg(IntegerClass, "newWithInt", self->length);
-end
+} end

@@ -13,7 +13,7 @@ proto(flush);
 proto(printEach);
 proto(disable);
 
-defclass
+defclass {
 	constructor(newWithFile);
 	
 	instance(initWithFile);
@@ -23,27 +23,27 @@ defclass
 	instance(flush);
 	instance(printEach);
 	instance(disable);
-end
+} end
 
-defcon(newWithFile)
+defcon(newWithFile) {
 	initWithFile(self, args);
 
 	return self;
-end
+} end
 
-def(initWithFile)
+def(initWithFile) {
 	self->output = nextArg(File);
 
 	return self;
-end
+} end
 
-def(dealloc)
+def(dealloc) {
 	msg(self->output, "release");
 
 	return msgSuper("dealloc");
-end
+} end
 
-def(print)
+def(print) {
 	if (self->disabled) {
 		return self;
 	}
@@ -54,9 +54,9 @@ def(print)
 	msg(toPrint, "release");
 
 	return self;
-end
+} end
 
-def(println)
+def(println) {
 	if (self->disabled) {
 		return self;
 	}
@@ -66,9 +66,9 @@ def(println)
 	msg(toPrint, "release");
 
 	return self;
-end
+} end
 
-def(flush)
+def(flush) {
 	if (self->disabled) {
 		return self;
 	}
@@ -76,9 +76,9 @@ def(flush)
 	fflush(self->output->file);
 
 	return self;
-end
+} end
 
-def(printEach)
+def(printEach) {
 	if (self->disabled) {
 		return self;
 	}
@@ -96,10 +96,10 @@ def(printEach)
 	msg(iterator, "release");
 
 	return self;
-end
+} end
 
-def(disable)
+def(disable) {
 	self->disabled = YES;
 
 	return self;
-end
+} end

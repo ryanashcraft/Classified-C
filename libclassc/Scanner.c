@@ -11,27 +11,27 @@ proto(initWithFile);
 proto(next);
 proto(hasNext);
 
-defclass
+defclass {
 	constructor(newWithFile);
 
 	instance(initWithFile);
 	instance(next);
 	instance(hasNext);
-end
+} end
 
-defcon(newWithFile)
+defcon(newWithFile) {
 	initWithFile(self, args);
 
 	return self;
-end
+} end
 
-def(initWithFile)
+def(initWithFile) {
 	self->file = nextArg(File);
 
 	return self;
-end
+} end
 
-def(next)
+def(next) {
 	FILE *f = msg(self->file, "file");
 	MutableString buffer = msg(MutableStringClass, "newWithCStringAndCapacity", "", TOKEN_BUFFER_SIZE);
 
@@ -58,9 +58,9 @@ def(next)
 	msg(buffer, "release");
 
 	return msg(token, "autoRelease");
-end
+} end
 
-def(hasNext)
+def(hasNext) {
 	FILE *f = msg(self->file, "file");
 	boolean hasNext = YES;
 	char c = 0;
@@ -72,4 +72,4 @@ def(hasNext)
 	ungetc(c, f);
 
 	return hasNext;
-end
+} end

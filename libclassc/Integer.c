@@ -12,7 +12,7 @@ proto(lessThan);
 proto(description);
 proto(increment);
 
-defclass
+defclass {
 	constructor(newWithInt);
 	
 	instance(initWithInt);
@@ -21,21 +21,21 @@ defclass
 	instance(lessThan);
 	instance(description);
 	instance(increment);
-end
+} end
 
-defcon(newWithInt)
+defcon(newWithInt) {
 	initWithInt(self, args);
 
 	return self;
-end
+} end
 
-def(initWithInt)
+def(initWithInt) {
 	self->value = nextArg(int);
 
 	return self;
-end
+} end
 
-def(equals)
+def(equals) {
 	Integer other = nextArg(Integer);
 
 	if (self->value == other->value) {
@@ -43,10 +43,10 @@ def(equals)
 	}
 
 	return NO;
-end
+} end
 
 
-def(greaterThan)
+def(greaterThan) {
 	Integer other = nextArg(Integer);
 
 	if (self->value > other->value) {
@@ -54,9 +54,9 @@ def(greaterThan)
 	}
 
 	return NO;
-end
+} end
 
-def(lessThan)
+def(lessThan) {
 	Integer other = nextArg(Integer);
 
 	if (self->value < other->value) {
@@ -64,17 +64,17 @@ def(lessThan)
 	}
 
 	return NO;
-end
+} end
 
-def(description)
+def(description) {
 	return msg(msg(StringClass, "newWithFormatCString", "%d", self->value), "autoRelease");
-end
+} end
 
-def(increment)
+def(increment) {
 	self->value++;
 
 	return self;
-end
+} end
 
 int to_int(Integer i) {
 	return i->value;

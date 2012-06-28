@@ -12,7 +12,7 @@ proto(isYes);
 static Boolean yesInstance = NULL;
 static Boolean noInstance = NULL;
 
-defclass
+defclass {
 	constructor(newWithInt);
 
 	static(yes);
@@ -21,26 +21,26 @@ defclass
 
 	yesInstance = msg(BooleanClass, "newWithInt", YES);
 	noInstance = msg(BooleanClass, "newWithInt", NO);
-end
+} end
 
-defcon(newWithInt)
+defcon(newWithInt) {
 	msg(self, "initWithInt", args);
 
 	return self;
-end
+} end
 
-defstat(yes)
+defstat(yes) {
 	return yesInstance;
-end
+} end
 
-defstat(no)
+defstat(no) {
 	return noInstance;
-end
+} end
 
-defstat(isYes)
+defstat(isYes) {
 	if (nextArg(size_t) == (size_t)NO) {
 		return NO;
 	}
 
 	return YES;
-end
+} end

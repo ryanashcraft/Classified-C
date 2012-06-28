@@ -10,14 +10,14 @@ proto(new);
 proto(testNewWithCString);
 proto(testNewWithFormatCString);
 
-defclass
+defclass {
 	constructor(new);
 
 	instance(testNewWithCString);
 	instance(testNewWithFormatCString);
-end
+} end
 
-defcon(new)
+defcon(new) {
 	msgSuper("init");
 
 	String testCase = msg(StringClass, "newWithCString", "testNewWithCString");
@@ -29,20 +29,20 @@ defcon(new)
 	msg(testCase, "release");
 
 	return self;
-end
+} end
 
-def(testNewWithCString)
+def(testNewWithCString) {
 	String foo = msg(StringClass, "newWithCString", "foo");
 	Boolean isEqual = msg(foo, "equals", "foo");
 	msg(foo, "release");
 
 	return msg(self, "assertTrue", isEqual);
-end
+} end
 
-def(testNewWithFormatCString)
+def(testNewWithFormatCString) {
 	String foo = msg(StringClass, "newWithFormatCString", "%s %d", "foo", 5);
 	Boolean isEqual = msg(foo, "equals", "foo 5");
 	msg(foo, "release");
 
 	return msg(self, "assertTrue", isEqual);
-end
+} end

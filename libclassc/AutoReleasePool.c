@@ -9,21 +9,21 @@ proto(dealloc);
 
 void msg_finish_auto_release(void *v);
 
-defclass
+defclass {
 	constructor(new);
 
 	instance(dealloc);
-end
+} end
 
-defcon(new)
+defcon(new) {
 	return msgSuper("init");
-end
+} end
 
-def(dealloc)
+def(dealloc) {
 	free_list(self->base.base.value, &msg_finish_auto_release);
 
 	return msgCast(ObjectClass, self, "dealloc");
-end
+} end
 
 void msg_finish_auto_release(void *v) {
 	msg(v, "finishAutoRelease");

@@ -43,23 +43,27 @@
 #define defclass \
 	Class CLASS_REF = NULL; \
 	void CLASS_INIT() { \
-		CLASS_REF = msg(ClassClass, "new", NAME, SUPER_CLASS_REF);
+		CLASS_REF = msg(ClassClass, "new", NAME, SUPER_CLASS_REF); \
+		if (1)
 
 #define defcon(METHOD) \
 	void *METHOD(METHOD_ARGS) { \
 		STRUCT *self = cc_alloc(sizeof(STRUCT)); \
 		object_init(self); \
-		((Object)self)->root = CLASS_REF;
+		((Object)self)->root = CLASS_REF; \
+		if (1)
 
 #define defstat(METHOD) \
 	void *METHOD(METHOD_ARGS) { \
 		Class self = CLASS_REF; \
-		(void)self;
+		(void)self; \
+		if (1)
 
 #define def(METHOD) \
 	void *METHOD(METHOD_ARGS) { \
 		CLASS self = (CLASS)v; \
-		(void)self;
+		(void)self; \
+		if (1)
 
 #define end }
 
