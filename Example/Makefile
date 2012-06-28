@@ -10,7 +10,7 @@ obj=Foo.o FooClass.o
 inc=Foo.h FooClass.h
 misc=Makefile
 target=Example.o
-cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug
+cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug -02
 lflags=-Wall -g -DDebug
 libclassc=../libclassc/
 include=-I$(libclassc)
