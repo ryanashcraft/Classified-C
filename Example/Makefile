@@ -10,9 +10,9 @@ obj=Foo.o FooClass.o
 inc=Foo.h FooClass.h
 misc=Makefile
 target=Example.o
-cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug -02
-lflags=-Wall -g -DDebug
-libclassc=../libclassc/
+cflags=-Wall -c -g -Werror -pedantic -std=c99 -DDebug -lpthread
+lflags=-Wall -g -DDebug -lpthread
+libclassc=../libclassc
 include=-I$(libclassc)
 c=gcc
 lcbang= $(libclassc)/libclassc.a
@@ -32,7 +32,7 @@ valgrind-clean: clean-all
 	valgrind --leak-check=full --dsymutil=yes ./$(target)
 
 $(target) : $(obj) $(misc) $(lcbang)
-	$(c) $(lflags) $(obj) $(lcbang) -o $(target)
+	$(c) $(obj) $(lcbang) -o $(target) $(lflags)
 
 # .SECONDARY:
 # %.c : %.cbang

@@ -59,7 +59,7 @@ defcon(newWithTargetAndSelectorAndUserData) {
 	self->userData = nextArg(LinkedList);
 	msg(self->userData, "retain");
 
-	self->thread = NULL;
+	self->thread = 0;
 	self->autoReleasePools = msg(StackClass, "new");
 
 	msg(self, "pushNewAutoReleasePool");
